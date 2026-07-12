@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/measurement.v1.json",
+  "title": "Measurement",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "org_id",
+    "plant_id",
+    "metric",
+    "ts_utc",
+    "ts_source",
+    "value",
+    "quality",
+    "aggregation",
+    "lineage",
+    "seq"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "org_id": { "type": "string", "minLength": 1 },
+    "plant_id": { "type": "string", "minLength": 1 },
+    "asset_id": { "type": ["string", "null"] },
+    "metric": {
+      "type": "object",
+      "required": ["type", "unit"],
+      "properties": {
+        "type": { "type": "string" },
+        "unit": { "type": "string" }
+      }
+    },
+    "ts_utc": { "type": "string", "format": "date-time" },
+    "ts_source": { "type": "string", "enum": ["device", "poller", "file"] },
+    "value": { "type": "number" },
+    "quality": {
+      "type": "string",
+      "enum": ["good", "estimated", "bad", "stale", "clock_unsynced"]
+    },
+    "aggregation": {
+      "type": "string",
+      "enum": ["instant", "interval_sum", "interval_avg", "counter_delta"]
+    },
+    "interval_s": { "type": ["integer", "null"], "minimum": 0 },
+    "lineage": {
+      "type": "object",
+      "required": ["source_system", "source_tag", "connector_id", "ingest_ts"],
+      "properties": {
+        "source_system": { "type": "string" },
+        "source_tag": { "type": "string" },
+        "connector_id": { "type": "string" },
+        "register_profile_ver": { "type": "string" },
+        "ingest_ts": { "type": "string", "format": "date-time" }
+      }
+    },
+    "seq": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}

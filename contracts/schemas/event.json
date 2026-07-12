@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/event.v1.json",
+  "title": "Event",
+  "type": "object",
+  "required": ["schema_version", "org_id", "plant_id", "ts_utc", "event_type", "severity", "payload", "lineage", "seq"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "org_id": { "type": "string" },
+    "plant_id": { "type": "string" },
+    "asset_id": { "type": ["string", "null"] },
+    "ts_utc": { "type": "string", "format": "date-time" },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "state_change",
+        "alarm",
+        "connector_birth",
+        "connector_death",
+        "data_gap",
+        "bill_received",
+        "bill_validated",
+        "bill_rejected",
+        "bill_published",
+        "tag_remapped",
+        "unmapped_tag",
+        "heartbeat",
+        "document_received",
+        "ems_published",
+        "shift_calendar_uploaded",
+        "tariff_order_received",
+        "tariff_contract_drafted",
+        "tariff_contract_approved",
+        "document_classified",
+        "lt_bill_received",
+        "water_bill_received",
+        "gas_bill_received",
+        "compliance_doc_received"
+      ]
+    },
+    "severity": { "type": "string", "enum": ["info", "warning", "error", "critical"] },
+    "payload": { "type": "object" },
+    "seq": { "type": "integer", "minimum": 0 },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "source_system": { "type": "string" },
+        "source_tag": { "type": "string" },
+        "connector_id": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

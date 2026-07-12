@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/stamped-record-envelope.v1.json",
+  "title": "StampedRecordEnvelope",
+  "description": "L1→L2 boundary envelope. Wraps canonical L1 payloads for cross-repo delivery. See docs/architecture/layer-interfaces.md.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "envelope_id",
+    "record_type",
+    "org_id",
+    "plant_id",
+    "dedupe_key",
+    "ingest_batch_id",
+    "ingested_at",
+    "late",
+    "correlation_id",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "const": "1.0.0"
+    },
+    "envelope_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "record_type": {
+      "type": "string",
+      "enum": ["measurement", "event", "production_record", "bill_line"]
+    },
+    "org_id": { "type": "string", "minLength": 1 },
+    "plant_id": { "type": "string", "minLength": 1 },
+    "dedupe_key": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "Stable business dedupe key per layer-interfaces.md §2.2"
+    },
+    "ingest_batch_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "ingested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "late": { "type": "boolean" },
+    "correlation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "traceparent": {
+      "type": "string",
+      "description": "W3C traceparent for OpenTelemetry propagation"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Validated L1 record per record_type schema"
+    }
+  },
+  "additionalProperties": false
+}

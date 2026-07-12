@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/bill-line.v1.json",
+  "title": "BillLine",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "org_id",
+    "plant_id",
+    "bill_id",
+    "bill_month",
+    "line_type",
+    "qty",
+    "qty_unit",
+    "rate",
+    "amount_inr",
+    "extraction"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "org_id": { "type": "string", "minLength": 1 },
+    "plant_id": { "type": "string", "minLength": 1 },
+    "bill_id": { "type": "string", "minLength": 1 },
+    "discom": { "type": "string" },
+    "bill_month": { "type": "string", "pattern": "^\\d{4}-\\d{2}$" },
+    "tariff_code": { "type": "string" },
+    "line_type": {
+      "type": "string",
+      "enum": [
+        "demand",
+        "energy_tod_slot",
+        "pf_adjustment",
+        "fca",
+        "duty",
+        "arrears",
+        "penalty_excess_cd",
+        "rebate",
+        "wheeling",
+        "net_metering_credit",
+        "other"
+      ]
+    },
+    "qty": { "type": "number" },
+    "qty_unit": { "type": "string" },
+    "rate": { "type": "number" },
+    "amount_inr": { "type": "number" },
+    "extraction": {
+      "type": "object",
+      "required": ["confidence", "method", "validated"],
+      "properties": {
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "method": { "type": "string", "enum": ["doc_ai", "llm", "manual"] },
+        "validated": { "type": "boolean" },
+        "recompute_delta_inr": { "type": "number" }
+      }
+    },
+    "source_doc_ref": { "type": "string" }
+  },
+  "additionalProperties": false
+}

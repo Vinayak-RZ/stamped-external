@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/tag-inventory.v1.json",
+  "title": "TagInventory",
+  "type": "object",
+  "required": ["schema_version", "plant_id", "harvested_at", "items"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "plant_id": { "type": "string" },
+    "harvested_at": { "type": "string", "format": "date-time" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_system", "source_tag", "connector_id"],
+        "properties": {
+          "source_system": { "type": "string" },
+          "source_tag": { "type": "string" },
+          "native_unit": { "type": "string" },
+          "connector_id": { "type": "string" },
+          "profile_version": { "type": "string" }
+        }
+      }
+    }
+  }
+}

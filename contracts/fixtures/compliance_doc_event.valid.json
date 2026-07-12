@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "org_id": "org_dev",
+  "plant_id": "plant_dev",
+  "ts_utc": "2026-06-15T10:00:00Z",
+  "event_type": "compliance_doc_received",
+  "severity": "info",
+  "payload": {
+    "document_id": "doc-compliance-001",
+    "doc_type": "brsr_export",
+    "filename": "brsr_fy2025.pdf"
+  },
+  "seq": 1,
+  "lineage": {
+    "source_system": "connectors-bill",
+    "connector_id": "connectors-bill"
+  }
+}
