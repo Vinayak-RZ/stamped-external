@@ -1,0 +1,8 @@
+# Platform repository — git ignores
+
+.DS_Store
+*.swp
+*.tmp
+.env
+.env.*
+!.env.example

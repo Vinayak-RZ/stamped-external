@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "org_id": "org_test",
+  "plant_id": "plant_test",
+  "bill_id": "bill-2026-06-001",
+  "discom": "MSEDCL",
+  "bill_month": "2026-06",
+  "tariff_code": "HT-I",
+  "line_type": "energy_tod_slot",
+  "qty": 15000,
+  "qty_unit": "kWh",
+  "rate": 8.5,
+  "amount_inr": 127500,
+  "extraction": {
+    "confidence": 0.95,
+    "method": "doc_ai",
+    "validated": true
+  },
+  "source_doc_ref": "s3://bills/2026-06.pdf"
+}

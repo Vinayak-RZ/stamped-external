@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "org_id": "org_dev",
+  "plant_id": "plant_dev",
+  "bill_id": "PNG-2026-06",
+  "bill_month": "2026-06",
+  "line_type": "other",
+  "qty": 8500,
+  "qty_unit": "SCM",
+  "rate": 48.2,
+  "amount_inr": 409700.0,
+  "extraction": {
+    "confidence": 0.91,
+    "method": "manual",
+    "validated": true
+  },
+  "source_doc_ref": "s3://fixtures/png_industrial_sample.pdf"
+}

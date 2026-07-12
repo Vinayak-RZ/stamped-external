@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "org_id": "org_dev",
+  "plant_id": "plant_dev",
+  "bill_id": "WATER-2026-06",
+  "bill_month": "2026-06",
+  "line_type": "other",
+  "qty": 1250,
+  "qty_unit": "kL",
+  "rate": 42.5,
+  "amount_inr": 53125.0,
+  "extraction": {
+    "confidence": 0.92,
+    "method": "manual",
+    "validated": true
+  },
+  "source_doc_ref": "s3://fixtures/water_municipal_sample.pdf"
+}

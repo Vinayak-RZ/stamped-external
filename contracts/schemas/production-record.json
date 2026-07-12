@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/production-record.v1.json",
+  "title": "ProductionRecord",
+  "type": "object",
+  "required": ["schema_version", "org_id", "plant_id", "line_id", "batch_id", "window", "quantity", "unit", "source"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "org_id": { "type": "string" },
+    "plant_id": { "type": "string" },
+    "line_id": { "type": "string" },
+    "window": {
+      "type": "object",
+      "required": ["start_utc", "end_utc"],
+      "properties": {
+        "start_utc": { "type": "string", "format": "date-time" },
+        "end_utc": { "type": "string", "format": "date-time" }
+      }
+    },
+    "sku": { "type": "string" },
+    "batch_id": { "type": "string" },
+    "quantity": { "type": "number" },
+    "unit": { "type": "string" },
+    "shift_code": { "type": "string" },
+    "source": { "type": "string", "enum": ["erp", "mes", "manual"] }
+  }
+}

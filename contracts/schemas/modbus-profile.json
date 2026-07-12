@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/modbus-profile.v1.json",
+  "title": "ModbusProfile",
+  "type": "object",
+  "required": ["profile_id", "version", "registers"],
+  "properties": {
+    "profile_id": { "type": "string" },
+    "version": { "type": "string" },
+    "byte_order": { "type": "string", "enum": ["ABCD", "CDAB", "BADC", "DCBA"] },
+    "registers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "address", "type", "scale"],
+        "properties": {
+          "name": { "type": "string" },
+          "address": { "type": "integer", "minimum": 0 },
+          "type": { "type": "string", "enum": ["uint16", "int16", "float32", "uint32"] },
+          "scale": { "type": "number" },
+          "unit": { "type": "string" },
+          "metric_type": { "type": "string" }
+        }
+      }
+    }
+  }
+}

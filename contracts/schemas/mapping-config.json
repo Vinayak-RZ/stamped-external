@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/mapping-config.v1.json",
+  "title": "MappingConfig",
+  "type": "object",
+  "required": ["schema_version", "mapping_version", "plant_id", "published_at", "rules"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "mapping_version": { "type": "string" },
+    "plant_id": { "type": "string" },
+    "published_at": { "type": "string", "format": "date-time" },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_system", "source_tag", "asset_id", "metric_type", "unit"],
+        "properties": {
+          "source_system": { "type": "string" },
+          "source_tag": { "type": "string" },
+          "asset_id": { "type": "string" },
+          "metric_type": { "type": "string" },
+          "unit": { "type": "string" },
+          "transform": { "type": "string" }
+        }
+      }
+    }
+  }
+}
