@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "org_id": "org_test",
+  "plant_id": "plant_test",
+  "asset_id": "incomer_1",
+  "metric": {"type": "active_power_kw", "unit": "kW"},
+  "ts_utc": "2026-07-12T08:00:00Z",
+  "ts_source": "poller",
+  "value": 412.5,
+  "quality": "good",
+  "aggregation": "instant",
+  "lineage": {
+    "source_system": "connectors-edge",
+    "source_tag": "INCOMER_KW",
+    "connector_id": "edge-agent-1",
+    "ingest_ts": "2026-07-12T08:00:01Z"
+  },
+  "seq": 1
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "org_id": "org_test",
+  "plant_id": "plant_test",
+  "line_id": "line_1",
+  "batch_id": "batch-2026-06-001",
+  "window": {
+    "start_utc": "2026-06-15T06:00:00Z",
+    "end_utc": "2026-06-15T14:00:00Z"
+  },
+  "quantity": 1200,
+  "unit": "ton",
+  "source": "mes"
+}

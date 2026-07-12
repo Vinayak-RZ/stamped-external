@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "org_id": "org_test",
+  "plant_id": "plant_test",
+  "ts_utc": "2026-06-15T10:00:00Z",
+  "event_type": "bill_published",
+  "severity": "info",
+  "payload": {"bill_id": "bill-2026-06-001"},
+  "seq": 1,
+  "lineage": {
+    "source_system": "connectors-bill",
+    "connector_id": "connectors-bill"
+  }
+}
