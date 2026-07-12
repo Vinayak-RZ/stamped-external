@@ -2,7 +2,9 @@
 
 > **Audience:** AI agents and engineers starting **`connectors-bill`**, **`stamped-l2`**, or sibling layer repos.  
 > **Master product context:** [../technical/00-stamped-master-document.md](../technical/00-stamped-master-document.md)  
-> **Distribution:** This folder is part of **[stamped-platform](../README.md)** — mount as git submodule at `external/` ([ADR-011](../decisions/ADR-011-stamped-platform-submodule-distribution.md), [SUBMODULE.md](../SUBMODULE.md))
+> **Distribution:** This folder is part of **[stamped-external](../README.md)** — mount as git submodule at `external/` ([ADR-011](../decisions/ADR-011-stamped-platform-submodule-distribution.md), [SUBMODULE.md](../SUBMODULE.md))
+
+**Agent prompt for any consumer repo:** [consumer-platform-prompt.md](./consumer-platform-prompt.md) — paste into `AGENTS.md` in connectors-edge, stamped-l2, and future repos.
 
 ---
 
