@@ -65,6 +65,8 @@ git commit -m "refactor: replace copied external/ with stamped-external submodul
 
 **Update CI paths** — scripts should still use `external/contracts/` (unchanged path).
 
+**Helper script:** from consumer repo root, run `external/scripts/migrate-external-to-submodule.sh v2026.07.12` after copying the script, or use [scripts/migrate-external-to-submodule.sh](scripts/migrate-external-to-submodule.sh) from a checked-out platform pack.
+
 ---
 
 ## 4. Clone consumer repo with submodules
