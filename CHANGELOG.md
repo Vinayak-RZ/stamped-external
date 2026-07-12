@@ -30,6 +30,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/). Platform tags: `vYYYY.M
 
 ## [Unreleased]
 
+### Added
+
+- Extensive README — architecture (L0–L6), tech stack, ADR catalog, contracts reference, deployment modes, Cursor config
+
 ### Planned
 
 - Submodule migration in connectors-edge, connectors-cloud, connectors-bill, universal-repositary
