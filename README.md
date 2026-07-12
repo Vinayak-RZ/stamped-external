@@ -87,8 +87,15 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
+## Cursor AI configuration
+
+This repo includes [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding) (rules, skills, MCP) under `.cursor/`. Agent orchestration: [AGENTS.md](AGENTS.md).
+
+---
+
 ## Changelog
 
 | Date | Change |
 |------|--------|
+| 2026-07-12 | Cursor config from `cursor-config-coding` vendored for cloud agents |
 | 2026-07-12 | Platform pack prepared for `stamped-external` repo + submodule distribution (ADR-011) |
