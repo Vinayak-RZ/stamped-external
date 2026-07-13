@@ -97,7 +97,7 @@ For agentic design, **query MCP first** (`find_pattern`, `recommend_recipe`, `pa
 10. Apply `quality-gates.mdc` — validate, report, update progress docs, **commit**.
 11. Contract changes: run `./scripts/contract-check.sh` before marking done.
 
-## Pre-installed skills (35)
+## Pre-installed skills (36)
 
 See [skills-manifest.json](skills-manifest.json) for the full list.
 
