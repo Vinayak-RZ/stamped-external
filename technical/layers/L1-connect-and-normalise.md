@@ -392,6 +392,48 @@ Interpolation policy: L1 **never fills gaps**. Gap-filling is an L2/L3 concern w
 
 ---
 
+## 8. Startup events, maintenance calendar, and historian backfill
+
+*Added 2026-07-13 · IMPLEMENTATION_PLAN Phase A · L3 suppression dependency*
+
+### Startup events (P0)
+
+Emit `event.json` with `event_type = equipment_startup` when ramp detection fires on feeder/incomer tags:
+
+| Field | Source |
+| --- | --- |
+| `asset_id` | Tag mapping |
+| `ramp_kw` | Derivative threshold on smoothed kW |
+| `duration_s` | Ramp end detection |
+| `seq` | Monotonic per asset |
+
+L2 feature store indexes startup catalogue for L3 attribution and suppression windows.
+
+### Maintenance calendar ingest (P0)
+
+| Source | Transport | L2 target |
+| --- | --- | --- |
+| SAP PM CSV export | Manual upload / REST | `commercial.shift_calendar` maintenance windows |
+| WhatsApp-form log | connectors-bill pattern | Parsed maintenance events |
+
+Events carry `maintenance_planned: true` for L3 suppression service.
+
+### Historian backfill metadata
+
+Backfill batches via `measurements/backfill` topic include:
+
+- `historian_source` — WinCC, PI, Ignition export id
+- `backfill_window_start/end` — UTC bounds
+- `late: true` on envelope
+
+L3 cold path replays backfill windows; findings cite `engine_version` + window for audit.
+
+### SCADA state tags (P1)
+
+Equipment state enums (`running | idle | off | fault`) from SCADA improve idle-load and suppression accuracy — Path A depth.
+
+---
+
 # Citations
 
 1. FlowFuse — OPC UA Security: Defensible Architecture (Jun 2026): https://flowfuse.com/blog/2026/06/opc-ua-security-best-practices/

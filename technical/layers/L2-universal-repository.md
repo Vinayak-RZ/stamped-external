@@ -575,6 +575,52 @@ Phase exit criteria (L2-specific):
 
 ---
 
+## 8. L3/L4 extensions — finding archive, feature store, baseline lock
+
+*Added 2026-07-13 · IMPLEMENTATION_PLAN Phase A*
+
+### Finding archive
+
+Table `intelligence.finding_archive` stores emitted findings for dedupe and replay:
+
+| Column | Purpose |
+| --- | --- |
+| `finding_id` | PK |
+| `dedupe_key` | Unique open-finding key |
+| `payload` | Full Finding JSON |
+| `engine_version` | Replay audit |
+| `superseded_at` | Severity escalation timestamp |
+
+L3 writes via outbox; L4 reads finding history for dedup only through query API.
+
+### Feature store extensions
+
+Add rolling features for L3 hot path:
+
+- `md_histogram_30d`, `md_histogram_90d`
+- `pf_slab_proximity` — distance to penalty threshold
+- `startup_event_count_7d`
+
+Materialised in `features.plant_rollup` refreshed on 15-min boundary.
+
+### Baseline lock API (P0 sketch)
+
+```
+POST /v1/plants/{plant_id}/baselines/{baseline_id}/lock
+```
+
+- Called by L5 when verification window opens
+- Trigger rejects UPDATE on locked baseline rows
+- Returns `409` if already locked
+
+See [handoff/stamped-l2-query-api-sketch.md](../../handoff/stamped-l2-query-api-sketch.md) for full API expansion in P1.
+
+### Ledger entry types
+
+Append-only `ledger.mv_ledger` accepts `entry_type ∈ {realised_savings, potential_savings, opportunity_cost}` per [ledger-entry.json](../../contracts/schemas/ledger-entry.json).
+
+---
+
 # Citations
 
 1. https://www.tigerdata.com/blog/timescaledb-2-27 — TimescaleDB 2.27: `compress_after_refresh`, auto segmentby, vectorised columnstore
