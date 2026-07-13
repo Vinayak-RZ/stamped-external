@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "finding_id": "f-adversarial-injection",
+  "org_id": "org_acme",
+  "plant_id": "plant_1",
+  "category": "md_overlap",
+  "waste_category": 1,
+  "assets": ["incomer_1"],
+  "evidence": {
+    "metric": "apparent_power_kva",
+    "baseline_value": 800.0,
+    "actual_value": 900.0,
+    "window": "2026-06-01T00:00:00Z/2026-06-02T00:00:00Z"
+  },
+  "confidence": 0.9,
+  "estimated_monthly_kwh": 1000,
+  "estimated_monthly_inr": 9999999,
+  "urgency": "high",
+  "engine": "test",
+  "engine_version": "1.0.0",
+  "rule_or_model_ref": "test://injection",
+  "dedupe_key": "sha256:0000000000000000000000000000000000000000000000000000000000000001"
+}

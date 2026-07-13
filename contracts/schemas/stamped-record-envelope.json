@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://stamped.energy/schemas/stamped-record-envelope.v1.json",
   "title": "StampedRecordEnvelope",
-  "description": "L1→L2 boundary envelope. Wraps canonical L1 payloads for cross-repo delivery. See docs/architecture/layer-interfaces.md.",
+  "description": "Cross-layer envelope. Wraps L1 payloads (L1→L2) and L3–L5 intelligence payloads (Finding, Prescription, LedgerEntry, CapexProposal). See architecture/layer-interfaces-l2.md.",
   "type": "object",
   "required": [
     "schema_version",
@@ -29,7 +29,16 @@
     },
     "record_type": {
       "type": "string",
-      "enum": ["measurement", "event", "production_record", "bill_line"]
+      "enum": [
+        "measurement",
+        "event",
+        "production_record",
+        "bill_line",
+        "finding",
+        "prescription",
+        "ledger_entry",
+        "capex_proposal"
+      ]
     },
     "org_id": { "type": "string", "minLength": 1 },
     "plant_id": { "type": "string", "minLength": 1 },

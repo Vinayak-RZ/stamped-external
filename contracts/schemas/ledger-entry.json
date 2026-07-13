@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/ledger-entry.v1.json",
+  "title": "LedgerEntry",
+  "description": "L5 → L2/L6 M&V ledger record. Append-only. See technical/02-technical-architecture.md §5.4.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "entry_id",
+    "org_id",
+    "plant_id",
+    "prescription_id",
+    "entry_type",
+    "period_start",
+    "period_end",
+    "potential_kwh",
+    "realised_kwh",
+    "potential_inr",
+    "realised_inr",
+    "mv_method",
+    "baseline_id",
+    "verification_status",
+    "dedupe_key"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "const": "1.0.0"
+    },
+    "entry_id": { "type": "string", "minLength": 1 },
+    "org_id": { "type": "string", "minLength": 1 },
+    "plant_id": { "type": "string", "minLength": 1 },
+    "prescription_id": { "type": "string", "minLength": 1 },
+    "entry_type": {
+      "type": "string",
+      "enum": ["realised_savings", "potential_savings", "opportunity_cost"],
+      "description": "opportunity_cost = counterfactual delay cost (ADR-013)"
+    },
+    "period_start": { "type": "string", "format": "date-time" },
+    "period_end": { "type": "string", "format": "date-time" },
+    "potential_kwh": { "type": "number", "minimum": 0 },
+    "realised_kwh": { "type": "number", "minimum": 0 },
+    "potential_inr": { "type": "number", "minimum": 0 },
+    "realised_inr": { "type": "number", "minimum": 0 },
+    "avoided_tco2e": { "type": "number", "minimum": 0 },
+    "mv_method": { "type": "string" },
+    "baseline_id": { "type": "string" },
+    "bill_line_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "intensity_delta": { "type": ["number", "null"] },
+    "verification_status": {
+      "type": "string",
+      "enum": ["pending", "verified", "disputed", "modeled"]
+    },
+    "modeled_reason": {
+      "type": "string",
+      "description": "Required when verification_status=modeled (e.g. opportunity_cost)"
+    },
+    "delay_days": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "For opportunity_cost entries"
+    },
+    "dedupe_key": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

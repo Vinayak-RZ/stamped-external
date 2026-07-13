@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/finding.v1.json",
+  "title": "Finding",
+  "description": "L3 → L4 structured finding. Numeric intelligence only — no prose. See technical/02-technical-architecture.md §5.2.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "finding_id",
+    "org_id",
+    "plant_id",
+    "category",
+    "waste_category",
+    "assets",
+    "evidence",
+    "confidence",
+    "estimated_monthly_kwh",
+    "estimated_monthly_inr",
+    "urgency",
+    "engine",
+    "engine_version",
+    "rule_or_model_ref",
+    "dedupe_key"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "const": "1.0.0"
+    },
+    "finding_id": { "type": "string", "minLength": 1 },
+    "org_id": { "type": "string", "minLength": 1 },
+    "plant_id": { "type": "string", "minLength": 1 },
+    "category": {
+      "type": "string",
+      "enum": [
+        "md_overlap",
+        "md_exceedance_risk",
+        "pf_slab_breach",
+        "pf_leading",
+        "tod_exposure",
+        "compressor_sp_drift",
+        "furnace_holding",
+        "idle_load",
+        "sec_drift",
+        "dispatch_gap",
+        "cop_degradation",
+        "cmd_oversized"
+      ]
+    },
+    "waste_category": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 6,
+      "description": "1=MD/PQ 2=furnace 3=idle 4=compressed air 5=HVAC 6=source mix"
+    },
+    "assets": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["metric", "baseline_value", "actual_value", "window"],
+      "properties": {
+        "metric": { "type": "string" },
+        "baseline_value": { "type": "number" },
+        "actual_value": { "type": "number" },
+        "window": {
+          "type": "string",
+          "description": "ISO8601 interval e.g. 2026-06-15T00:00:00Z/2026-07-05T00:00:00Z"
+        },
+        "baseline_id": { "type": "string" },
+        "baseline_band": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "supporting_tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "model_version": { "type": "string" },
+        "rule_version": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "estimated_monthly_kwh": { "type": "number", "minimum": 0 },
+    "estimated_monthly_inr": { "type": "number", "minimum": 0 },
+    "inr_decomposition": {
+      "type": "object",
+      "properties": {
+        "bill_line": { "type": "string" },
+        "rate_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "urgency": { "type": "string", "enum": ["low", "medium", "high"] },
+    "engine": { "type": "string" },
+    "engine_version": { "type": "string" },
+    "rule_or_model_ref": { "type": "string" },
+    "suppressions_checked": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "dedupe_key": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "Stable key from category + assets + window per L3 spec"
+    }
+  },
+  "additionalProperties": false
+}

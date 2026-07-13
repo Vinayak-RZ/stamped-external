@@ -37,7 +37,13 @@ for ff in sorted(fixtures.glob("*.json")):
     with open(ff) as f:
         json.load(f)
 
-pairs = {"bill_line.valid.json": "bill-line.json"}
+pairs = {
+    "bill_line.valid.json": "bill-line.json",
+    "finding.valid.json": "finding.json",
+    "prescription.valid.json": "prescription.json",
+    "ledger_entry.valid.json": "ledger-entry.json",
+    "ledger_entry_opportunity_cost.valid.json": "ledger-entry.json",
+}
 for fixture, schema_name in pairs.items():
     fp, sp = fixtures / fixture, schemas / schema_name
     if fp.exists() and sp.exists():

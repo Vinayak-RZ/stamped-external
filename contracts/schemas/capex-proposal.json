@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/capex-proposal.v1.json",
+  "title": "CapexProposal",
+  "description": "Sidecar to Prescription for capex ROI / payback. Human approval required before issue.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "prescription_id",
+    "org_id",
+    "plant_id",
+    "capex_inr",
+    "annual_savings_inr",
+    "payback_months",
+    "roi_pct",
+    "approval_status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "const": "1.0.0"
+    },
+    "proposal_id": { "type": "string", "minLength": 1 },
+    "prescription_id": { "type": "string", "minLength": 1 },
+    "org_id": { "type": "string", "minLength": 1 },
+    "plant_id": { "type": "string", "minLength": 1 },
+    "capex_inr": { "type": "number", "minimum": 0 },
+    "annual_savings_inr": { "type": "number", "minimum": 0 },
+    "payback_months": { "type": "number", "minimum": 0 },
+    "roi_pct": { "type": "number" },
+    "approval_status": {
+      "type": "string",
+      "enum": ["pending", "approved", "rejected"]
+    },
+    "approved_by": { "type": "string" },
+    "approved_at": { "type": "string", "format": "date-time" },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

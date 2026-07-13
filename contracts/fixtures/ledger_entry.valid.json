@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "entry_id": "le-2026-09-01-0001",
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "prescription_id": "rx-2026-07-08-0031",
+  "entry_type": "realised_savings",
+  "period_start": "2026-08-01T00:00:00Z",
+  "period_end": "2026-09-01T00:00:00Z",
+  "potential_kwh": 4200,
+  "realised_kwh": 3900,
+  "potential_inr": 31200,
+  "realised_inr": 28900,
+  "avoided_tco2e": 2.9,
+  "mv_method": "option_c",
+  "baseline_id": "bl-incomer-2026Q2",
+  "bill_line_refs": ["bill_2026_08:demand_charge"],
+  "intensity_delta": null,
+  "verification_status": "verified",
+  "dedupe_key": "sha256:c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567890"
+}

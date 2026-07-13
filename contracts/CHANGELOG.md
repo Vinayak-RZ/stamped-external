@@ -1,5 +1,12 @@
 # Changelog — stamped-l1-contracts
 
+## 0.6.0 — 2026-07-13
+
+- Add L3–L5 intelligence schemas: `finding.json`, `prescription.json`, `ledger-entry.json`, `capex-proposal.json`
+- Extend `stamped-record-envelope.json` record_type enum: finding, prescription, ledger_entry, capex_proposal (BACKWARD additive)
+- Add golden fixtures for Finding, Prescription, LedgerEntry (incl. opportunity_cost)
+- ADR-012/013/014 accepted
+
 ## 0.5.0 — 2026-07-11
 
 - Extend `event.json` enum: `bill_validated`, `bill_rejected`, `bill_published`, `document_received`, `ems_published`, `shift_calendar_uploaded`, `tariff_order_received` (BACKWARD additive)
