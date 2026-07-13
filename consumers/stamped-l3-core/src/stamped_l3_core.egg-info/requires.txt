@@ -1,7 +1,0 @@
-
-[challenger]
-timesfm>=2.0.2
-
-[dev]
-pytest>=8.0
-ruff>=0.4
