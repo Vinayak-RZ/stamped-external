@@ -1,0 +1,116 @@
+{
+  "manifest_version": "1.0.0",
+  "description": "Golden eval tasks for L4 template-fast-path (Lane A P0)",
+  "tasks": [
+    {
+      "id": "gt-md-001",
+      "finding_fixture_ref": "tests/fixtures/finding_md_overlap.json",
+      "expected_template_id": "md_overlap.stagger_costart.v1"
+    },
+    {
+      "id": "gt-pf-001",
+      "finding_fixture_ref": "tests/fixtures/finding_pf_slab_breach.json",
+      "expected_template_id": "pf_slab.apfc_health.v1"
+    },
+    {
+      "id": "gt-tod-001",
+      "finding_fixture_ref": "tests/fixtures/finding_tod_exposure.json",
+      "expected_template_id": "tod_exposure.shift_load.v1"
+    },
+    {
+      "id": "gt-md-002",
+      "finding_fixture_ref": "tests/fixtures/finding_md_overlap.json",
+      "expected_template_id": "md_overlap.stagger_costart.v1"
+    },
+    {
+      "id": "gt-pf-002",
+      "finding_fixture_ref": "tests/fixtures/finding_pf_slab_breach.json",
+      "expected_template_id": "pf_slab.apfc_health.v1"
+    },
+    {
+      "id": "gt-tod-002",
+      "finding_fixture_ref": "tests/fixtures/finding_tod_exposure.json",
+      "expected_template_id": "tod_exposure.shift_load.v1"
+    },
+    {
+      "id": "gt-md-003",
+      "finding_fixture_ref": "tests/fixtures/finding_md_overlap.json",
+      "expected_template_id": "md_overlap.stagger_costart.v1"
+    },
+    {
+      "id": "gt-pf-003",
+      "finding_fixture_ref": "tests/fixtures/finding_pf_slab_breach.json",
+      "expected_template_id": "pf_slab.apfc_health.v1"
+    },
+    {
+      "id": "gt-tod-003",
+      "finding_fixture_ref": "tests/fixtures/finding_tod_exposure.json",
+      "expected_template_id": "tod_exposure.shift_load.v1"
+    },
+    {
+      "id": "gt-md-004",
+      "finding_fixture_ref": "tests/fixtures/finding_md_overlap.json",
+      "expected_template_id": "md_overlap.stagger_costart.v1"
+    },
+    {
+      "id": "gt-pf-004",
+      "finding_fixture_ref": "tests/fixtures/finding_pf_slab_breach.json",
+      "expected_template_id": "pf_slab.apfc_health.v1"
+    },
+    {
+      "id": "gt-tod-004",
+      "finding_fixture_ref": "tests/fixtures/finding_tod_exposure.json",
+      "expected_template_id": "tod_exposure.shift_load.v1"
+    },
+    {
+      "id": "gt-md-005",
+      "finding_fixture_ref": "tests/fixtures/finding_md_overlap.json",
+      "expected_template_id": "md_overlap.stagger_costart.v1"
+    },
+    {
+      "id": "gt-pf-005",
+      "finding_fixture_ref": "tests/fixtures/finding_pf_slab_breach.json",
+      "expected_template_id": "pf_slab.apfc_health.v1"
+    },
+    {
+      "id": "gt-tod-005",
+      "finding_fixture_ref": "tests/fixtures/finding_tod_exposure.json",
+      "expected_template_id": "tod_exposure.shift_load.v1"
+    },
+    {
+      "id": "gt-md-006",
+      "finding_fixture_ref": "tests/fixtures/finding_md_overlap.json",
+      "expected_template_id": "md_overlap.stagger_costart.v1"
+    },
+    {
+      "id": "gt-pf-006",
+      "finding_fixture_ref": "tests/fixtures/finding_pf_slab_breach.json",
+      "expected_template_id": "pf_slab.apfc_health.v1"
+    },
+    {
+      "id": "gt-tod-006",
+      "finding_fixture_ref": "tests/fixtures/finding_tod_exposure.json",
+      "expected_template_id": "tod_exposure.shift_load.v1"
+    },
+    {
+      "id": "gt-md-007",
+      "finding_fixture_ref": "tests/fixtures/finding_md_overlap.json",
+      "expected_template_id": "md_overlap.stagger_costart.v1"
+    },
+    {
+      "id": "gt-pf-007",
+      "finding_fixture_ref": "tests/fixtures/finding_pf_slab_breach.json",
+      "expected_template_id": "pf_slab.apfc_health.v1"
+    },
+    {
+      "id": "gt-tod-007",
+      "finding_fixture_ref": "tests/fixtures/finding_tod_exposure.json",
+      "expected_template_id": "tod_exposure.shift_load.v1"
+    },
+    {
+      "id": "gt-md-008",
+      "finding_fixture_ref": "tests/fixtures/finding_md_overlap.json",
+      "expected_template_id": "md_overlap.stagger_costart.v1"
+    }
+  ]
+}

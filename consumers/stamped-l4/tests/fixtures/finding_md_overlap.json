@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "finding_id": "f-2026-07-08-0042",
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "category": "md_overlap",
+  "waste_category": 1,
+  "assets": ["incomer_1"],
+  "evidence": {
+    "metric": "apparent_power_kva",
+    "baseline_value": 820.0,
+    "actual_value": 945.0,
+    "window": "2026-06-15T06:00:00Z/2026-06-15T07:00:00Z",
+    "baseline_id": "bl-incomer-2026Q2",
+    "baseline_band": [800.0, 850.0],
+    "supporting_tags": ["incomer_1/apparent_power_kva"],
+    "rule_version": "1.0.0"
+  },
+  "confidence": 0.88,
+  "estimated_monthly_kwh": 4500,
+  "estimated_monthly_inr": 31500,
+  "inr_decomposition": {
+    "bill_line": "demand_charge",
+    "rate_ref": "tariff-jvvnl-ht1-2026"
+  },
+  "urgency": "high",
+  "engine": "rules.md_overlap",
+  "engine_version": "1.0.0",
+  "rule_or_model_ref": "rulepack://incomer/1.0.0#md_overlap",
+  "suppressions_checked": ["startup_window"],
+  "dedupe_key": "sha256:a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "finding_id": "f-2026-07-10-0022",
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "category": "tod_exposure",
+  "waste_category": 1,
+  "assets": ["furnace_line_2"],
+  "evidence": {
+    "metric": "energy_kwh",
+    "baseline_value": 1200.0,
+    "actual_value": 2100.0,
+    "window": "2026-06-18T14:00:00Z/2026-06-18T18:00:00Z",
+    "baseline_id": "bl-tod-2026Q2",
+    "supporting_tags": ["furnace_line_2/energy_kwh"],
+    "rule_version": "1.0.0"
+  },
+  "confidence": 0.85,
+  "estimated_monthly_kwh": 6800,
+  "estimated_monthly_inr": 22400,
+  "inr_decomposition": {
+    "bill_line": "tod_surcharge",
+    "rate_ref": "tariff-jvvnl-ht1-2026"
+  },
+  "urgency": "medium",
+  "engine": "rules.tod_exposure",
+  "engine_version": "1.0.0",
+  "rule_or_model_ref": "rulepack://incomer/1.0.0#tod_exposure",
+  "dedupe_key": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+}
