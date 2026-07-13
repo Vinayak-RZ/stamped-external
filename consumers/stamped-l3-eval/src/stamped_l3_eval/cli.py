@@ -24,6 +24,8 @@ def cmd_backtest_run(args: argparse.Namespace) -> int:
     corpus_path = Path(args.corpus)
     data = json.loads(corpus_path.read_text(encoding="utf-8"))
     print(f"backtest run: corpus={corpus_path} windows={len(data['windows'])} (skeleton)")
+    if args.shadow == "timesfm":
+        print("timesfm shadow: not installed — pinball gate deferred (ADR-014)")
     return 0
 
 
@@ -41,6 +43,7 @@ def build_parser() -> argparse.ArgumentParser:
     backtest_sub = backtest.add_subparsers(dest="backtest_cmd", required=True)
     run_parser = backtest_sub.add_parser("run", help="Run rolling backtest (skeleton)")
     run_parser.add_argument("--corpus", type=Path, default=_default_corpus())
+    run_parser.add_argument("--shadow", choices=["timesfm", "none"], default="none")
     run_parser.set_defaults(func=cmd_backtest_run)
 
     return parser
