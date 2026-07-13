@@ -1,0 +1,8 @@
+id: tod_exposure
+category: tod_exposure
+engine: rules.tod_exposure
+version: "1.0.0"
+waste_category: 6
+metric: energy_kwh
+peak_share_threshold: 0.35
+window_days: 7

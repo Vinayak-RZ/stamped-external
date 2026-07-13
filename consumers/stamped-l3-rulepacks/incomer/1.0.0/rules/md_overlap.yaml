@@ -1,0 +1,10 @@
+id: md_overlap
+category: md_overlap
+engine: rules.md_overlap
+version: "1.0.0"
+waste_category: 1
+metric: apparent_power_kva
+threshold_kva: 900
+baseline_band: [800.0, 850.0]
+suppressions:
+  - startup_window

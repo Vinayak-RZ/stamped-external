@@ -1,0 +1,8 @@
+id: pf_slab
+category: pf_slab_breach
+engine: rules.pf_slab
+version: "1.0.0"
+waste_category: 1
+metric: power_factor
+slab_min: 0.90
+window_days: 30

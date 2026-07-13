@@ -1,0 +1,13 @@
+version: "1.0.0"
+rulepack: incomer
+description: P0 incomer rules — MD overlap, PF slab, TOD exposure
+rules:
+  - id: md_overlap
+    file: rules/md_overlap.yaml
+    category: md_overlap
+  - id: pf_slab
+    file: rules/pf_slab.yaml
+    category: pf_slab_breach
+  - id: tod_exposure
+    file: rules/tod_exposure.yaml
+    category: tod_exposure
