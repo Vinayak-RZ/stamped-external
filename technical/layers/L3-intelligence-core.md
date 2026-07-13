@@ -356,6 +356,55 @@ Deliberate sequencing logic: **deterministic ₹ engines first** (they verify fa
 
 ---
 
+## 8. Competitive positioning — Zerowatt Digital Brain
+
+*Added 2026-07-13 · IMPLEMENTATION_PLAN Phase A*
+
+| Zerowatt claim | Stamped counter | Evidence path |
+| --- | --- | --- |
+| Physics digital twin + 1000s rules | Semver rulepacks + deterministic engines | `rule_or_model_ref` on every Finding |
+| Society of AI agents + Zoe NL | Template-fast-path P0 + bounded LangGraph P1 | Schema-verified Prescription; rules veto |
+| 20–30% savings narrative | 15–20% **bill-verified** precision-first | L5 ledger + DISCOM reconciliation |
+| Equipment health / PdM breadth | Electrical proxies + matrix profile P2 | Findings cite meter tags, not black-box scores |
+| 3D plant replica | Out of scope P0 | L6 queue + WhatsApp closure |
+
+**Surrogate twins (not PINNs):** TOW-P + physics rulepacks + stagger simulator provide explainable "what-if" without Modelica FMUs. Counterfactual **delay cost** (ADR-013) is Stamped-specific accountability Zerowatt does not emphasize.
+
+---
+
+## 9. Dual-mode execution — hot / warm / cold
+
+| Path | Trigger | Engines | SLO |
+| --- | --- | --- | --- |
+| **Hot** | 15-min rollup | MD histogram, PF slab, suppression | p95 < 30s post-rollup |
+| **Warm** | Hourly / shift | EWMA/CUSUM, rulepack batch | p95 < 5 min |
+| **Cold** | Nightly + historian backfill | TOW-P refit, eval backtest, TimesFM shadow (P2) | Batch |
+
+Historian backfill: replay windows through cold path with `late: true` envelopes; findings tagged `engine_version` for audit. Hot path never blocks on cold refit.
+
+---
+
+## 10. Suppression service — shared contract
+
+All engines call suppression before emit:
+
+| Check | Source | Default |
+| --- | --- | --- |
+| `startup_window` | L2 feature store / SCADA state | 90s–15min per asset class |
+| `production_mix_change` | SKU share delta | >10% shift |
+| `maintenance_calendar` | L1 maintenance events | Planned window |
+| `data_quality` | L2 quality flags | Reject `estimated` for M&V-eligible |
+
+Applied suppressions recorded on `suppressions_checked[]`.
+
+---
+
+## 11. Time-series foundation models — shadow placement
+
+See [ADR-014](../decisions/ADR-014-ts-foundation-model-role.md). **TimesFM is shadow-only P2** — never M&V engine of record. Primary stack unchanged: TOW-P, deterministic MD/tariff/rules, LightGBM quantile for MD exceedance.
+
+---
+
 # Citations
 
 1. Price, P. — *Methods for Analyzing Electric Load Shape and its Variability*, LBNL-3713E (2010): https://eta-publications.lbl.gov/sites/default/files/LBNL-3713E.pdf

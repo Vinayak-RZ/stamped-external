@@ -568,6 +568,36 @@ Sequencing rationale: P0 ships value with the LLM in its *narrowest* possible ro
 
 ---
 
+## 8. Two-lane prescription architecture
+
+*Added 2026-07-13 · IMPLEMENTATION_PLAN Phase A*
+
+### Lane A — Template-fast-path (P0)
+
+High-confidence single-finding categories (`md_overlap`, `pf_slab_breach`, `tod_exposure`) map deterministically to approved action templates. **No LLM invocation.** Template ID + parameters populate `what/why/who/effort/when`; impact calculator recomputes ₹.
+
+`provenance.lane = template_fast_path`
+
+### Lane B — Bounded LangGraph (P1)
+
+Planner → seven tools → drafter → verifier → rules veto. **Max 8 steps.** Human checkpoint for capex / high-risk. Compound findings only.
+
+Agentic patterns (manual — MCP catalog unavailable at plan time): bounded orchestrator, schema-constrained tool executor, verifier loop, human-in-the-loop for irreversible actions.
+
+### Prescription lifecycle (ADR-013)
+
+| Field | Purpose |
+| --- | --- |
+| `first_recommended_at` | Counterfactual delay baseline |
+| `implemented_at` | Supervisor "Done" timestamp |
+| `verified_at` | L5 M&V window complete |
+
+### CapexProposal sidecar
+
+Capex prescriptions require `CapexProposal` with ROI/payback; `approval_status = approved` before WhatsApp send.
+
+---
+
 # Citations
 
 1. Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection (Asai et al.) — https://arxiv.org/abs/2310.11511

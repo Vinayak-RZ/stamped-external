@@ -452,6 +452,20 @@ Dependency note: P0 M&V needs ≥9 months of historical bills at onboarding (L1 
 
 ---
 
+## 8. Opportunity cost ledger job
+
+*Added 2026-07-13 · ADR-013*
+
+When `implemented_at > first_recommended_at`, L5 cron emits `LedgerEntry` with:
+
+- `entry_type = opportunity_cost`
+- `verification_status = modeled`
+- `realised_inr = delay_days × (potential_inr / 30)`
+
+L5 writes; L2 stores append-only. L6 displays with "modeled — not bill-verified" disclaimer.
+
+---
+
 # Citations
 
 1. https://developers.facebook.com/docs/whatsapp/pricing/ — Meta, WhatsApp Business Platform pricing (per-message model effective 1 Jul 2025; free service window; utility-in-window free; volume tiers; notice periods).

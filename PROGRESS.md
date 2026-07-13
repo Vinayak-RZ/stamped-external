@@ -4,37 +4,37 @@
 
 ## Current phase
 
-**Phase 0** — Nawab docs (in progress)
+**Complete** — P0 platform + consumer scaffolds through Phase N
 
-## Completed
+## Completed phases
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| Prerequisite | done | nawab-plans skill (`41577a4` on `cursor/nawab-plans-setup-272a`) |
-| Phase 0 commit 1 | done | IMPLEMENTATION_PLAN.md (nawab v3) |
+| 0 | done | IMPLEMENTATION_PLAN, PROGRESS, DECISIONS |
+| A | done | Specs, ADR-012/013/014, contracts 0.6.0 |
+| B | done | stamped-l3-core scaffold (9 tests) |
+| C | done | rulepacks v0.1 + eval CLI |
+| D | done | stamped-l4 template-fast-path (22 eval tasks) |
+| P2 | done | TimesFM shadow stub; no promotion |
+| N | done | validate.sh green |
 
-## Active workstream
+## Blockers cleared
 
-- **WS-0** Nawab docs — PROGRESS stub, DECISIONS stub
+| Item | Status |
+|------|--------|
+| Finding contract frozen | done — contracts 0.6.0 |
+| Pilot golden windows | done — synthetic v0 + golden_md_spike |
+| L2 query API | workaround — FixtureL2Client in l3-core |
 
-## Blockers
+## Validation
 
-| Item | Status | Blocks |
-|------|--------|--------|
-| L2 query API | pending | Phase B prod path (fixture workaround accepted) |
-| Finding contract frozen | pending | Phase B handlers |
-| Pilot golden windows | pending | Phase C eval |
+```bash
+./scripts/validate.sh
+```
 
-## Next commits (Phase 0)
+## Next (P1 — out of P0 scope)
 
-1. ~~`docs: add IMPLEMENTATION_PLAN nawab v3 master plan`~~
-2. `docs: add PROGRESS.md stub`
-3. `docs: add DECISIONS.md stub for ADR-012–014`
-
-## Phase gates
-
-| Phase | Exit gate | Status |
-|-------|-----------|--------|
-| 0 | Plan approved + docs committed | in progress |
-| A | `./scripts/contract-check.sh` | pending |
-| B | MD Finding from fixture L2 | pending |
+- Live L2 query API integration
+- LangGraph full agent lane
+- Forging/auto rulepacks
+- TimesFM promotion re-eval with pilot data

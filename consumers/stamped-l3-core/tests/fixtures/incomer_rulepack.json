@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "pack_id": "incomer",
+  "engines": {
+    "md_overlap": {
+      "cmd_kva": 900.0,
+      "baseline_band": [800.0, 850.0],
+      "md_rate_inr_per_kva": 350.0
+    },
+    "pf_slab_breach": {
+      "pf_threshold": 0.90
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/prescription.v1.json",
+  "title": "Prescription",
+  "description": "L4 → L5 actionable prescription. See technical/02-technical-architecture.md §5.3.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "org_id",
+    "plant_id",
+    "status",
+    "priority",
+    "what",
+    "why",
+    "who",
+    "effort",
+    "when",
+    "impact",
+    "waste_category",
+    "finding_refs",
+    "evidence_refs",
+    "mv_plan",
+    "dedupe_key"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "const": "1.0.0"
+    },
+    "id": { "type": "string", "minLength": 1 },
+    "org_id": { "type": "string", "minLength": 1 },
+    "plant_id": { "type": "string", "minLength": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["open", "in_progress", "done", "deferred", "rejected", "blocked_incomplete"]
+    },
+    "priority": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "what": { "type": "string", "minLength": 1 },
+    "why": { "type": "string", "minLength": 1 },
+    "who": { "type": "string", "minLength": 1 },
+    "effort": { "type": "string", "minLength": 1 },
+    "when": { "type": "string", "minLength": 1 },
+    "template_id": {
+      "type": "string",
+      "description": "Approved action template ID when template-fast-path used"
+    },
+    "impact": {
+      "type": "object",
+      "required": ["inr_monthly", "kwh_monthly", "tco2e_monthly", "confidence_interval"],
+      "properties": {
+        "inr_monthly": { "type": "number", "minimum": 0 },
+        "kwh_monthly": { "type": "number", "minimum": 0 },
+        "tco2e_monthly": { "type": "number", "minimum": 0 },
+        "confidence_interval": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "additionalProperties": false
+    },
+    "waste_category": { "type": "integer", "minimum": 1, "maximum": 6 },
+    "finding_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "sustainability_tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "mv_plan": {
+      "type": "object",
+      "required": ["method", "baseline_id", "verification_window"],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["option_a", "option_b", "option_c", "option_d"]
+        },
+        "baseline_id": { "type": "string" },
+        "measurement_boundary": { "type": "string" },
+        "verification_window": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "agent_version": { "type": "string" },
+        "prompt_version": { "type": "string" },
+        "lane": { "type": "string", "enum": ["template_fast_path", "langgraph"] },
+        "rule_versions": { "type": "array", "items": { "type": "string" } },
+        "model_versions": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "first_recommended_at": { "type": "string", "format": "date-time" },
+    "implemented_at": { "type": ["string", "null"], "format": "date-time" },
+    "verified_at": { "type": ["string", "null"], "format": "date-time" },
+    "dedupe_key": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

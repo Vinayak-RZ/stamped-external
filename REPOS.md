@@ -8,7 +8,9 @@ Consumer repos mount this platform pack as a git submodule at `external/`.
 | connectors-cloud | `Vinayak-RZ/connectors-cloud` | L1 cloud | `external/` | `v2026.07.12` |
 | connectors-bill | `Vinayak-RZ/connectors-bill` | L1 bill | `external/` | `v2026.07.12` |
 | stamped-l2 | `Vinayak-RZ/universal-repositary` | L2 | `external/` | `v2026.07.12` |
-| stamped-l3 | `Vinayak-RZ/stamped-l3` (planned) | L3 | `external/` | — |
+| stamped-l3-core | `Vinayak-RZ/stamped-l3-core` (planned) | L3 engine | `external/` | — |
+| stamped-l3-rulepacks | `Vinayak-RZ/stamped-l3-rulepacks` (planned) | L3 artifacts | `external/` | — |
+| stamped-l3-eval | `Vinayak-RZ/stamped-l3-eval` (planned) | L3 eval | `external/` | — |
 | stamped-l4 | `Vinayak-RZ/stamped-l4` (planned) | L4 | `external/` | — |
 | stamped-l5 | `Vinayak-RZ/stamped-l5` (planned) | L5 | `external/` | — |
 | stamped-l6 | `Vinayak-RZ/stamped-l6` (planned) | L6 | `external/` | — |

@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "finding_id": "f-2026-07-09-0011",
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "category": "pf_slab_breach",
+  "waste_category": 1,
+  "assets": ["incomer_1", "apfc_bank_1"],
+  "evidence": {
+    "metric": "power_factor",
+    "baseline_value": 0.95,
+    "actual_value": 0.88,
+    "window": "2026-06-20T00:00:00Z/2026-06-30T00:00:00Z",
+    "baseline_id": "bl-pf-2026Q2",
+    "supporting_tags": ["incomer_1/power_factor"],
+    "rule_version": "1.0.0"
+  },
+  "confidence": 0.91,
+  "estimated_monthly_kwh": 0,
+  "estimated_monthly_inr": 18200,
+  "inr_decomposition": {
+    "bill_line": "pf_penalty",
+    "rate_ref": "tariff-jvvnl-ht1-2026"
+  },
+  "urgency": "medium",
+  "engine": "rules.pf_slab_breach",
+  "engine_version": "1.0.0",
+  "rule_or_model_ref": "rulepack://incomer/1.0.0#pf_slab_breach",
+  "dedupe_key": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+}

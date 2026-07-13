@@ -1,0 +1,14 @@
+{
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "asset_id": "incomer_1",
+  "metric": "apparent_power_kva",
+  "granularity": "15min",
+  "points": [
+    {"ts": "2026-06-15T06:00:00Z", "value": 810.0, "quality": 0},
+    {"ts": "2026-06-15T06:15:00Z", "value": 830.0, "quality": 0},
+    {"ts": "2026-06-15T06:30:00Z", "value": 945.0, "quality": 0},
+    {"ts": "2026-06-15T06:45:00Z", "value": 920.0, "quality": 0},
+    {"ts": "2026-06-15T07:00:00Z", "value": 815.0, "quality": 0}
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "rulepack": "incomer/1.0.0",
+  "rule": "md_overlap",
+  "input_window": {
+    "plant_id": "plant_ghaziabad_1",
+    "asset": "incomer_1",
+    "window": "2026-06-15T06:00:00Z/2026-06-15T07:00:00Z",
+    "measurements": [
+      {"ts": "2026-06-15T06:15:00Z", "metric": "apparent_power_kva", "value": 820.0},
+      {"ts": "2026-06-15T06:30:00Z", "metric": "apparent_power_kva", "value": 945.0},
+      {"ts": "2026-06-15T06:45:00Z", "metric": "apparent_power_kva", "value": 910.0}
+    ]
+  },
+  "expected_finding": {
+    "category": "md_overlap",
+    "waste_category": 1,
+    "engine": "rules.md_overlap",
+    "rule_or_model_ref": "rulepack://incomer/1.0.0#md_overlap"
+  }
+}

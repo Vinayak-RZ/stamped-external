@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "entry_id": "le-2026-09-01-0002",
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "prescription_id": "rx-2026-07-08-0031",
+  "entry_type": "opportunity_cost",
+  "period_start": "2026-07-08T07:15:00Z",
+  "period_end": "2026-08-01T00:00:00Z",
+  "potential_kwh": 4200,
+  "realised_kwh": 0,
+  "potential_inr": 31200,
+  "realised_inr": 21840,
+  "avoided_tco2e": 0,
+  "mv_method": "modeled_counterfactual",
+  "baseline_id": "bl-incomer-2026Q2",
+  "bill_line_refs": [],
+  "verification_status": "modeled",
+  "modeled_reason": "delay_cost: implemented_at > first_recommended_at",
+  "delay_days": 23,
+  "dedupe_key": "sha256:d4e5f6789012345678901234567890abcdef1234567890abcdef1234567890ab"
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "id": "rx-2026-07-08-0031",
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "status": "open",
+  "priority": 2,
+  "what": "Stagger furnace preheat start by 8 minutes relative to line ramp on Monday 06:55 shift start.",
+  "why": "Incomer MD spike 945 kVA vs 820 kVA baseline — co-start pattern furnace+line detected in attribution window.",
+  "who": "electrical_supervisor",
+  "effort": "low_schedule_change",
+  "when": "next_monday_shift_start",
+  "template_id": "md_overlap.stagger_costart.v1",
+  "impact": {
+    "inr_monthly": 31200,
+    "kwh_monthly": 4200,
+    "tco2e_monthly": 3.1,
+    "confidence_interval": [24000, 38000]
+  },
+  "waste_category": 1,
+  "finding_refs": ["f-2026-07-08-0042"],
+  "evidence_refs": [
+    "tag:incomer_1/apparent_power_kva?window=2026-06-15T06:00:00Z/2026-06-15T07:00:00Z",
+    "baseline:bl-incomer-2026Q2",
+    "tariff:jvvnl-ht1-2026/demand-line"
+  ],
+  "sustainability_tags": ["scope2_grid_reduction"],
+  "mv_plan": {
+    "method": "option_c",
+    "baseline_id": "bl-incomer-2026Q2",
+    "measurement_boundary": "whole_plant_incomer",
+    "verification_window": "2026-08-01/2026-09-01"
+  },
+  "provenance": {
+    "agent_version": "l4-template-1.0.0",
+    "lane": "template_fast_path",
+    "rule_versions": ["rulepack://incomer/1.0.0#md_overlap"]
+  },
+  "first_recommended_at": "2026-07-08T07:15:00Z",
+  "implemented_at": null,
+  "verified_at": null,
+  "dedupe_key": "sha256:b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef12345678"
+}
