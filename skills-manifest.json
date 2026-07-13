@@ -1,6 +1,6 @@
 {
   "version": 6,
-  "description": "Coding Cursor config — 35 skills, 21 rules, agent-patterns MCP, ponytail + Spec Kit, learn-while-building, auto conventional commits",
+  "description": "Coding Cursor config — 36 skills, 21 rules, agent-patterns MCP, ponytail + Spec Kit + nawab-plans, learn-while-building, auto conventional commits",
   "mcp": {
     "default_server": "agent-patterns",
     "url": "https://mcp.agentpatternscatalog.org/mcp",
@@ -15,8 +15,11 @@
     "rule": "speckit"
   },
   "preinstalled": {
-    "count": 35,
+    "count": 36,
     "categories": {
+      "planning": [
+        "nawab-plans"
+      ],
       "minimal-code": [
         "ponytail",
         "ponytail-review",
