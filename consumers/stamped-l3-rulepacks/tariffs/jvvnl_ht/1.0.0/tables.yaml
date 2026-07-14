@@ -1,0 +1,26 @@
+discom: jvvnl
+connection: ht
+version: 1.0.0
+billing_demand_floor_pct: 0.75
+energy_rate_inr_per_kwh: 7.5
+md_rate_inr_per_kva: 350
+pf_slabs:
+- pf_min: 0.95
+  pf_max: 1.0
+  rebate_pct: 0.5
+- pf_min: 0.9
+  pf_max: 0.95
+  surcharge_pct: 0.0
+- pf_min: 0.0
+  pf_max: 0.9
+  surcharge_pct: 1.0
+tod_windows:
+- name: peak
+  start: '17:00'
+  end: '22:00'
+  rate_delta_inr_per_kwh: 1.5
+- name: off_peak
+  start: '22:00'
+  end: 06:00
+  rate_delta_inr_per_kwh: -0.5
+kvah_billing: false

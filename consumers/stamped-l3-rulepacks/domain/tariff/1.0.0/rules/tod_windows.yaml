@@ -1,0 +1,17 @@
+id: tod_windows
+category: tod_exposure
+engine: rules.tod_windows
+version: 1.0.0
+waste_category: 1
+formula_ref: TOD peak/off-peak windows and rate deltas
+defaults:
+  windows:
+  - name: peak
+    start: '17:00'
+    end: '22:00'
+    rate_delta_inr_per_kwh: 1.5
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

@@ -1,0 +1,14 @@
+id: cmd_oversized
+category: cmd_oversized
+engine: rules.cmd_oversized
+version: 1.0.0
+waste_category: 1
+formula_ref: recommend CD ~= MD_hist_P95 + margin_kva
+defaults:
+  p_quantile: 0.95
+  margin_kva: 50
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

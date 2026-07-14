@@ -1,0 +1,13 @@
+id: billing_demand_floor
+category: cmd_oversized
+engine: rules.billing_demand_floor
+version: 1.0.0
+waste_category: 1
+formula_ref: billing_demand = max(MD_recorded, floor_pct * CD)
+defaults:
+  floor_pct: 0.75
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

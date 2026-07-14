@@ -1,0 +1,13 @@
+version: 1.0.0
+rulepack: tariff
+description: "Domain pack tariff \u2014 physics/threshold stubs"
+rules:
+- id: billing_demand_floor
+  file: rules/billing_demand_floor.yaml
+  category: cmd_oversized
+- id: pf_slab_table
+  file: rules/pf_slab_table.yaml
+  category: pf_slab_breach
+- id: tod_windows
+  file: rules/tod_windows.yaml
+  category: tod_exposure

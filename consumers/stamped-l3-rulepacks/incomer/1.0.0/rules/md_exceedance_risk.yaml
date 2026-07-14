@@ -1,0 +1,14 @@
+id: md_exceedance_risk
+category: md_exceedance_risk
+engine: rules.md_exceedance_risk
+version: 1.0.0
+waste_category: 1
+formula_ref: P90 remaining-day peak vs CMD (threshold gate; forecast in core)
+defaults:
+  cmd_margin_kva: 20
+  min_confidence: 0.5
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

@@ -1,0 +1,7 @@
+version: 1.0.0
+rulepack: tariff_jvvnl_ht
+description: JVVNL HT tariff tables stub
+rules:
+- id: tables
+  file: tables.yaml
+  category: tod_exposure
