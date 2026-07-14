@@ -24,3 +24,4 @@
 | Rulepacks catalog axes | Domain × vertical × tariff (see `consumers/stamped-l3-rulepacks/DECISIONS.md`) |
 | Optimization methods | First-class rule IDs in furnace / idle / load_management packs |
 | Eval Lab UI | Internal Next.js lab in `stamped-l3-eval` over RunArtifact + optional CORE_LAB_URL |
+| L3 decision defense brief | Synthesis doc for arguing rules/ML/LLM/FM placement — [`technical/layers/L3-decision-defense-brief.md`](technical/layers/L3-decision-defense-brief.md) |
