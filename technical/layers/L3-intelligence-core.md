@@ -12,7 +12,7 @@ timestamp: "2026-07-09T00:00:00Z"
 
 > **Honesty convention:** `[~]` approximate / benchmark-derived · `[!]` evolving — verify before customer-facing claims.
 >
-> **Siblings:** [L2 — Universal Repository](L2-universal-repository.md) · [L4 — Knowledge & Reasoning](L4-knowledge-and-reasoning.md) · [Evaluation & Quality](../cross-cutting/04-evaluation-and-quality.md) · [Technical architecture](../02-technical-architecture.md) · [Master architecture v1](/core-product/Stamped_Technical_Architecture_v1.md)
+> **Siblings:** [L2 — Universal Repository](L2-universal-repository.md) · [L4 — Knowledge & Reasoning](L4-knowledge-and-reasoning.md) · [Evaluation & Quality](../cross-cutting/04-evaluation-and-quality.md) · [Technical architecture v2](../02-technical-architecture.md) (canonical) · Finding contract: [`contracts/schemas/finding.json`](../../contracts/schemas/finding.json)
 
 L3 is the **numeric intelligence layer** of the Stamped stack: it converts normalised telemetry, bills, and production context from [L2](L2-universal-repository.md) into **structured, category-tagged finding objects** that [L4](L4-knowledge-and-reasoning.md) turns into prescriptions. L3 never emits prose. It emits numbers, evidence windows, confidence, and waste-category tags.
 
@@ -27,7 +27,7 @@ Design constraints that shaped every recommendation below:
 
 ## 1. Role in the 15–20% target
 
-The 15–20% bill-reduction claim is **not one model's output** — it is the sum of closed prescriptions across six waste categories, each served by a specific combination of L3 engines (per [technical architecture §3.1](/core-product/Stamped_Technical_Architecture_v1.md)).
+The 15–20% bill-reduction claim is **not one model's output** — it is the sum of closed prescriptions across six waste categories, each served by a specific combination of L3 engines (per [technical architecture §3.1](../02-technical-architecture.md)).
 
 ### 1.1 Engines → waste categories → savings bands
 
@@ -44,7 +44,7 @@ Three structural implications for L3:
 
 1. **No engine needs to be heroic.** Each category needs a detector good enough to find the top 2–3 recurring instances per plant per month with high precision. A 3% category closed reliably beats a 6% category detected at 40% precision that destroys trust.
 2. **Precision > recall, everywhere.** The scarce resource is plant-side attention (supervisor actions per week). A false prescription costs more than a missed one — it burns the credibility that closure depends on (closure-rate target ≥60% on high-priority Rx `[!]`).
-3. **The bill is the ground truth.** Every engine's ₹ estimate must decompose onto a DISCOM bill line (energy, demand, PF penalty, TOD) so [L5 M&V](/core-product/Stamped_Technical_Architecture_v1.md) can reconcile it. This is why the tariff engine is deterministic and why baselines must be M&V-grade, not merely predictive.
+3. **The bill is the ground truth.** Every engine's ₹ estimate must decompose onto a DISCOM bill line (energy, demand, PF penalty, TOD) so [L5 M&V](L5-closure-and-verification.md) can reconcile it. This is why the tariff engine is deterministic and why baselines must be M&V-grade, not merely predictive.
 
 ### 1.2 What L3 must NOT do
 
@@ -352,7 +352,7 @@ This is the mandatory protocol. It has five parts: per-engine metrics & targets,
 
 ## 6. Build phasing P0–P3
 
-Aligned to the master architecture's phases (§15) and the savings stack (§3.2).
+Aligned to the [technical architecture](../02-technical-architecture.md) build phases and the savings stack (§3.2 / architecture §3.1).
 
 | Phase | L3 scope | Model/rules deliverables | Eval deliverables |
 |---|---|---|---|
