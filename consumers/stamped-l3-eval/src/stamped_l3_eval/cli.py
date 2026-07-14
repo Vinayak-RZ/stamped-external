@@ -1,11 +1,19 @@
-"""stamped-l3-eval CLI — corpus list + backtest run (skeleton)."""
+"""stamped-l3-eval CLI — corpus, backtest, artifact, lab-run."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
+
+from stamped_l3_eval.artifact import (
+    GOLDEN_DIR,
+    artifact_for_window,
+    load_artifact,
+    validate_artifact,
+)
 
 
 def _default_corpus() -> Path:
@@ -29,6 +37,85 @@ def cmd_backtest_run(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_artifact_show(args: argparse.Namespace) -> int:
+    data = load_artifact(args.path)
+    emitted = sum(1 for d in data["detections"] if d["status"] == "emitted")
+    suppressed = sum(1 for d in data["detections"] if d["status"] == "suppressed")
+    shadow = sum(1 for d in data["detections"] if d["status"] == "shadow_only")
+    print(f"run_id={data['run_id']} window={data['window_id']}")
+    print(f"detections: emitted={emitted} suppressed={suppressed} shadow={shadow}")
+    for d in data["detections"]:
+        print(f"  [{d['status']}] {d['detector_kind']} {d['rule_or_model_ref']}")
+    return 0
+
+
+def cmd_lab_run(args: argparse.Namespace) -> int:
+    """Produce or echo a RunArtifact for a corpus window.
+
+    ponytail: when --from-core path missing, copy golden fixture / synthesize stub.
+    Real engines stay in stamped-l3-core lab export (Phase D).
+    """
+    window_id = args.window
+    out_dir = Path(args.out) if args.out else GOLDEN_DIR
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"run_{window_id}.json"
+
+    if args.from_core:
+        data = load_artifact(args.from_core)
+        out_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+        print(f"wrote {out_path} (from core export)")
+        return 0
+
+    existing = artifact_for_window(window_id)
+    if existing and not args.force_stub:
+        data = load_artifact(existing)
+        print(f"using golden {existing}")
+        print(f"detections={len(data['detections'])}")
+        return 0
+
+    # Minimal stub when no golden exists
+    corpus = json.loads(Path(args.corpus).read_text(encoding="utf-8"))
+    win = next((w for w in corpus["windows"] if w["window_id"] == window_id), None)
+    if win is None:
+        print(f"unknown window: {window_id}", file=sys.stderr)
+        return 1
+    stub = {
+        "schema_version": "1.0.0",
+        "run_id": f"run-{window_id}-stub",
+        "window_id": window_id,
+        "plant_id": win["plant_id"],
+        "started_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "core_version": "0.0.0-stub",
+        "rulepack_pins": [{"pack": "incomer", "version": "1.0.0"}],
+        "inputs": {"source": "stub", "fixture_ref": win.get("rulepack_ref", "")},
+        "detections": [
+            {
+                "detection_id": f"d-stub-{window_id}",
+                "detector_kind": "engine",
+                "rule_or_model_ref": win.get("rulepack_ref", "rulepack://incomer/1.0.0#unknown"),
+                "category": win["category"],
+                "status": "emitted",
+                "finding": None,
+                "suppressions_checked": [],
+                "scores": None,
+                "logs": ["stub lab-run — replace via core lab export"],
+            }
+        ],
+        "timeline": [
+            {
+                "ts": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "step": "stub",
+                "detail": "no core export",
+            }
+        ],
+        "errors": [],
+    }
+    validate_artifact(stub)
+    out_path.write_text(json.dumps(stub, indent=2) + "\n", encoding="utf-8")
+    print(f"wrote stub {out_path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="stamped-l3-eval")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -45,6 +132,20 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--corpus", type=Path, default=_default_corpus())
     run_parser.add_argument("--shadow", choices=["timesfm", "none"], default="none")
     run_parser.set_defaults(func=cmd_backtest_run)
+
+    artifact = sub.add_parser("artifact", help="RunArtifact commands")
+    artifact_sub = artifact.add_subparsers(dest="artifact_cmd", required=True)
+    show = artifact_sub.add_parser("show", help="Show and validate an artifact")
+    show.add_argument("--path", type=Path, required=True)
+    show.set_defaults(func=cmd_artifact_show)
+
+    lab = sub.add_parser("lab-run", help="Produce RunArtifact for a window")
+    lab.add_argument("--window", required=True)
+    lab.add_argument("--corpus", type=Path, default=_default_corpus())
+    lab.add_argument("--out", type=Path, default=None)
+    lab.add_argument("--from-core", type=Path, default=None)
+    lab.add_argument("--force-stub", action="store_true")
+    lab.set_defaults(func=cmd_lab_run)
 
     return parser
 
