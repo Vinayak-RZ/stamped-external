@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/run-artifact.v1.json",
+  "title": "RunArtifact",
+  "description": "Offline/live lab payload: every engine/rule/ML candidate for a window.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "window_id",
+    "plant_id",
+    "started_at",
+    "core_version",
+    "rulepack_pins",
+    "inputs",
+    "detections",
+    "timeline",
+    "errors"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "window_id": { "type": "string", "minLength": 1 },
+    "plant_id": { "type": "string", "minLength": 1 },
+    "started_at": { "type": "string", "format": "date-time" },
+    "core_version": { "type": "string", "minLength": 1 },
+    "rulepack_pins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pack", "version"],
+        "properties": {
+          "pack": { "type": "string" },
+          "version": { "type": "string" }
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "required": ["source"],
+      "properties": {
+        "source": { "type": "string" },
+        "fixture_ref": { "type": "string" },
+        "measurement_summary": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "detections": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/detection" }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ts", "step", "detail"],
+        "properties": {
+          "ts": { "type": "string" },
+          "step": { "type": "string" },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "detection": {
+      "type": "object",
+      "required": [
+        "detection_id",
+        "detector_kind",
+        "rule_or_model_ref",
+        "category",
+        "status",
+        "suppressions_checked",
+        "logs"
+      ],
+      "properties": {
+        "detection_id": { "type": "string" },
+        "detector_kind": {
+          "type": "string",
+          "enum": ["engine", "rule", "ml_shadow"]
+        },
+        "rule_or_model_ref": { "type": "string" },
+        "category": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["emitted", "suppressed", "shadow_only"]
+        },
+        "finding": { "type": ["object", "null"] },
+        "suppressions_checked": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "scores": { "type": ["object", "null"] },
+        "logs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

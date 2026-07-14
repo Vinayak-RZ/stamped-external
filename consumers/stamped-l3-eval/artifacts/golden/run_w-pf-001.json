@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "run-w-pf-001-001",
+  "window_id": "w-pf-001",
+  "plant_id": "plant_ghaziabad_1",
+  "started_at": "2026-06-01T00:00:00Z",
+  "core_version": "0.1.0",
+  "rulepack_pins": [
+    { "pack": "incomer", "version": "1.0.0" },
+    { "pack": "tariff", "version": "1.0.0" }
+  ],
+  "inputs": {
+    "source": "fixture",
+    "fixture_ref": "tests/fixtures/pf_month.json",
+    "measurement_summary": { "avg_pf": 0.87 }
+  },
+  "detections": [
+    {
+      "detection_id": "d-pf-emit-1",
+      "detector_kind": "engine",
+      "rule_or_model_ref": "rulepack://incomer/1.0.0#pf_slab",
+      "category": "pf_slab_breach",
+      "status": "emitted",
+      "finding": {
+        "finding_id": "f-pf-001",
+        "category": "pf_slab_breach",
+        "estimated_monthly_inr": 18500
+      },
+      "suppressions_checked": ["data_quality"],
+      "scores": { "pf": 0.87, "slab": 0.9 },
+      "logs": ["PF below 0.90 slab for 6h sustained"]
+    },
+    {
+      "detection_id": "d-pf-rule-1",
+      "detector_kind": "rule",
+      "rule_or_model_ref": "rulepack://load_management/1.0.0#pf_kvAr_correct",
+      "category": "pf_slab_breach",
+      "status": "emitted",
+      "finding": {
+        "finding_id": "f-pf-kvar-001",
+        "category": "pf_slab_breach",
+        "estimated_monthly_inr": 18500
+      },
+      "suppressions_checked": ["data_quality"],
+      "scores": { "kvar_needed": 42.5 },
+      "logs": ["kVAr_needed = kW*(tanφ1-tanφ2)"]
+    }
+  ],
+  "timeline": [
+    { "ts": "2026-06-01T00:00:01Z", "step": "engine.pf", "detail": "emit pf_slab" },
+    { "ts": "2026-06-01T00:00:02Z", "step": "rule.pf_kvAr_correct", "detail": "emit" }
+  ],
+  "errors": []
+}
