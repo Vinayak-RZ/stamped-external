@@ -177,7 +177,18 @@ TOWT was introduced by Price ([LBNL-3713E, 2010](https://eta-publications.lbl.go
 
 **a) Event/ramp detection.** Detect load steps/ramps per feeder tag: derivative thresholding on smoothed kW, CUSUM-style step detection, or changepoint methods (e.g. PELT via `ruptures`). Output: startup-event catalogue (asset, t₀, ramp magnitude, duration) in the L2 feature store.
 
-**b) Co-start / graph analysis.** For an incomer MD spike at time T: traverse the energy graph for assets on the shared bus, select events within ±3 min of T, rank by ramp magnitude × electrical proximity. Cross-correlation of feeder vs incomer deltas over the window ranks partial contributors. A recurring co-start pair (e.g. furnace preheat ∩ line ramp every Monday 06:55) is detected by frequency analysis of the event catalogue — this recurrence is what turns a post-mortem into a **schedule prescription**.
+**b) Co-start / graph analysis.** For an incomer MD spike at time T: traverse the energy graph for assets on the shared bus, select events within ±3 min of T, rank by **score = ramp_kw × proximity(asset)**. Cross-correlation of feeder vs incomer deltas over the window ranks partial contributors when scores are close. A recurring co-start pair (e.g. furnace preheat ∩ line ramp every Monday 06:55) is detected by frequency analysis of the event catalogue — this recurrence is what turns a post-mortem into a **schedule prescription**.
+
+**Electrical proximity (locked definition for §5.2 attribution gates):**
+
+| Symbol | Definition |
+| --- | --- |
+| `hops(asset)` | Shortest undirected path length in the L2 energy graph from `asset` to the spike meter (incomer), following `feeds` / `shares_electrical_bus` edges; max traverse depth 4 |
+| `proximity(asset)` | `1 / (1 + hops(asset))` — same-bus (`shares_electrical_bus`, hops = 0 or 1 via bus node) scores higher than feeder two hops away |
+| `ramp_kw` | Measured startup ramp magnitude (kW) from the startup-event catalogue |
+| `score` | `ramp_kw × proximity(asset)` — rank descending; ties broken by higher `|corr(feeder_Δ, incomer_Δ)|` in the ±3 min window |
+
+Shared-bus boolean alone is **not** used as the proximity term (too coarse for multi-feeder plants). Asset-class weights are deferred P2 — P0/P1 use graph hops only so the formula stays auditable.
 
 **c) NILM / disaggregation — researched, and ruled out as a core engine.** Industrial NILM is an active research field — a 2024 systematic review in *Renewable & Sustainable Energy Reviews* (the first since 2015) catalogues the state of the art and its open problems: industrial loads are continuous and highly variable, events overlap, noise is high, multi-phase and reactive signals are needed, and **labelled industrial datasets are scarce** [12]. Current SOTA is transformer/CNN-LSTM disaggregation validated on single machines in lab-like settings [12]; the standard toolkit [NILMTK](https://github.com/nilmtk/nilmtk) [21] is residential-centric (kettles and fridges, not 500 kW furnaces). Verdict: full NILM at an industrial incomer is a research project, not a product feature. Stamped's substitute is **feeder-level attribution** — the plant already has (or progressively adds) feeder meters, so attribution is a ranking problem over metered candidates plus SCADA state tags, which is tractable, explainable, and improves monotonically with Path A depth. NILM-lite techniques (signature matching of large distinctive loads at a 1-min incomer) may appear in P3 as a hint generator only `[!]`.
 
