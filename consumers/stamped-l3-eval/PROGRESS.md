@@ -8,7 +8,7 @@
 | C Next.js UI | complete |
 | D Core lab export | complete |
 | E Live attach | complete |
-| N Auth / validate / PR | in progress |
+| N Auth / validate / PR | complete |
 
 Branch: `cursor/l3-eval-lab-ui-272a`
 
