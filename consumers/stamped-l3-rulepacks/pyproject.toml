@@ -1,8 +1,12 @@
 [project]
 name = "stamped-l3-rulepacks"
-version = "1.0.0"
-description = "L3 semver rulepack artifacts (incomer MD/PF/TOD)"
+version = "0.2.0"
+description = "Stamped L3 industrial physics rulepack catalog"
 requires-python = ">=3.11"
+dependencies = [
+  "PyYAML>=6.0",
+  "jsonschema>=4.0",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
@@ -16,3 +20,4 @@ packages = []
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
