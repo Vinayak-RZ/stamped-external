@@ -43,23 +43,37 @@ L4 is deliberately **not** where intelligence lives. If a prescription is wrong 
 
 ### 2.1 Input contract — the finding object (from L3)
 
-L3 engines emit **structured finding objects, never prose** (architecture §7). L4 must accept:
+L3 engines emit **structured finding objects, never prose**. Canonical schema: [`contracts/schemas/finding.json`](../../contracts/schemas/finding.json) · [architecture §5.2](../02-technical-architecture.md#52-l3--l4-finding). L4 must accept:
 
 ```json
 {
+  "schema_version": "1.0.0",
   "finding_id": "f-2026-07-08-0042",
-  "category": "md_overlap | compressor_sp_drift | furnace_holding | idle_load | pf_slab | ...",
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "category": "compressor_sp_drift",
+  "waste_category": 4,
   "assets": ["compressor-2"],
-  "evidence": { "metric": "specific_power_kw_per_nm3min", "baseline": 0.82, "actual": 0.97, "window": "2026-06-15/2026-07-06" },
+  "evidence": {
+    "metric": "specific_power_kw_per_nm3min",
+    "baseline_value": 0.82,
+    "actual_value": 0.97,
+    "window": "2026-06-15T00:00:00Z/2026-07-06T00:00:00Z"
+  },
   "confidence": 0.91,
   "estimated_monthly_kwh": 12000,
   "estimated_monthly_inr": 84000,
-  "urgency": "high"
+  "urgency": "high",
+  "engine": "rules.compressor_sp_drift",
+  "engine_version": "1.4.2",
+  "rule_or_model_ref": "rulepack://compressor/1.4.2#sp_drift",
+  "dedupe_key": "sha256:a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
 }
 ```
 
 Contract obligations on L4:
 
+- **Schema gate.** Reject findings that fail `finding.json` (wrong field names like `baseline`/`actual`, missing `plant_id`, etc.) — dead-letter, never invent.
 - **Category-gated intake.** Generic "energy is high" findings are rejected at the boundary — only category-tagged findings from the six-category taxonomy become prescriptions (architecture §3.1 rule). The waste classifier in L3 guarantees the tag; L4 validates it.
 - **Multi-finding synthesis.** One prescription may consume several findings (e.g. MD spike + attribution result + tariff exposure). L4 groups findings by root cause before drafting, and the deduplicator collapses same-cause/multiple-symptom clusters.
 - **Numbers are read-only.** `estimated_monthly_inr` and `estimated_monthly_kwh` from L3 are *estimates*; the L4 impact calculator recomputes them against the correct tariff line. The agent may not adjust either figure by generation — only by calling the calculator tool.
@@ -114,19 +128,29 @@ Input (from L3, compressor rule pack + anomaly engine):
 
 ```json
 {
+  "schema_version": "1.0.0",
   "finding_id": "f-2026-07-06-0117",
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
   "category": "compressor_sp_drift",
+  "waste_category": 4,
   "assets": ["compressor-2"],
   "evidence": {
     "metric": "specific_power_kw_per_nm3min",
-    "baseline": 0.82, "actual": 0.97,
-    "window": "2026-06-15/2026-07-06",
-    "pressure_band": "stable_6.8_7.1_bar"
+    "baseline_value": 0.82,
+    "actual_value": 0.97,
+    "window": "2026-06-15T00:00:00Z/2026-07-06T00:00:00Z",
+    "baseline_id": "bl-c2-sp-2026Q2",
+    "supporting_tags": ["compressor-2/line_pressure"]
   },
   "confidence": 0.91,
   "estimated_monthly_kwh": 12000,
   "estimated_monthly_inr": 84000,
-  "urgency": "high"
+  "urgency": "high",
+  "engine": "rules.compressor_sp_drift",
+  "engine_version": "1.4.2",
+  "rule_or_model_ref": "rulepack://compressor/1.4.2#sp_drift",
+  "dedupe_key": "sha256:b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef12345678"
 }
 ```
 
