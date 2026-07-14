@@ -1,0 +1,16 @@
+version: 1.0.0
+rulepack: idle
+description: "Domain pack idle \u2014 physics/threshold stubs"
+rules:
+- id: idle_machine_kw
+  file: rules/idle_machine_kw.yaml
+  category: idle_load
+- id: phantom_nonprod
+  file: rules/phantom_nonprod.yaml
+  category: idle_load
+- id: offshift_baseload_drift
+  file: rules/offshift_baseload_drift.yaml
+  category: idle_load
+- id: idle_cnc_spindle
+  file: rules/idle_cnc_spindle.yaml
+  category: idle_load

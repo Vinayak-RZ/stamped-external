@@ -1,0 +1,8 @@
+vertical: fmcg_food
+asset_classes:
+- refrigeration
+- compressor
+- line
+priors:
+  cop_drift_pct: 12
+  idle_kw_floor: 5

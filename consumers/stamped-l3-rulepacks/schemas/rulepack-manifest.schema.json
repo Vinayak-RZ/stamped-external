@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/rulepack-manifest.v1.json",
+  "title": "RulepackManifest",
+  "type": "object",
+  "required": ["version", "rulepack", "rules"],
+  "properties": {
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "rulepack": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "file", "category"],
+        "properties": {
+          "id": { "type": "string" },
+          "file": { "type": "string" },
+          "category": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

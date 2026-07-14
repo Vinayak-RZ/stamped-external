@@ -1,0 +1,14 @@
+id: demand_floor_exposure
+category: cmd_oversized
+engine: rules.demand_floor_exposure
+version: 1.0.0
+waste_category: 1
+formula_ref: when MD << floor_pct*CD, floor dominates bill
+defaults:
+  floor_pct: 0.75
+  underuse_ratio_max: 0.85
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

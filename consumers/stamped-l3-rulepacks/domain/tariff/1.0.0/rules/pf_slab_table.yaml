@@ -1,12 +1,14 @@
-id: pf_slab
+id: pf_slab_table
 category: pf_slab_breach
-engine: rules.pf_slab
+engine: rules.pf_slab_table
 version: 1.0.0
 waste_category: 1
-formula_ref: flag if PF < pf_slab for sustained minutes
+formula_ref: DISCOM PF rebate/surcharge slabs
 defaults:
-  pf_slab: 0.9
-  sustained_minutes: 30
+  slabs:
+  - pf_min: 0.0
+    pf_max: 0.9
+    surcharge_pct: 0.0
 suppressions:
 - startup_window
 - production_mix_change

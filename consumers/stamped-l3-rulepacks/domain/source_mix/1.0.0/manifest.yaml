@@ -1,0 +1,7 @@
+version: 1.0.0
+rulepack: source_mix
+description: "Domain pack source_mix \u2014 physics/threshold stubs"
+rules:
+- id: dispatch_gap
+  file: rules/dispatch_gap.yaml
+  category: dispatch_gap

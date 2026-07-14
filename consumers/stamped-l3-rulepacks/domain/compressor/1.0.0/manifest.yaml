@@ -1,0 +1,10 @@
+version: 1.0.0
+rulepack: compressor
+description: "Domain pack compressor \u2014 physics/threshold stubs"
+rules:
+- id: compressor_sp_drift
+  file: rules/compressor_sp_drift.yaml
+  category: compressor_sp_drift
+- id: compressor_unload_seq
+  file: rules/compressor_unload_seq.yaml
+  category: compressor_sp_drift

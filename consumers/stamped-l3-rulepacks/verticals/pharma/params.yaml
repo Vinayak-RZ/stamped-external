@@ -1,0 +1,8 @@
+vertical: pharma
+asset_classes:
+- ahu
+- chiller
+- compressor
+priors:
+  cop_drift_pct: 10
+  pf_slab: 0.95

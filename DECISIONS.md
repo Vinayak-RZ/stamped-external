@@ -21,3 +21,5 @@
 | P0 rulepack vertical | Incomer MD/PF/TOD |
 | L4 P0 | Template-fast-path only |
 | Consumer location | `consumers/` scaffolds (split to GitHub repos per REPOS.md) |
+| Rulepacks catalog axes | Domain × vertical × tariff (see `consumers/stamped-l3-rulepacks/DECISIONS.md`) |
+| Optimization methods | First-class rule IDs in furnace / idle / load_management packs |

@@ -1,0 +1,6 @@
+vertical: general_ht
+asset_classes:
+- incomer
+priors:
+  path: B
+  incomer_only: true

@@ -1,0 +1,14 @@
+id: idle_machine_kw
+category: idle_load
+engine: rules.idle_machine_kw
+version: 1.0.0
+waste_category: 3
+formula_ref: state=idle AND kW > idle_kw_floor for > N min
+defaults:
+  idle_kw_floor: 5
+  min_minutes: 15
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

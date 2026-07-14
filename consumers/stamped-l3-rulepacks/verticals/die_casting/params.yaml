@@ -1,0 +1,8 @@
+vertical: die_casting
+asset_classes:
+- furnace
+- die_cell
+- chiller
+priors:
+  holding_kw_floor: 70
+  cop_drift_pct: 12

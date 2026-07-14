@@ -1,12 +1,11 @@
-id: pf_slab
+id: pf_kvAr_correct
 category: pf_slab_breach
-engine: rules.pf_slab
+engine: rules.pf_kvAr_correct
 version: 1.0.0
 waste_category: 1
-formula_ref: flag if PF < pf_slab for sustained minutes
+formula_ref: kVAr_needed = kW * (tan(phi1) - tan(phi2))
 defaults:
-  pf_slab: 0.9
-  sustained_minutes: 30
+  target_pf: 0.95
 suppressions:
 - startup_window
 - production_mix_change

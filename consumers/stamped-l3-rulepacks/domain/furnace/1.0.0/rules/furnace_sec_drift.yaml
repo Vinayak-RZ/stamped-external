@@ -1,0 +1,13 @@
+id: furnace_sec_drift
+category: sec_drift
+engine: rules.furnace_sec_drift
+version: 1.0.0
+waste_category: 2
+formula_ref: kWh/ton above TOW-P SEC band at stable mix
+defaults:
+  sec_drift_pct: 10
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

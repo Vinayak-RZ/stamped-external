@@ -1,0 +1,13 @@
+{
+  "window_id": "golden_load_shift_tod",
+  "pack": "load_management",
+  "input_window": {
+    "asset_id": "asset_1",
+    "from": "2026-06-15T06:00:00Z",
+    "to": "2026-06-15T07:00:00Z"
+  },
+  "expected_finding": {
+    "category": "tod_exposure"
+  },
+  "expected_rule_id": "load_shift_tod"
+}

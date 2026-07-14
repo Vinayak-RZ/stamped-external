@@ -1,0 +1,15 @@
+id: stagger_costart
+category: md_overlap
+engine: rules.stagger_costart
+version: 1.0.0
+waste_category: 1
+formula_ref: time-shift startup by stagger_min; recompute 15/30-min peak kVA (core
+  simulator)
+defaults:
+  stagger_min: 8
+  window_minutes: 15
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

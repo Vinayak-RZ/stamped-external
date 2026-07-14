@@ -1,0 +1,7 @@
+version: 1.0.0
+rulepack: attribution
+description: "Domain pack attribution \u2014 physics/threshold stubs"
+rules:
+- id: costart_window
+  file: rules/costart_window.yaml
+  category: md_overlap

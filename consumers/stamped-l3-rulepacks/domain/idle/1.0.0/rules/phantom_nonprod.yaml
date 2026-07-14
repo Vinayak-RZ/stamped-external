@@ -1,0 +1,13 @@
+id: phantom_nonprod
+category: idle_load
+engine: rules.phantom_nonprod
+version: 1.0.0
+waste_category: 3
+formula_ref: feeder kW > baseload_floor while production=0 entire shift
+defaults:
+  baseload_floor_kw: 20
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

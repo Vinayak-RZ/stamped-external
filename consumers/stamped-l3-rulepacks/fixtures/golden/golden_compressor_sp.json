@@ -1,0 +1,13 @@
+{
+  "window_id": "golden_compressor_sp",
+  "pack": "compressor",
+  "input_window": {
+    "asset_id": "asset_1",
+    "from": "2026-06-15T06:00:00Z",
+    "to": "2026-06-15T07:00:00Z"
+  },
+  "expected_finding": {
+    "category": "compressor_sp_drift"
+  },
+  "expected_rule_id": "compressor_sp_drift"
+}

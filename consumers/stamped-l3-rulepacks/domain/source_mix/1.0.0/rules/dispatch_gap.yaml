@@ -1,0 +1,13 @@
+id: dispatch_gap
+category: dispatch_gap
+engine: rules.dispatch_gap
+version: 1.0.0
+waste_category: 6
+formula_ref: under-draw solar/WHR/DG in peak TOD vs availability
+defaults:
+  min_undrawn_kwh: 50
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

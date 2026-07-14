@@ -1,0 +1,9 @@
+# Required keys for DISCOM tariff tables loaded by core.
+required_keys:
+  - billing_demand_floor_pct
+  - pf_slabs
+  - tod_windows
+  - energy_rate_inr_per_kwh
+optional_keys:
+  - kvah_billing
+  - md_rate_inr_per_kva

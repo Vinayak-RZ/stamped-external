@@ -1,0 +1,9 @@
+vertical: forging
+asset_classes:
+- furnace
+- press
+- compressor
+priors:
+  holding_kw_floor: 80
+  idle_kw_floor: 8
+  sp_drift_pct: 12
