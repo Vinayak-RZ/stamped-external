@@ -1,9 +1,11 @@
 [project]
 name = "stamped-l3-eval"
-version = "0.1.0"
-description = "L3 golden corpus + rolling backtest CLI"
+version = "0.2.0"
+description = "L3 golden corpus, backtest CLI, and Internal Lab UI support"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+  "jsonschema>=4.0",
+]
 
 [project.scripts]
 stamped-l3-eval = "stamped_l3_eval.cli:main"

@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "run-w-md-001-001",
+  "window_id": "w-md-001",
+  "plant_id": "plant_ghaziabad_1",
+  "started_at": "2026-06-15T06:00:00Z",
+  "core_version": "0.1.0",
+  "rulepack_pins": [{ "pack": "incomer", "version": "1.0.0" }],
+  "inputs": {
+    "source": "fixture",
+    "fixture_ref": "tests/fixtures/md_window.json",
+    "measurement_summary": { "peak_kva": 1120, "points": 12 }
+  },
+  "detections": [
+    {
+      "detection_id": "d-md-emit-1",
+      "detector_kind": "engine",
+      "rule_or_model_ref": "rulepack://incomer/1.0.0#md_overlap",
+      "category": "md_overlap",
+      "status": "emitted",
+      "finding": {
+        "finding_id": "f-md-001",
+        "category": "md_overlap",
+        "estimated_monthly_inr": 77000
+      },
+      "suppressions_checked": ["startup_window", "maintenance_calendar"],
+      "scores": { "excess_kva": 220 },
+      "logs": ["peak 1120 kVA > band 850", "publish outbox"]
+    },
+    {
+      "detection_id": "d-md-supp-1",
+      "detector_kind": "rule",
+      "rule_or_model_ref": "rulepack://load_management/1.0.0#stagger_costart",
+      "category": "md_overlap",
+      "status": "suppressed",
+      "finding": null,
+      "suppressions_checked": ["startup_window"],
+      "scores": null,
+      "logs": ["suppressed: startup_window active 0–8 min"]
+    },
+    {
+      "detection_id": "d-md-shadow-1",
+      "detector_kind": "ml_shadow",
+      "rule_or_model_ref": "mlflow://timesfm/shadow#md_exceedance",
+      "category": "md_exceedance_risk",
+      "status": "shadow_only",
+      "finding": null,
+      "suppressions_checked": [],
+      "scores": { "p90_peak_kva": 980, "pinball": 0.12 },
+      "logs": ["TimesFM shadow — not gated (ADR-014)"]
+    }
+  ],
+  "timeline": [
+    { "ts": "2026-06-15T06:00:01Z", "step": "load_fixture", "detail": "12 points" },
+    { "ts": "2026-06-15T06:00:02Z", "step": "engine.md_overlap", "detail": "emit" },
+    { "ts": "2026-06-15T06:00:02Z", "step": "rule.stagger_costart", "detail": "suppress" },
+    { "ts": "2026-06-15T06:00:03Z", "step": "ml.timesfm_shadow", "detail": "shadow_only" }
+  ],
+  "errors": []
+}

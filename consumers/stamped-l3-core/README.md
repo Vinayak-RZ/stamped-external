@@ -16,11 +16,22 @@ src/stamped_l3_core/
   outbox.py              TransactionalOutbox (in-memory)
   scheduler.py           run_hot_path() — MD engine hot path
   rulepack_loader.py     semver rulepack manifest loader
+  lab_export.py          RunArtifact export + /lab/export HTTP for eval Lab UI
 tests/
   unit/                  engine, suppression, outbox unit tests
   golden/                fixture → Finding golden replay
   fixtures/              L2 measurement JSON fixtures
 ```
+
+## Lab export (for stamped-l3-eval)
+
+```bash
+pip install -e .
+stamped-l3-lab
+# GET http://127.0.0.1:8090/lab/export
+# Optional: CORE_LAB_TOKEN=… Authorization: Bearer …
+```
+
 
 ## Quick start
 

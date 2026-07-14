@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "run-w-tod-001-001",
+  "window_id": "w-tod-001",
+  "plant_id": "plant_ghaziabad_1",
+  "started_at": "2026-06-10T00:00:00Z",
+  "core_version": "0.1.0",
+  "rulepack_pins": [{ "pack": "incomer", "version": "1.0.0" }],
+  "inputs": {
+    "source": "fixture",
+    "fixture_ref": "tests/fixtures/tod_week.json",
+    "measurement_summary": { "peak_tod_kwh": 4200 }
+  },
+  "detections": [
+    {
+      "detection_id": "d-tod-emit-1",
+      "detector_kind": "engine",
+      "rule_or_model_ref": "rulepack://incomer/1.0.0#tod_exposure",
+      "category": "tod_exposure",
+      "status": "emitted",
+      "finding": {
+        "finding_id": "f-tod-001",
+        "category": "tod_exposure",
+        "estimated_monthly_inr": 25200
+      },
+      "suppressions_checked": ["production_mix_change"],
+      "scores": { "peak_kwh": 4200, "rate_delta": 1.5 },
+      "logs": ["peak window 17:00–22:00 exposure"]
+    },
+    {
+      "detection_id": "d-tod-supp-1",
+      "detector_kind": "rule",
+      "rule_or_model_ref": "rulepack://load_management/1.0.0#load_shift_tod",
+      "category": "tod_exposure",
+      "status": "suppressed",
+      "finding": null,
+      "suppressions_checked": ["production_mix_change"],
+      "scores": null,
+      "logs": ["suppressed: mix change same week"]
+    }
+  ],
+  "timeline": [
+    { "ts": "2026-06-10T00:00:01Z", "step": "engine.tod", "detail": "emit" },
+    { "ts": "2026-06-10T00:00:02Z", "step": "rule.load_shift_tod", "detail": "suppress" }
+  ],
+  "errors": []
+}

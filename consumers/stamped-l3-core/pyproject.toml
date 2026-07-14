@@ -14,6 +14,9 @@ dependencies = []
 dev = ["pytest>=8.0", "ruff>=0.4"]
 challenger = ["timesfm>=2.0.2"]
 
+[project.scripts]
+stamped-l3-lab = "stamped_l3_core.lab_export:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
