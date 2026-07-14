@@ -203,7 +203,7 @@ Shared-bus boolean alone is **not** used as the proximity term (too coarse for m
 | Drools-class (JVM BRMS) | Enterprise rule platforms | Wrong ecosystem (JVM), heavy ops; avoid |
 | Plain versioned Python + YAML parameter packs | Rules as pure functions over feature-store inputs; thresholds/constants in YAML per vertical/plant | Best for **physics rules** that need real math (regressions over windows, integration, simulation) |
 
-The key research finding is that the industry pattern (see PredCo, Zerowatt learnings in the [product definition §3](/core-product/Stamped_Product_Definition_and_Architecture.md)) is **rules-first for explainability with ML underneath** — and that modern practice treats rules as code: JSON/YAML artefacts in git, unit-tested, CI-gated, released with semver [13].
+The key research finding is that the industry pattern (see PredCo, Zerowatt learnings in the [master document](../00-stamped-master-document.md) competitive landscape) is **rules-first for explainability with ML underneath** — and that modern practice treats rules as code: JSON/YAML artefacts in git, unit-tested, CI-gated, released with semver [13].
 
 **b) Physics formula inventory per waste category** (the deterministic heart of L3; all constants are per-plant calibratable, §3.9):
 
@@ -237,7 +237,7 @@ Given solar/WHR/DG availability, grid TOD windows, and process constraints, reco
 
 **Per-plant calibration & cold-start** — the research-relevant part:
 
-- **Parameter layer, not retraining** (architecture §7.9): plant config = anomaly sensitivities, SEC norms, idle thresholds, startup suppression windows, shift boundaries. Model *code* is fleet-shared; parameters are per-plant.
+- **Parameter layer, not retraining** ([architecture L3 engines table](../02-technical-architecture.md) — per-plant calibration row): plant config = anomaly sensitivities, SEC norms, idle thresholds, startup suppression windows, shift boundaries. Model *code* is fleet-shared; parameters are per-plant.
 - **Hierarchical / partial pooling:** treat plant-level baseline coefficients (e.g. compressor SP, furnace holding kW, idle floors) as draws from a vertical-level prior distribution. With 2 weeks of data the posterior sits near the fleet prior (wide bands); with 6 months it is dominated by plant data. Implementable as closed-form Bayesian linear regression updates or empirical-Bayes shrinkage — no MCMC needed for linear-in-parameters baselines `[~]`. This is the formal version of "fleet priors → tightened bands weeks 4–10".
 - **False-positive-driven threshold tuning:** L5 workflow reason codes (rejected / already-fixed / wrong-owner / deferred) flow back as labels. Per plant per category, adjust detection thresholds to hold the precision target (§5.2) — e.g. raise the CUSUM decision interval where rejections cluster. This is the single most valuable learning loop in the system because it directly optimises the closure metric.
 - **Guardrail:** calibration may tighten/loosen thresholds within fleet-defined bounds only; it must never silently disable a category (a plant that rejects everything is a customer-success signal, not a tuning signal).
@@ -264,7 +264,7 @@ Given solar/WHR/DG availability, grid TOD windows, and process constraints, reco
 
 1. **Everything of record is linear-in-parameters or deterministic** → every finding and every M&V claim can be reproduced by hand from the report. This is the moat for the "bill-verified" positioning, not a limitation.
 2. **ML where it pays, in supporting roles:** GBMs sharpen forecasts and challenge baselines; matrix profile mines signatures; isolation forest sweeps for the unknown-unknowns. None of them are load-bearing for a ₹ claim.
-3. **One codebase, many plants:** fleet-shared engine code + per-plant parameter packs + hierarchical priors is the only shape that scales to 100+ plants with a small ML team (the Greenovative "base model + per-plant parameterisation" pattern, validated in [product definition §3.2](/core-product/Stamped_Product_Definition_and_Architecture.md)).
+3. **One codebase, many plants:** fleet-shared engine code + per-plant parameter packs + hierarchical priors is the only shape that scales to 100+ plants with a small ML team (the Greenovative-style "base model + per-plant parameterisation" pattern noted in [master document](../00-stamped-master-document.md)).
 4. **Suppression logic is a first-class shared service** — most anomaly-quality problems will be solved there, not in detector choice.
 
 ### 4.3 Baseline engine — concrete design `[~]`
@@ -316,10 +316,22 @@ This is the mandatory protocol. It has five parts: per-engine metrics & targets,
 ### 5.2 Anomaly, rules & attribution engines
 
 - **Precision/recall on labelled incidents.** Label sources: pilot-plant incident logs, engineer adjudication of a weekly sample, and L5 reason codes (accepted/fixed = TP; rejected/not-real = FP). Targets `[~]`: **precision ≥0.75 at P0, ≥0.85 by P2** on high/medium-urgency findings; recall tracked but not gated early (we cannot know all misses; estimate via periodic manual audits of high-cost windows).
-- **Alert budget:** ≤ **N findings/plant/day** (default N=5, calibrated per plant) and ≤2 high-urgency/day — enforced as a hard cap with ranking overflow to a digest. Alert fatigue is a product-killer; the budget is a first-class SLO, not a hint.
-- **Attribution accuracy:** for adjudicated MD spikes, top-1 cause correct ≥70%, top-3 ≥90% `[~]`.
+- **Alert budget `[!]` unvalidated assumption:** ≤ **N findings/plant/day** (starting hypothesis **N=5**) and ≤2 high-urgency/day — hard cap with ranking overflow to a digest. **Not derived from pilot data**; revisit after the first plant has ≥30 days of delivered prescriptions. Until then treat N as a product knob, not a measured SLO.
+- **Attribution accuracy:** for adjudicated MD spikes, top-1 cause correct ≥70%, top-3 ≥90% `[~]` — scoring uses `ramp_kw × proximity` per §3.4(b).
 - **Tariff engine correctness:** reconstruct ≥3 historical bills per plant from telemetry + tariff model to **within ±2% per line item** before the plant's ₹ estimates go live; re-run on every tariff-order update.
-- **Confidence calibration:** reliability curves per engine quarterly; Brier score tracked; `confidence` must be monotone with realised acceptance rate.
+- **Confidence calibration — cold-start + ongoing:**
+  - **Days 0–90 (no labelled closure history):** use **engine prior confidence** (fixed table below) — not uncalibrated detector scores as if they were acceptance probabilities. L4 ranker still uses `score = inr × confidence / effort`, so priors must be conservative.
+  - **After ≥20 adjudicated outcomes per engine×plant (or fleet-pooled if plant-thin):** fit reliability curve; switch that engine to **empirical calibration**.
+  - **Ongoing:** reliability curves + Brier per engine at least **quarterly** once past cold-start; `confidence` must stay monotone with realised acceptance rate.
+
+  | Engine class | Cold-start prior confidence | Cap until calibrated |
+  | --- | --- | --- |
+  | Deterministic tariff / PF / MD arithmetic | 0.85 | 0.90 |
+  | Rules pack (physics thresholds) | 0.75 | 0.85 |
+  | Residual anomaly (EWMA/CUSUM) | 0.55 | 0.75 |
+  | Attribution co-start ranking | 0.60 | 0.80 |
+  | LightGBM MD exceedance | 0.50 | 0.75 |
+  | TimesFM / foundation shadow | **n/a — never ranks Rx** | — |
 
 ### 5.3 Forecast engines (MD exceedance)
 
