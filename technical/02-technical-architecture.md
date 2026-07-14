@@ -226,23 +226,34 @@ Guarantees L1 makes to L2: units normalised · timestamps UTC (plant TZ preserve
 
 ### 5.2 L3 → L4: `Finding`
 
+**Canonical schema:** [`contracts/schemas/finding.json`](../contracts/schemas/finding.json) — CI-blocking via `./scripts/contract-check.sh`. Layer docs must not invent alternate field names.
+
 ```
 Finding {
-  finding_id, plant_id,
-  category,                            // md_overlap | compressor_sp_drift | furnace_holding | ... (closed enum)
-  waste_category,                      // one of the six (§3.1)
+  schema_version,                      // "1.0.0"
+  finding_id, org_id, plant_id,        // plant_id required
+  category,                            // closed enum (md_overlap | compressor_sp_drift | …)
+  waste_category,                      // 1–6 (§3.1)
   assets[],
   evidence {                           // machine-checkable — L4 verifier re-derives these
-    metric, baseline_value, actual_value, window,
-    baseline_id, model_version, rule_version
+    metric, baseline_value, actual_value, window,   // required — never "baseline"/"actual"
+    baseline_id?, baseline_band?, supporting_tags?, // optional enrichment
+    model_version?, rule_version?                   // versions of cited artefacts
   },
   confidence,                          // calibrated 0–1
   estimated_monthly_kwh, estimated_monthly_inr,
-  urgency                              // low | medium | high
+  inr_decomposition?,                  // bill_line + rate_ref
+  urgency,                             // low | medium | high
+  engine, engine_version,              // producer identity (e.g. rules.compressor_sp_drift / 1.4.2)
+  rule_or_model_ref,                   // URI, e.g. rulepack://compressor/1.4.2#sp_drift
+  suppressions_checked?,
+  dedupe_key                           // sha256:… stable business key
 }
 ```
 
-Guarantees L3 makes to L4: findings are category-tagged (generic alerts rejected) · every number traces to a versioned baseline/model/rule · confidence is calibrated, not raw model score.
+**Naming map (do not mix):** `evidence.baseline_value` / `evidence.actual_value` are the numbers; `evidence.model_version` / `evidence.rule_version` version cited artefacts; top-level `engine` + `engine_version` + `rule_or_model_ref` identify the producer for M&V replay. Layer docs that used `baseline`/`actual` are obsolete.
+
+Guarantees L3 makes to L4: findings are category-tagged (generic alerts rejected) · every number traces to a versioned baseline/model/rule · confidence is calibrated, not raw model score · schema matches `finding.json`.
 
 ### 5.3 L4 → L5: `Prescription`
 

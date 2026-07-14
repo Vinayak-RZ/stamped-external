@@ -1,5 +1,9 @@
 # Changelog — stamped-l1-contracts
 
+## 0.6.1 — 2026-07-14
+
+- Docs: reconcile `Finding` examples in L3/L4/`02-technical-architecture` §5.2 to match `finding.json` field names (`baseline_value`/`actual_value`, required `plant_id`/`org_id`, top-level `engine` + `rule_or_model_ref`). Schema unchanged.
+
 ## 0.6.0 — 2026-07-13
 
 - Add L3–L5 intelligence schemas: `finding.json`, `prescription.json`, `ledger-entry.json`, `capex-proposal.json`

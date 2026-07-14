@@ -73,37 +73,48 @@ L3 consumes only from the [Universal Repository](L2-universal-repository.md) —
 
 ### 2.2 Output contract: the finding object
 
-All nine engines emit the same schema (from [technical architecture §7](/core-product/Stamped_Technical_Architecture_v1.md)), which is the entire interface to [L4](L4-knowledge-and-reasoning.md):
+All nine engines emit the same schema. **Canonical:** [`contracts/schemas/finding.json`](../../contracts/schemas/finding.json) · summary in [technical architecture §5.2](../02-technical-architecture.md#52-l3--l4-finding). This is the entire interface to [L4](L4-knowledge-and-reasoning.md):
 
 ```json
 {
+  "schema_version": "1.0.0",
   "finding_id": "f-2026-07-08-0042",
-  "category": "md_overlap | compressor_sp_drift | furnace_holding | idle_load | pf_slab_breach | tod_exposure | sec_drift | dispatch_gap | ...",
-  "waste_category": 1,
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "category": "compressor_sp_drift",
+  "waste_category": 4,
   "assets": ["compressor-2"],
   "evidence": {
     "metric": "specific_power_kw_per_nm3min",
-    "baseline": 5.8, "baseline_id": "bl-c2-2026w22", "baseline_band": [5.5, 6.1],
-    "actual": 6.7, "window": "2026-06-15T00:00Z/2026-07-05T00:00Z",
-    "supporting_tags": ["compressor-2/active_power", "compressor-2/line_pressure"]
+    "baseline_value": 5.8,
+    "actual_value": 6.7,
+    "window": "2026-06-15T00:00:00Z/2026-07-05T00:00:00Z",
+    "baseline_id": "bl-c2-2026w22",
+    "baseline_band": [5.5, 6.1],
+    "supporting_tags": ["compressor-2/active_power", "compressor-2/line_pressure"],
+    "rule_version": "1.4.2"
   },
   "confidence": 0.91,
   "estimated_monthly_kwh": 12000,
   "estimated_monthly_inr": 84000,
   "inr_decomposition": {"bill_line": "energy_kvah", "rate_ref": "tariff-upcl-hv2-2026"},
   "urgency": "high",
-  "engine": "rules.compressor_sp_drift", "engine_version": "1.4.2",
+  "engine": "rules.compressor_sp_drift",
+  "engine_version": "1.4.2",
   "rule_or_model_ref": "rulepack://compressor/1.4.2#sp_drift",
-  "suppressions_checked": ["startup_window", "production_mix_change"]
+  "suppressions_checked": ["startup_window", "production_mix_change"],
+  "dedupe_key": "sha256:a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
 }
 ```
 
+**Field names (locked):** use `baseline_value` / `actual_value` — not `baseline` / `actual`. `plant_id` and `org_id` are required. Top-level `engine` + `engine_version` + `rule_or_model_ref` identify the producer; optional `evidence.model_version` / `evidence.rule_version` version the cited baseline/rule artefacts.
+
 Contract rules that matter for L3 design:
 
-1. **`engine_version` + `rule_or_model_ref` are mandatory** — M&V cites them; the model registry (§5.6) must be able to reproduce any historical finding.
-2. **`confidence` is calibrated, not cosmetic** — it feeds the L4 ranker (`score = inr × confidence / effort`), so per-engine calibration curves are part of the evaluation protocol (§5).
-3. **`baseline_id` points to an immutable baseline version** in the L2 baseline store.
-4. **Deduplication key** = (category, asset set, overlapping window) — L3 emits at most one open finding per key; persistence escalates severity instead of re-emitting.
+1. **`engine` + `engine_version` + `rule_or_model_ref` are mandatory** — M&V cites them; the model registry (§5.6) must be able to reproduce any historical finding.
+2. **`confidence` is calibrated, not cosmetic** — it feeds the L4 ranker (`score = inr × confidence / effort`), so per-engine calibration curves are part of the evaluation protocol (§5). Cold-start defaults: §5.2.
+3. **`evidence.baseline_id` points to an immutable baseline version** in the L2 baseline store when the finding cites a baseline (required for M&V-eligible ₹).
+4. **`dedupe_key`** = sha256 of (category, sorted assets, window) — L3 emits at most one open finding per key; persistence escalates severity instead of re-emitting.
 5. Findings are **idempotent and replayable**: same inputs + same engine version ⇒ same finding. This makes backtesting (§5.4) and audit possible.
 
 ---
