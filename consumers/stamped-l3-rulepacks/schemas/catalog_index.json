@@ -1,0 +1,294 @@
+{
+  "version": "1.0.0",
+  "pack_count": 9,
+  "rule_count": 32,
+  "packs": [
+    "attribution",
+    "compressor",
+    "furnace",
+    "hvac",
+    "idle",
+    "incomer",
+    "load_management",
+    "source_mix",
+    "tariff"
+  ],
+  "tariffs": [
+    "jvvnl_ht"
+  ],
+  "verticals": [
+    "auto_components",
+    "cement",
+    "die_casting",
+    "fmcg_food",
+    "forging",
+    "general_ht",
+    "pharma",
+    "textile"
+  ],
+  "goldens": [
+    "golden_compressor_sp.json",
+    "golden_cop_drift.json",
+    "golden_dispatch_gap.json",
+    "golden_furnace_holding.json",
+    "golden_furnace_setback.json",
+    "golden_idle_shift.json",
+    "golden_load_shift_tod.json",
+    "golden_md_spike.json",
+    "golden_pf_breach.json",
+    "golden_stagger_costart.json",
+    "golden_tod_peak.json"
+  ],
+  "finding_category_coverage": {
+    "md_overlap": [
+      "rulepack://attribution/1.0.0#costart_window",
+      "rulepack://incomer/1.0.0#md_overlap",
+      "rulepack://load_management/1.0.0#stagger_costart",
+      "rulepack://load_management/1.0.0#peak_shave_shed",
+      "rulepack://load_management/1.0.0#intraday_load_factor"
+    ],
+    "md_exceedance_risk": [
+      "rulepack://incomer/1.0.0#md_exceedance_risk",
+      "rulepack://load_management/1.0.0#md_exceedance_holdoff"
+    ],
+    "pf_slab_breach": [
+      "rulepack://incomer/1.0.0#pf_slab",
+      "rulepack://load_management/1.0.0#pf_kvAr_correct",
+      "rulepack://tariff/1.0.0#pf_slab_table"
+    ],
+    "pf_leading": [
+      "rulepack://incomer/1.0.0#pf_leading",
+      "rulepack://load_management/1.0.0#pf_leading_cut"
+    ],
+    "tod_exposure": [
+      "rulepack://incomer/1.0.0#tod_exposure",
+      "rulepack://load_management/1.0.0#load_shift_tod",
+      "rulepack://tariff/1.0.0#tod_windows"
+    ],
+    "compressor_sp_drift": [
+      "rulepack://compressor/1.0.0#compressor_sp_drift",
+      "rulepack://compressor/1.0.0#compressor_unload_seq"
+    ],
+    "furnace_holding": [
+      "rulepack://furnace/1.0.0#furnace_holding_detect",
+      "rulepack://furnace/1.0.0#furnace_setback_opt",
+      "rulepack://furnace/1.0.0#furnace_preheat_early"
+    ],
+    "idle_load": [
+      "rulepack://idle/1.0.0#idle_machine_kw",
+      "rulepack://idle/1.0.0#phantom_nonprod",
+      "rulepack://idle/1.0.0#offshift_baseload_drift",
+      "rulepack://idle/1.0.0#idle_cnc_spindle"
+    ],
+    "sec_drift": [
+      "rulepack://furnace/1.0.0#furnace_sec_drift"
+    ],
+    "dispatch_gap": [
+      "rulepack://source_mix/1.0.0#dispatch_gap"
+    ],
+    "cop_degradation": [
+      "rulepack://hvac/1.0.0#cop_degradation",
+      "rulepack://hvac/1.0.0#ahu_offhours"
+    ],
+    "cmd_oversized": [
+      "rulepack://incomer/1.0.0#cmd_oversized",
+      "rulepack://load_management/1.0.0#cmd_rightsize",
+      "rulepack://load_management/1.0.0#demand_floor_exposure",
+      "rulepack://tariff/1.0.0#billing_demand_floor"
+    ]
+  },
+  "rules": [
+    {
+      "pack": "attribution",
+      "rule_id": "costart_window",
+      "category": "md_overlap",
+      "uri": "rulepack://attribution/1.0.0#costart_window"
+    },
+    {
+      "pack": "compressor",
+      "rule_id": "compressor_sp_drift",
+      "category": "compressor_sp_drift",
+      "uri": "rulepack://compressor/1.0.0#compressor_sp_drift"
+    },
+    {
+      "pack": "compressor",
+      "rule_id": "compressor_unload_seq",
+      "category": "compressor_sp_drift",
+      "uri": "rulepack://compressor/1.0.0#compressor_unload_seq"
+    },
+    {
+      "pack": "furnace",
+      "rule_id": "furnace_holding_detect",
+      "category": "furnace_holding",
+      "uri": "rulepack://furnace/1.0.0#furnace_holding_detect"
+    },
+    {
+      "pack": "furnace",
+      "rule_id": "furnace_setback_opt",
+      "category": "furnace_holding",
+      "uri": "rulepack://furnace/1.0.0#furnace_setback_opt"
+    },
+    {
+      "pack": "furnace",
+      "rule_id": "furnace_preheat_early",
+      "category": "furnace_holding",
+      "uri": "rulepack://furnace/1.0.0#furnace_preheat_early"
+    },
+    {
+      "pack": "furnace",
+      "rule_id": "furnace_sec_drift",
+      "category": "sec_drift",
+      "uri": "rulepack://furnace/1.0.0#furnace_sec_drift"
+    },
+    {
+      "pack": "hvac",
+      "rule_id": "cop_degradation",
+      "category": "cop_degradation",
+      "uri": "rulepack://hvac/1.0.0#cop_degradation"
+    },
+    {
+      "pack": "hvac",
+      "rule_id": "ahu_offhours",
+      "category": "cop_degradation",
+      "uri": "rulepack://hvac/1.0.0#ahu_offhours"
+    },
+    {
+      "pack": "idle",
+      "rule_id": "idle_machine_kw",
+      "category": "idle_load",
+      "uri": "rulepack://idle/1.0.0#idle_machine_kw"
+    },
+    {
+      "pack": "idle",
+      "rule_id": "phantom_nonprod",
+      "category": "idle_load",
+      "uri": "rulepack://idle/1.0.0#phantom_nonprod"
+    },
+    {
+      "pack": "idle",
+      "rule_id": "offshift_baseload_drift",
+      "category": "idle_load",
+      "uri": "rulepack://idle/1.0.0#offshift_baseload_drift"
+    },
+    {
+      "pack": "idle",
+      "rule_id": "idle_cnc_spindle",
+      "category": "idle_load",
+      "uri": "rulepack://idle/1.0.0#idle_cnc_spindle"
+    },
+    {
+      "pack": "incomer",
+      "rule_id": "md_overlap",
+      "category": "md_overlap",
+      "uri": "rulepack://incomer/1.0.0#md_overlap"
+    },
+    {
+      "pack": "incomer",
+      "rule_id": "md_exceedance_risk",
+      "category": "md_exceedance_risk",
+      "uri": "rulepack://incomer/1.0.0#md_exceedance_risk"
+    },
+    {
+      "pack": "incomer",
+      "rule_id": "cmd_oversized",
+      "category": "cmd_oversized",
+      "uri": "rulepack://incomer/1.0.0#cmd_oversized"
+    },
+    {
+      "pack": "incomer",
+      "rule_id": "pf_slab",
+      "category": "pf_slab_breach",
+      "uri": "rulepack://incomer/1.0.0#pf_slab"
+    },
+    {
+      "pack": "incomer",
+      "rule_id": "pf_leading",
+      "category": "pf_leading",
+      "uri": "rulepack://incomer/1.0.0#pf_leading"
+    },
+    {
+      "pack": "incomer",
+      "rule_id": "tod_exposure",
+      "category": "tod_exposure",
+      "uri": "rulepack://incomer/1.0.0#tod_exposure"
+    },
+    {
+      "pack": "load_management",
+      "rule_id": "stagger_costart",
+      "category": "md_overlap",
+      "uri": "rulepack://load_management/1.0.0#stagger_costart"
+    },
+    {
+      "pack": "load_management",
+      "rule_id": "peak_shave_shed",
+      "category": "md_overlap",
+      "uri": "rulepack://load_management/1.0.0#peak_shave_shed"
+    },
+    {
+      "pack": "load_management",
+      "rule_id": "load_shift_tod",
+      "category": "tod_exposure",
+      "uri": "rulepack://load_management/1.0.0#load_shift_tod"
+    },
+    {
+      "pack": "load_management",
+      "rule_id": "md_exceedance_holdoff",
+      "category": "md_exceedance_risk",
+      "uri": "rulepack://load_management/1.0.0#md_exceedance_holdoff"
+    },
+    {
+      "pack": "load_management",
+      "rule_id": "cmd_rightsize",
+      "category": "cmd_oversized",
+      "uri": "rulepack://load_management/1.0.0#cmd_rightsize"
+    },
+    {
+      "pack": "load_management",
+      "rule_id": "pf_kvAr_correct",
+      "category": "pf_slab_breach",
+      "uri": "rulepack://load_management/1.0.0#pf_kvAr_correct"
+    },
+    {
+      "pack": "load_management",
+      "rule_id": "pf_leading_cut",
+      "category": "pf_leading",
+      "uri": "rulepack://load_management/1.0.0#pf_leading_cut"
+    },
+    {
+      "pack": "load_management",
+      "rule_id": "demand_floor_exposure",
+      "category": "cmd_oversized",
+      "uri": "rulepack://load_management/1.0.0#demand_floor_exposure"
+    },
+    {
+      "pack": "load_management",
+      "rule_id": "intraday_load_factor",
+      "category": "md_overlap",
+      "uri": "rulepack://load_management/1.0.0#intraday_load_factor"
+    },
+    {
+      "pack": "source_mix",
+      "rule_id": "dispatch_gap",
+      "category": "dispatch_gap",
+      "uri": "rulepack://source_mix/1.0.0#dispatch_gap"
+    },
+    {
+      "pack": "tariff",
+      "rule_id": "billing_demand_floor",
+      "category": "cmd_oversized",
+      "uri": "rulepack://tariff/1.0.0#billing_demand_floor"
+    },
+    {
+      "pack": "tariff",
+      "rule_id": "pf_slab_table",
+      "category": "pf_slab_breach",
+      "uri": "rulepack://tariff/1.0.0#pf_slab_table"
+    },
+    {
+      "pack": "tariff",
+      "rule_id": "tod_windows",
+      "category": "tod_exposure",
+      "uri": "rulepack://tariff/1.0.0#tod_windows"
+    }
+  ]
+}
