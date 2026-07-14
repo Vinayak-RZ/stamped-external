@@ -699,6 +699,8 @@ Full spec: [Production engineering — patterns, streaming, reliability](cross-c
 
 Design point: **10s of plants (headroom ~100) · 200–2000 tags/plant · 1s–15min granularity.** Worst-case sustained ingest is a few thousand messages/sec — modest. The architecture must be **reliable and replayable**, not hyperscale.
 
+**L3 model count note:** TOW-P baselines are sized **per engine-read asset** (~5–40/plant), not per tag — see [L3 §5.7](layers/L3-intelligence-core.md). Nightly refit of ~600–4000 linear models fits a single batch worker at this envelope; GPU foundation models stay shadow-only (ADR-014).
+
 ### 16.2 Backbone
 
 **Production path at Stamped's scale (10s of plants, ~k msg/s):** MQTT at plant boundary (Mosquitto on edge) → **ingest service** → batched idempotent writes to TimescaleDB + **Postgres transactional outbox** for domain events (findings, prescriptions, ledger entries). MD hot-path detection runs in-process inside the ingest service (< 60 s spike→finding). Continuous aggregates handle rollups. At-least-once delivery with idempotent keys `(plant_id, tag_id, timestamp)` — no exactly-once machinery.

@@ -360,6 +360,22 @@ This is the mandatory protocol. It has five parts: per-engine metrics & targets,
 - **MLflow model registry** [19] (or equivalent) holds every baseline/forecast model version: training window, features, params hash, eval report, git commit. Rule packs live in git with semver; the finding object's `engine_version`/`rule_or_model_ref`/`baseline_id` triple makes every historical finding reproducible.
 - **Monthly quality report per plant** (auto-generated): baseline CV(RMSE)/NMBE by meter, findings issued vs accepted vs rejected by category, alert-budget utilisation, drift flags — reviewed in customer-success cadence, feeds threshold calibration (§3.9).
 
+### 5.7 Compute sizing (back-of-envelope)
+
+Aligned to architecture [§16.1](../02-technical-architecture.md) scale: **10s of plants (headroom ~100) · 200–2000 tags/plant**.
+
+| Quantity | Estimate `[~]` | Notes |
+| --- | --- | --- |
+| Meter points needing a TOW-P baseline | Not every tag — energy/SEC-critical only | Default: **incomer + feeders + process-heat assets** ≈ **5–40 models/plant**, not 2000 |
+| Fleet at 30 plants × 20 models | **~600 TOW-P models** | Linear WLS/elastic-net on 15-min × 90–365 d |
+| Nightly refit wall-clock (single 4–8 vCPU worker) | **≪ 1 h** for 600 models | One plant's TOW-P fit is seconds–low tens of seconds; batch is I/O bound on Timescale reads |
+| At 100 plants × 40 models | **~4000 models** | Still fits **one nightly batch worker**; fan out only if refit + eval + registry write exceeds the ops window |
+| Hot-path (MD/PF/rules) | In-process after 15-min rollup | No GPU; per-plant compute is trivial vs DB query |
+| LightGBM MD exceedance | **1 model/plant** | Tiny vs baselines |
+| TimesFM shadow (P2) | Batch-only, optional | Do **not** size hot path for 200M foundation models |
+
+**Policy:** baselines are **per asset_id that L3 engines read**, not per raw tag. Tag explosion does not imply model explosion. If nightly refit + golden replay + MLflow register exceeds **4 h wall-clock** at measured scale, add a second worker shard by `plant_id` — do not migrate the whole L3 stack to a cluster prematurely.
+
 ---
 
 ## 6. Build phasing P0–P3
