@@ -7,7 +7,7 @@
 | B Incomer/tariff | complete |
 | C Domain stubs | complete |
 | D Verticals | complete |
-| N Validate | in progress |
+| N Validate | complete |
 
 ## Inventory
 
