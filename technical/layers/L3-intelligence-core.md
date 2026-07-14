@@ -12,7 +12,7 @@ timestamp: "2026-07-09T00:00:00Z"
 
 > **Honesty convention:** `[~]` approximate / benchmark-derived · `[!]` evolving — verify before customer-facing claims.
 >
-> **Siblings:** [L2 — Universal Repository](L2-universal-repository.md) · [L4 — Knowledge & Reasoning](L4-knowledge-and-reasoning.md) · [Evaluation & Quality](../cross-cutting/04-evaluation-and-quality.md) · [Technical architecture](../02-technical-architecture.md) · [Master architecture v1](/core-product/Stamped_Technical_Architecture_v1.md)
+> **Siblings:** [L2 — Universal Repository](L2-universal-repository.md) · [L4 — Knowledge & Reasoning](L4-knowledge-and-reasoning.md) · [Evaluation & Quality](../cross-cutting/04-evaluation-and-quality.md) · [Technical architecture v2](../02-technical-architecture.md) (canonical) · Finding contract: [`contracts/schemas/finding.json`](../../contracts/schemas/finding.json)
 
 L3 is the **numeric intelligence layer** of the Stamped stack: it converts normalised telemetry, bills, and production context from [L2](L2-universal-repository.md) into **structured, category-tagged finding objects** that [L4](L4-knowledge-and-reasoning.md) turns into prescriptions. L3 never emits prose. It emits numbers, evidence windows, confidence, and waste-category tags.
 
@@ -27,7 +27,7 @@ Design constraints that shaped every recommendation below:
 
 ## 1. Role in the 15–20% target
 
-The 15–20% bill-reduction claim is **not one model's output** — it is the sum of closed prescriptions across six waste categories, each served by a specific combination of L3 engines (per [technical architecture §3.1](/core-product/Stamped_Technical_Architecture_v1.md)).
+The 15–20% bill-reduction claim is **not one model's output** — it is the sum of closed prescriptions across six waste categories, each served by a specific combination of L3 engines (per [technical architecture §3.1](../02-technical-architecture.md)).
 
 ### 1.1 Engines → waste categories → savings bands
 
@@ -44,7 +44,7 @@ Three structural implications for L3:
 
 1. **No engine needs to be heroic.** Each category needs a detector good enough to find the top 2–3 recurring instances per plant per month with high precision. A 3% category closed reliably beats a 6% category detected at 40% precision that destroys trust.
 2. **Precision > recall, everywhere.** The scarce resource is plant-side attention (supervisor actions per week). A false prescription costs more than a missed one — it burns the credibility that closure depends on (closure-rate target ≥60% on high-priority Rx `[!]`).
-3. **The bill is the ground truth.** Every engine's ₹ estimate must decompose onto a DISCOM bill line (energy, demand, PF penalty, TOD) so [L5 M&V](/core-product/Stamped_Technical_Architecture_v1.md) can reconcile it. This is why the tariff engine is deterministic and why baselines must be M&V-grade, not merely predictive.
+3. **The bill is the ground truth.** Every engine's ₹ estimate must decompose onto a DISCOM bill line (energy, demand, PF penalty, TOD) so [L5 M&V](L5-closure-and-verification.md) can reconcile it. This is why the tariff engine is deterministic and why baselines must be M&V-grade, not merely predictive.
 
 ### 1.2 What L3 must NOT do
 
@@ -73,37 +73,48 @@ L3 consumes only from the [Universal Repository](L2-universal-repository.md) —
 
 ### 2.2 Output contract: the finding object
 
-All nine engines emit the same schema (from [technical architecture §7](/core-product/Stamped_Technical_Architecture_v1.md)), which is the entire interface to [L4](L4-knowledge-and-reasoning.md):
+All nine engines emit the same schema. **Canonical:** [`contracts/schemas/finding.json`](../../contracts/schemas/finding.json) · summary in [technical architecture §5.2](../02-technical-architecture.md#52-l3--l4-finding). This is the entire interface to [L4](L4-knowledge-and-reasoning.md):
 
 ```json
 {
+  "schema_version": "1.0.0",
   "finding_id": "f-2026-07-08-0042",
-  "category": "md_overlap | compressor_sp_drift | furnace_holding | idle_load | pf_slab_breach | tod_exposure | sec_drift | dispatch_gap | ...",
-  "waste_category": 1,
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "category": "compressor_sp_drift",
+  "waste_category": 4,
   "assets": ["compressor-2"],
   "evidence": {
     "metric": "specific_power_kw_per_nm3min",
-    "baseline": 5.8, "baseline_id": "bl-c2-2026w22", "baseline_band": [5.5, 6.1],
-    "actual": 6.7, "window": "2026-06-15T00:00Z/2026-07-05T00:00Z",
-    "supporting_tags": ["compressor-2/active_power", "compressor-2/line_pressure"]
+    "baseline_value": 5.8,
+    "actual_value": 6.7,
+    "window": "2026-06-15T00:00:00Z/2026-07-05T00:00:00Z",
+    "baseline_id": "bl-c2-2026w22",
+    "baseline_band": [5.5, 6.1],
+    "supporting_tags": ["compressor-2/active_power", "compressor-2/line_pressure"],
+    "rule_version": "1.4.2"
   },
   "confidence": 0.91,
   "estimated_monthly_kwh": 12000,
   "estimated_monthly_inr": 84000,
   "inr_decomposition": {"bill_line": "energy_kvah", "rate_ref": "tariff-upcl-hv2-2026"},
   "urgency": "high",
-  "engine": "rules.compressor_sp_drift", "engine_version": "1.4.2",
+  "engine": "rules.compressor_sp_drift",
+  "engine_version": "1.4.2",
   "rule_or_model_ref": "rulepack://compressor/1.4.2#sp_drift",
-  "suppressions_checked": ["startup_window", "production_mix_change"]
+  "suppressions_checked": ["startup_window", "production_mix_change"],
+  "dedupe_key": "sha256:a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
 }
 ```
 
+**Field names (locked):** use `baseline_value` / `actual_value` — not `baseline` / `actual`. `plant_id` and `org_id` are required. Top-level `engine` + `engine_version` + `rule_or_model_ref` identify the producer; optional `evidence.model_version` / `evidence.rule_version` version the cited baseline/rule artefacts.
+
 Contract rules that matter for L3 design:
 
-1. **`engine_version` + `rule_or_model_ref` are mandatory** — M&V cites them; the model registry (§5.6) must be able to reproduce any historical finding.
-2. **`confidence` is calibrated, not cosmetic** — it feeds the L4 ranker (`score = inr × confidence / effort`), so per-engine calibration curves are part of the evaluation protocol (§5).
-3. **`baseline_id` points to an immutable baseline version** in the L2 baseline store.
-4. **Deduplication key** = (category, asset set, overlapping window) — L3 emits at most one open finding per key; persistence escalates severity instead of re-emitting.
+1. **`engine` + `engine_version` + `rule_or_model_ref` are mandatory** — M&V cites them; the model registry (§5.6) must be able to reproduce any historical finding.
+2. **`confidence` is calibrated, not cosmetic** — it feeds the L4 ranker (`score = inr × confidence / effort`), so per-engine calibration curves are part of the evaluation protocol (§5). Cold-start defaults: §5.2.
+3. **`evidence.baseline_id` points to an immutable baseline version** in the L2 baseline store when the finding cites a baseline (required for M&V-eligible ₹).
+4. **`dedupe_key`** = sha256 of (category, sorted assets, window) — L3 emits at most one open finding per key; persistence escalates severity instead of re-emitting.
 5. Findings are **idempotent and replayable**: same inputs + same engine version ⇒ same finding. This makes backtesting (§5.4) and audit possible.
 
 ---
@@ -166,7 +177,18 @@ TOWT was introduced by Price ([LBNL-3713E, 2010](https://eta-publications.lbl.go
 
 **a) Event/ramp detection.** Detect load steps/ramps per feeder tag: derivative thresholding on smoothed kW, CUSUM-style step detection, or changepoint methods (e.g. PELT via `ruptures`). Output: startup-event catalogue (asset, t₀, ramp magnitude, duration) in the L2 feature store.
 
-**b) Co-start / graph analysis.** For an incomer MD spike at time T: traverse the energy graph for assets on the shared bus, select events within ±3 min of T, rank by ramp magnitude × electrical proximity. Cross-correlation of feeder vs incomer deltas over the window ranks partial contributors. A recurring co-start pair (e.g. furnace preheat ∩ line ramp every Monday 06:55) is detected by frequency analysis of the event catalogue — this recurrence is what turns a post-mortem into a **schedule prescription**.
+**b) Co-start / graph analysis.** For an incomer MD spike at time T: traverse the energy graph for assets on the shared bus, select events within ±3 min of T, rank by **score = ramp_kw × proximity(asset)**. Cross-correlation of feeder vs incomer deltas over the window ranks partial contributors when scores are close. A recurring co-start pair (e.g. furnace preheat ∩ line ramp every Monday 06:55) is detected by frequency analysis of the event catalogue — this recurrence is what turns a post-mortem into a **schedule prescription**.
+
+**Electrical proximity (locked definition for §5.2 attribution gates):**
+
+| Symbol | Definition |
+| --- | --- |
+| `hops(asset)` | Shortest undirected path length in the L2 energy graph from `asset` to the spike meter (incomer), following `feeds` / `shares_electrical_bus` edges; max traverse depth 4 |
+| `proximity(asset)` | `1 / (1 + hops(asset))` — same-bus (`shares_electrical_bus`, hops = 0 or 1 via bus node) scores higher than feeder two hops away |
+| `ramp_kw` | Measured startup ramp magnitude (kW) from the startup-event catalogue |
+| `score` | `ramp_kw × proximity(asset)` — rank descending; ties broken by higher `|corr(feeder_Δ, incomer_Δ)|` in the ±3 min window |
+
+Shared-bus boolean alone is **not** used as the proximity term (too coarse for multi-feeder plants). Asset-class weights are deferred P2 — P0/P1 use graph hops only so the formula stays auditable.
 
 **c) NILM / disaggregation — researched, and ruled out as a core engine.** Industrial NILM is an active research field — a 2024 systematic review in *Renewable & Sustainable Energy Reviews* (the first since 2015) catalogues the state of the art and its open problems: industrial loads are continuous and highly variable, events overlap, noise is high, multi-phase and reactive signals are needed, and **labelled industrial datasets are scarce** [12]. Current SOTA is transformer/CNN-LSTM disaggregation validated on single machines in lab-like settings [12]; the standard toolkit [NILMTK](https://github.com/nilmtk/nilmtk) [21] is residential-centric (kettles and fridges, not 500 kW furnaces). Verdict: full NILM at an industrial incomer is a research project, not a product feature. Stamped's substitute is **feeder-level attribution** — the plant already has (or progressively adds) feeder meters, so attribution is a ranking problem over metered candidates plus SCADA state tags, which is tractable, explainable, and improves monotonically with Path A depth. NILM-lite techniques (signature matching of large distinctive loads at a 1-min incomer) may appear in P3 as a hint generator only `[!]`.
 
@@ -181,7 +203,7 @@ TOWT was introduced by Price ([LBNL-3713E, 2010](https://eta-publications.lbl.go
 | Drools-class (JVM BRMS) | Enterprise rule platforms | Wrong ecosystem (JVM), heavy ops; avoid |
 | Plain versioned Python + YAML parameter packs | Rules as pure functions over feature-store inputs; thresholds/constants in YAML per vertical/plant | Best for **physics rules** that need real math (regressions over windows, integration, simulation) |
 
-The key research finding is that the industry pattern (see PredCo, Zerowatt learnings in the [product definition §3](/core-product/Stamped_Product_Definition_and_Architecture.md)) is **rules-first for explainability with ML underneath** — and that modern practice treats rules as code: JSON/YAML artefacts in git, unit-tested, CI-gated, released with semver [13].
+The key research finding is that the industry pattern (see PredCo, Zerowatt learnings in the [master document](../00-stamped-master-document.md) competitive landscape) is **rules-first for explainability with ML underneath** — and that modern practice treats rules as code: JSON/YAML artefacts in git, unit-tested, CI-gated, released with semver [13].
 
 **b) Physics formula inventory per waste category** (the deterministic heart of L3; all constants are per-plant calibratable, §3.9):
 
@@ -215,7 +237,7 @@ Given solar/WHR/DG availability, grid TOD windows, and process constraints, reco
 
 **Per-plant calibration & cold-start** — the research-relevant part:
 
-- **Parameter layer, not retraining** (architecture §7.9): plant config = anomaly sensitivities, SEC norms, idle thresholds, startup suppression windows, shift boundaries. Model *code* is fleet-shared; parameters are per-plant.
+- **Parameter layer, not retraining** ([architecture L3 engines table](../02-technical-architecture.md) — per-plant calibration row): plant config = anomaly sensitivities, SEC norms, idle thresholds, startup suppression windows, shift boundaries. Model *code* is fleet-shared; parameters are per-plant.
 - **Hierarchical / partial pooling:** treat plant-level baseline coefficients (e.g. compressor SP, furnace holding kW, idle floors) as draws from a vertical-level prior distribution. With 2 weeks of data the posterior sits near the fleet prior (wide bands); with 6 months it is dominated by plant data. Implementable as closed-form Bayesian linear regression updates or empirical-Bayes shrinkage — no MCMC needed for linear-in-parameters baselines `[~]`. This is the formal version of "fleet priors → tightened bands weeks 4–10".
 - **False-positive-driven threshold tuning:** L5 workflow reason codes (rejected / already-fixed / wrong-owner / deferred) flow back as labels. Per plant per category, adjust detection thresholds to hold the precision target (§5.2) — e.g. raise the CUSUM decision interval where rejections cluster. This is the single most valuable learning loop in the system because it directly optimises the closure metric.
 - **Guardrail:** calibration may tighten/loosen thresholds within fleet-defined bounds only; it must never silently disable a category (a plant that rejects everything is a customer-success signal, not a tuning signal).
@@ -242,7 +264,7 @@ Given solar/WHR/DG availability, grid TOD windows, and process constraints, reco
 
 1. **Everything of record is linear-in-parameters or deterministic** → every finding and every M&V claim can be reproduced by hand from the report. This is the moat for the "bill-verified" positioning, not a limitation.
 2. **ML where it pays, in supporting roles:** GBMs sharpen forecasts and challenge baselines; matrix profile mines signatures; isolation forest sweeps for the unknown-unknowns. None of them are load-bearing for a ₹ claim.
-3. **One codebase, many plants:** fleet-shared engine code + per-plant parameter packs + hierarchical priors is the only shape that scales to 100+ plants with a small ML team (the Greenovative "base model + per-plant parameterisation" pattern, validated in [product definition §3.2](/core-product/Stamped_Product_Definition_and_Architecture.md)).
+3. **One codebase, many plants:** fleet-shared engine code + per-plant parameter packs + hierarchical priors is the only shape that scales to 100+ plants with a small ML team (the Greenovative-style "base model + per-plant parameterisation" pattern noted in [master document](../00-stamped-master-document.md)).
 4. **Suppression logic is a first-class shared service** — most anomaly-quality problems will be solved there, not in detector choice.
 
 ### 4.3 Baseline engine — concrete design `[~]`
@@ -294,10 +316,22 @@ This is the mandatory protocol. It has five parts: per-engine metrics & targets,
 ### 5.2 Anomaly, rules & attribution engines
 
 - **Precision/recall on labelled incidents.** Label sources: pilot-plant incident logs, engineer adjudication of a weekly sample, and L5 reason codes (accepted/fixed = TP; rejected/not-real = FP). Targets `[~]`: **precision ≥0.75 at P0, ≥0.85 by P2** on high/medium-urgency findings; recall tracked but not gated early (we cannot know all misses; estimate via periodic manual audits of high-cost windows).
-- **Alert budget:** ≤ **N findings/plant/day** (default N=5, calibrated per plant) and ≤2 high-urgency/day — enforced as a hard cap with ranking overflow to a digest. Alert fatigue is a product-killer; the budget is a first-class SLO, not a hint.
-- **Attribution accuracy:** for adjudicated MD spikes, top-1 cause correct ≥70%, top-3 ≥90% `[~]`.
+- **Alert budget `[!]` unvalidated assumption:** ≤ **N findings/plant/day** (starting hypothesis **N=5**) and ≤2 high-urgency/day — hard cap with ranking overflow to a digest. **Not derived from pilot data**; revisit after the first plant has ≥30 days of delivered prescriptions. Until then treat N as a product knob, not a measured SLO.
+- **Attribution accuracy:** for adjudicated MD spikes, top-1 cause correct ≥70%, top-3 ≥90% `[~]` — scoring uses `ramp_kw × proximity` per §3.4(b).
 - **Tariff engine correctness:** reconstruct ≥3 historical bills per plant from telemetry + tariff model to **within ±2% per line item** before the plant's ₹ estimates go live; re-run on every tariff-order update.
-- **Confidence calibration:** reliability curves per engine quarterly; Brier score tracked; `confidence` must be monotone with realised acceptance rate.
+- **Confidence calibration — cold-start + ongoing:**
+  - **Days 0–90 (no labelled closure history):** use **engine prior confidence** (fixed table below) — not uncalibrated detector scores as if they were acceptance probabilities. L4 ranker still uses `score = inr × confidence / effort`, so priors must be conservative.
+  - **After ≥20 adjudicated outcomes per engine×plant (or fleet-pooled if plant-thin):** fit reliability curve; switch that engine to **empirical calibration**.
+  - **Ongoing:** reliability curves + Brier per engine at least **quarterly** once past cold-start; `confidence` must stay monotone with realised acceptance rate.
+
+  | Engine class | Cold-start prior confidence | Cap until calibrated |
+  | --- | --- | --- |
+  | Deterministic tariff / PF / MD arithmetic | 0.85 | 0.90 |
+  | Rules pack (physics thresholds) | 0.75 | 0.85 |
+  | Residual anomaly (EWMA/CUSUM) | 0.55 | 0.75 |
+  | Attribution co-start ranking | 0.60 | 0.80 |
+  | LightGBM MD exceedance | 0.50 | 0.75 |
+  | TimesFM / foundation shadow | **n/a — never ranks Rx** | — |
 
 ### 5.3 Forecast engines (MD exceedance)
 
@@ -326,11 +360,27 @@ This is the mandatory protocol. It has five parts: per-engine metrics & targets,
 - **MLflow model registry** [19] (or equivalent) holds every baseline/forecast model version: training window, features, params hash, eval report, git commit. Rule packs live in git with semver; the finding object's `engine_version`/`rule_or_model_ref`/`baseline_id` triple makes every historical finding reproducible.
 - **Monthly quality report per plant** (auto-generated): baseline CV(RMSE)/NMBE by meter, findings issued vs accepted vs rejected by category, alert-budget utilisation, drift flags — reviewed in customer-success cadence, feeds threshold calibration (§3.9).
 
+### 5.7 Compute sizing (back-of-envelope)
+
+Aligned to architecture [§16.1](../02-technical-architecture.md) scale: **10s of plants (headroom ~100) · 200–2000 tags/plant**.
+
+| Quantity | Estimate `[~]` | Notes |
+| --- | --- | --- |
+| Meter points needing a TOW-P baseline | Not every tag — energy/SEC-critical only | Default: **incomer + feeders + process-heat assets** ≈ **5–40 models/plant**, not 2000 |
+| Fleet at 30 plants × 20 models | **~600 TOW-P models** | Linear WLS/elastic-net on 15-min × 90–365 d |
+| Nightly refit wall-clock (single 4–8 vCPU worker) | **≪ 1 h** for 600 models | One plant's TOW-P fit is seconds–low tens of seconds; batch is I/O bound on Timescale reads |
+| At 100 plants × 40 models | **~4000 models** | Still fits **one nightly batch worker**; fan out only if refit + eval + registry write exceeds the ops window |
+| Hot-path (MD/PF/rules) | In-process after 15-min rollup | No GPU; per-plant compute is trivial vs DB query |
+| LightGBM MD exceedance | **1 model/plant** | Tiny vs baselines |
+| TimesFM shadow (P2) | Batch-only, optional | Do **not** size hot path for 200M foundation models |
+
+**Policy:** baselines are **per asset_id that L3 engines read**, not per raw tag. Tag explosion does not imply model explosion. If nightly refit + golden replay + MLflow register exceeds **4 h wall-clock** at measured scale, add a second worker shard by `plant_id` — do not migrate the whole L3 stack to a cluster prematurely.
+
 ---
 
 ## 6. Build phasing P0–P3
 
-Aligned to the master architecture's phases (§15) and the savings stack (§3.2).
+Aligned to the [technical architecture](../02-technical-architecture.md) build phases and the savings stack (§3.2 / architecture §3.1).
 
 | Phase | L3 scope | Model/rules deliverables | Eval deliverables |
 |---|---|---|---|
