@@ -1,0 +1,14 @@
+id: furnace_setback_opt
+category: furnace_holding
+engine: rules.furnace_setback_opt
+version: 1.0.0
+waste_category: 2
+formula_ref: setback savings ~ radiation hold reduction from delta_T (T^4 - T0^4)
+defaults:
+  delta_t_c_min: 20
+  epsilon: 0.8
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

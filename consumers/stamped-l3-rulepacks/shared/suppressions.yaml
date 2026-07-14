@@ -1,0 +1,16 @@
+startup_window:
+  default_seconds:
+  - 90
+  - 900
+  by_asset_class:
+    furnace: 600
+    cnc: 120
+    compressor: 180
+production_mix_change:
+  sku_share_delta_pct: 10
+maintenance_calendar:
+  source: l1_or_manual
+data_quality:
+  reject_quality:
+  - bad
+  - stale

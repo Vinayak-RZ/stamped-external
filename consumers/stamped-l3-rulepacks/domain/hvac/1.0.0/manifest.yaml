@@ -1,0 +1,10 @@
+version: 1.0.0
+rulepack: hvac
+description: "Domain pack hvac \u2014 physics/threshold stubs"
+rules:
+- id: cop_degradation
+  file: rules/cop_degradation.yaml
+  category: cop_degradation
+- id: ahu_offhours
+  file: rules/ahu_offhours.yaml
+  category: cop_degradation

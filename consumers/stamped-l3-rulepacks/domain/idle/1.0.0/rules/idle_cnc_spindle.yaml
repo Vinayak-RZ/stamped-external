@@ -1,0 +1,14 @@
+id: idle_cnc_spindle
+category: idle_load
+engine: rules.idle_cnc_spindle
+version: 1.0.0
+waste_category: 3
+formula_ref: CNC idle_kw / run_kw > idle_fraction_max
+defaults:
+  idle_fraction_max: 0.7
+  idle_fraction_min_ref: 0.4
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

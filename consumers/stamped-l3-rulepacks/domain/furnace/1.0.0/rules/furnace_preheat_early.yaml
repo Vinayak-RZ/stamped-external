@@ -1,0 +1,13 @@
+id: furnace_preheat_early
+category: furnace_holding
+engine: rules.furnace_preheat_early
+version: 1.0.0
+waste_category: 2
+formula_ref: preheat start earlier than MES charge by > early_minutes
+defaults:
+  early_minutes: 30
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

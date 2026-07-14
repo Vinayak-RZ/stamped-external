@@ -1,0 +1,15 @@
+id: cmd_rightsize
+category: cmd_oversized
+engine: rules.cmd_rightsize
+version: 1.0.0
+waste_category: 1
+formula_ref: billing_demand = max(MD, floor_pct*CD); recommend CD near P95+margin
+defaults:
+  floor_pct: 0.75
+  p_quantile: 0.95
+  margin_kva: 50
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

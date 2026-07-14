@@ -1,0 +1,13 @@
+id: compressor_unload_seq
+category: compressor_sp_drift
+engine: rules.compressor_unload_seq
+version: 1.0.0
+waste_category: 4
+formula_ref: "unload_duty > unload_duty_max_pct \u2192 sequencing Rx"
+defaults:
+  unload_duty_max_pct: 35
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

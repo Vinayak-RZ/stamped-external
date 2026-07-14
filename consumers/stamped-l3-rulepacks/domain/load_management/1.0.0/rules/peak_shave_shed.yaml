@@ -1,0 +1,16 @@
+id: peak_shave_shed
+category: md_overlap
+engine: rules.peak_shave_shed
+version: 1.0.0
+waste_category: 1
+formula_ref: shed non-critical feeders in MD window; savings = delta_kva * md_rate
+defaults:
+  shed_priority:
+  - aux_hvac
+  - compressor_lag
+  - noncrit_line
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

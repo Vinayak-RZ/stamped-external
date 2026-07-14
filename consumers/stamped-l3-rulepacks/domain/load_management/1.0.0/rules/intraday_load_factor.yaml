@@ -1,0 +1,13 @@
+id: intraday_load_factor
+category: md_overlap
+engine: rules.intraday_load_factor
+version: 1.0.0
+waste_category: 1
+formula_ref: "low load_factor with high MD \u2192 flatten feeder overlap"
+defaults:
+  load_factor_max: 0.55
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

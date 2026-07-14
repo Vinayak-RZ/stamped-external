@@ -1,0 +1,16 @@
+version: 1.0.0
+rulepack: furnace
+description: "Domain pack furnace \u2014 physics/threshold stubs"
+rules:
+- id: furnace_holding_detect
+  file: rules/furnace_holding_detect.yaml
+  category: furnace_holding
+- id: furnace_setback_opt
+  file: rules/furnace_setback_opt.yaml
+  category: furnace_holding
+- id: furnace_preheat_early
+  file: rules/furnace_preheat_early.yaml
+  category: furnace_holding
+- id: furnace_sec_drift
+  file: rules/furnace_sec_drift.yaml
+  category: sec_drift

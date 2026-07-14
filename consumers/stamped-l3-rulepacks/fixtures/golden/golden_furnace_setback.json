@@ -1,0 +1,13 @@
+{
+  "window_id": "golden_furnace_setback",
+  "pack": "furnace",
+  "input_window": {
+    "asset_id": "asset_1",
+    "from": "2026-06-15T06:00:00Z",
+    "to": "2026-06-15T07:00:00Z"
+  },
+  "expected_finding": {
+    "category": "furnace_holding"
+  },
+  "expected_rule_id": "furnace_setback_opt"
+}

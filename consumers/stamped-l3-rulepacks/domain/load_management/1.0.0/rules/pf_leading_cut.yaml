@@ -1,0 +1,13 @@
+id: pf_leading_cut
+category: pf_leading
+engine: rules.pf_leading_cut
+version: 1.0.0
+waste_category: 1
+formula_ref: "leading PF at light load \u2192 capacitor step-out"
+defaults:
+  light_load_kw: 100
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

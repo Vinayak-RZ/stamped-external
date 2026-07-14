@@ -1,0 +1,31 @@
+version: 1.0.0
+rulepack: load_management
+description: "Domain pack load_management \u2014 physics/threshold stubs"
+rules:
+- id: stagger_costart
+  file: rules/stagger_costart.yaml
+  category: md_overlap
+- id: peak_shave_shed
+  file: rules/peak_shave_shed.yaml
+  category: md_overlap
+- id: load_shift_tod
+  file: rules/load_shift_tod.yaml
+  category: tod_exposure
+- id: md_exceedance_holdoff
+  file: rules/md_exceedance_holdoff.yaml
+  category: md_exceedance_risk
+- id: cmd_rightsize
+  file: rules/cmd_rightsize.yaml
+  category: cmd_oversized
+- id: pf_kvAr_correct
+  file: rules/pf_kvAr_correct.yaml
+  category: pf_slab_breach
+- id: pf_leading_cut
+  file: rules/pf_leading_cut.yaml
+  category: pf_leading
+- id: demand_floor_exposure
+  file: rules/demand_floor_exposure.yaml
+  category: cmd_oversized
+- id: intraday_load_factor
+  file: rules/intraday_load_factor.yaml
+  category: md_overlap

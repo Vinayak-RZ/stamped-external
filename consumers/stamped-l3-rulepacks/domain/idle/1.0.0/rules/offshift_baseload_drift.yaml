@@ -1,0 +1,13 @@
+id: offshift_baseload_drift
+category: idle_load
+engine: rules.offshift_baseload_drift
+version: 1.0.0
+waste_category: 3
+formula_ref: off-shift mean kW rises > drift_pct vs 30d prior
+defaults:
+  drift_pct: 15
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

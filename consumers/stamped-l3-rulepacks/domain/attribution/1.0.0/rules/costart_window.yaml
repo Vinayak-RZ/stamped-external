@@ -1,0 +1,14 @@
+id: costart_window
+category: md_overlap
+engine: rules.costart_window
+version: 1.0.0
+waste_category: 1
+formula_ref: events within +/- costart_minutes of spike; score = ramp_kw * 1/(1+hops)
+defaults:
+  costart_minutes: 3
+  max_hops: 4
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

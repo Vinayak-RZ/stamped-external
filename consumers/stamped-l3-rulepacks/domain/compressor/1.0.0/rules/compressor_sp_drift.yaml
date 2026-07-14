@@ -1,0 +1,17 @@
+id: compressor_sp_drift
+category: compressor_sp_drift
+engine: rules.compressor_sp_drift
+version: 1.0.0
+waste_category: 4
+formula_ref: SP = kW / (Nm3_min_proxy); flag if SP rises > x% at stable pressure
+defaults:
+  sp_drift_pct: 12
+  unload_duty_max_pct: 35
+  screw_sp_ref_kw_per_nm3min:
+  - 5.5
+  - 6.5
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

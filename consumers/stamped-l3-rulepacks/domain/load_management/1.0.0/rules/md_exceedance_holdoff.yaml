@@ -1,0 +1,13 @@
+id: md_exceedance_holdoff
+category: md_exceedance_risk
+engine: rules.md_exceedance_holdoff
+version: 1.0.0
+waste_category: 1
+formula_ref: if P90 peak > CMD, defer co-starts until window clears
+defaults:
+  holdoff_minutes: 30
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality

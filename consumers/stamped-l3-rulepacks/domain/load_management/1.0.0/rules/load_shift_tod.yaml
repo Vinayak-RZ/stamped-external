@@ -1,0 +1,16 @@
+id: load_shift_tod
+category: tod_exposure
+engine: rules.load_shift_tod
+version: 1.0.0
+waste_category: 1
+formula_ref: "move flexible_kwh peak\u2192offpeak; savings = kwh * rate_delta"
+defaults:
+  flexible_asset_classes:
+  - dryer
+  - batch_furnace
+  - compressor
+suppressions:
+- startup_window
+- production_mix_change
+- maintenance_calendar
+- data_quality
