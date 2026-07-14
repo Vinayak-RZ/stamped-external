@@ -25,9 +25,11 @@ Split L3 implementation into **three repositories** at the intelligence boundary
 | --- | --- | --- |
 | `stamped-l3-core` | Engine runtime, schedulers, transactional outbox, MLflow registry | **Yes** |
 | `stamped-l3-rulepacks` | Semver YAML/JSON physics + tariff rulepacks + golden windows | Artifact only |
-| `stamped-l3-eval` | Golden corpus + rolling backtest CLI + champion/challenger gates | Artifact only |
+| `stamped-l3-eval` | Golden corpus + rolling backtest CLI + champion/challenger gates + **internal Lab UI** (forensic browser of RunArtifacts / live core lab export) | Artifact + internal Lab UI (not customer-facing) |
 
 **ADR-008 unchanged at layer interface:** one `Finding` outbox from `stamped-l3-core`; L3→L4 boundary identical.
+
+**Lab UI note (2026-07-14):** Engineer-only debugger lives in `stamped-l3-eval/ui` (Next.js). It renders RunArtifact v1 written by core lab export — UI never invents detections. Not L6.
 
 Rulepacks and eval repos are **consumers of platform contracts** via `external/contracts` submodule — analogous to contracts distribution ([ADR-011](ADR-011-stamped-platform-submodule-distribution.md)).
 

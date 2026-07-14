@@ -2,12 +2,18 @@
 
 | Phase | Status |
 | --- | --- |
-| 0 Docs / Impeccable | in progress |
-| A RunArtifact schema | pending |
-| B Lab CLI | pending |
-| C Next.js UI | pending |
-| D Core lab export | pending |
-| E Live attach | pending |
-| N Auth / validate / PR | pending |
+| 0 Docs / Impeccable | complete |
+| A RunArtifact schema | complete |
+| B Lab CLI | complete |
+| C Next.js UI | complete |
+| D Core lab export | complete |
+| E Live attach | complete |
+| N Auth / validate / PR | in progress |
 
 Branch: `cursor/l3-eval-lab-ui-272a`
+
+## Validation
+
+- eval `pytest` green
+- `ui` `pnpm build` green
+- core `test_lab_export` green

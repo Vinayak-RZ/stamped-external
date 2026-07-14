@@ -17,6 +17,9 @@ echo "== validate: stamped-l3-rulepacks =="
 echo "== validate: stamped-l3-eval =="
 (cd consumers/stamped-l3-eval && pip install -e ".[dev]" -q && pytest -q)
 
+echo "== validate: stamped-l3-eval Lab UI =="
+(cd consumers/stamped-l3-eval/ui && pnpm install --frozen-lockfile 2>/dev/null || pnpm install && pnpm test && pnpm build)
+
 echo "== validate: stamped-l4 =="
 (cd consumers/stamped-l4 && pip install -e ".[dev]" -q && pytest -q)
 
