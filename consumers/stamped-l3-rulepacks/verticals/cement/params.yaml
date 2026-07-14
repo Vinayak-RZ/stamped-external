@@ -1,0 +1,7 @@
+vertical: cement
+asset_classes:
+- kiln
+- mill
+- fan
+priors:
+  sec_drift_pct: 8

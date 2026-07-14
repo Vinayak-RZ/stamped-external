@@ -1,0 +1,8 @@
+vertical: textile
+asset_classes:
+- loom
+- dryer
+- compressor
+priors:
+  idle_kw_floor: 6
+  sp_drift_pct: 12
