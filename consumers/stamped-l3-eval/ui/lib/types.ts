@@ -1,4 +1,9 @@
-export type DetectionStatus = "emitted" | "suppressed" | "shadow_only";
+export type DetectionStatus =
+  | "emitted"
+  | "suppressed"
+  | "shadow_only"
+  | "hypothesis";
+export type Delivery = "l4" | "lab_only";
 export type DetectorKind = "engine" | "rule" | "ml_shadow";
 
 export interface Detection {
@@ -7,6 +12,7 @@ export interface Detection {
   rule_or_model_ref: string;
   category: string;
   status: DetectionStatus;
+  delivery: Delivery;
   finding: Record<string, unknown> | null;
   suppressions_checked: string[];
   scores: Record<string, unknown> | null;

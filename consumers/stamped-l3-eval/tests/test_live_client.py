@@ -9,7 +9,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from stamped_l3_eval.live_client import fetch_live_snapshot
 
 PAYLOAD = {
-    "schema_version": "1.0.0",
+    "schema_version": "1.1.0",
     "run_id": "mock-live",
     "window_id": "live-demo",
     "plant_id": "plant_ghaziabad_1",
@@ -24,6 +24,7 @@ PAYLOAD = {
             "rule_or_model_ref": "rulepack://incomer/1.0.0#md_overlap",
             "category": "md_overlap",
             "status": "emitted",
+            "delivery": "l4",
             "finding": None,
             "suppressions_checked": [],
             "scores": None,

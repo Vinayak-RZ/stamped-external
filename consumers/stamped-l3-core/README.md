@@ -16,7 +16,9 @@ src/stamped_l3_core/
   outbox.py              TransactionalOutbox (in-memory)
   scheduler.py           run_hot_path() — MD engine hot path
   rulepack_loader.py     semver rulepack manifest loader
-  lab_export.py          RunArtifact export + /lab/export HTTP for eval Lab UI
+  detection_lane.py      ADR-015 delivery mapping (l4 vs lab_only)
+  lab_export.py          RunArtifact 1.1.0 export + /lab/export HTTP for eval Lab UI
+  challenger/attribution_shadow.py  ADR-016 ranking ablations + motif stub (Lab-only)
 tests/
   unit/                  engine, suppression, outbox unit tests
   golden/                fixture → Finding golden replay

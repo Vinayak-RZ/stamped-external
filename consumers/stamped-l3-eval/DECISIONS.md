@@ -20,3 +20,14 @@
 
 - **Selected:** `LAB_SHARED_SECRET` middleware
 - **Defer:** OIDC to P2
+
+## D005 — Dual-lane Lab retention (ADR-015)
+
+- **Selected:** Required `delivery` ∈ {`l4`,`lab_only`} status includes `hypothesis`
+- **UI:** Primary lane filter; status secondary
+- **Rationale:** Retention without polluting L4 outbox
+
+## D006 — Attribution scores in inspector
+
+- **Selected:** Render attribution `scores` + shadow agree/disagree chips
+- **Rationale:** Explainability path is co-start ranking (ADR-016 shadows Lab-only)

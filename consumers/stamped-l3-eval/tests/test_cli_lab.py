@@ -15,7 +15,10 @@ def test_artifact_show(capsys) -> None:
     assert rc == 0
     out = capsys.readouterr().out
     assert "emitted=" in out
+    assert "lanes:" in out
+    assert "lab_only=" in out
     assert "md_overlap" in out
+    assert "hypothesis=" in out
 
 
 def test_lab_run_uses_golden(capsys) -> None:

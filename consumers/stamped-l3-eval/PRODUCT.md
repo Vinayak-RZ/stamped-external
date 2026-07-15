@@ -36,4 +36,7 @@ Quiet, dense, trustworthy laboratory tool. Task over brand theatre.
 
 - Truth comes only from RunArtifact / core lab export
 - Emitted and suppressed are peers in the UI
+- **L4 delivery vs Lab-only discovery** are first-class lanes (ADR-015) — hypothesis/shadow never leave L3
+- Attribution explainability via scores (co-start); shadow agree chips for ADR-016
 - Offline default; live is attach, not the only mode
+- Lab-only ≠ failure — it is discovery retention

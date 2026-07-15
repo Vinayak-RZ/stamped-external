@@ -84,6 +84,17 @@ Also read ADRs: [ADR-001](../decisions/ADR-001-l1-repo-split-and-boundaries.md),
 
 ---
 
+## stamped-l3 (core / rulepacks / eval)
+
+| # | Document | Purpose |
+|---|----------|---------|
+| 1 | [stamped-l3-build-order.md](./stamped-l3-build-order.md) | P0 build order across three L3 repos |
+| 2 | [stamped-l3-dual-lane-consumer-prompt.md](./stamped-l3-dual-lane-consumer-prompt.md) | **Paste to core & rulepacks agents** after ADR-015/016 — submodule pin + dual-lane + attribution shadows |
+
+Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · [ADR-015](../decisions/ADR-015-l3-dual-lane-lab-detections.md) · [ADR-016](../decisions/ADR-016-attribution-shadow-challengers.md).
+
+---
+
 ## Contracts & fixtures (shared)
 
 | Path | Use |

@@ -1,19 +1,9 @@
-# Progress — stamped-l3-eval Lab UI
+# Progress — stamped-l3-eval
 
-| Phase | Status |
+| Item | Status |
 | --- | --- |
-| 0 Docs / Impeccable | complete |
-| A RunArtifact schema | complete |
-| B Lab CLI | complete |
-| C Next.js UI | complete |
-| D Core lab export | complete |
-| E Live attach | complete |
-| N Auth / validate / PR | complete |
-
-Branch: `cursor/l3-eval-lab-ui-272a`
-
-## Validation
-
-- eval `pytest` green
-- `ui` `pnpm build` green
-- core `test_lab_export` green
+| A RunArtifact schema | complete (1.1.0 delivery + hypothesis) |
+| Lab UI lanes | complete (L4 vs Lab-only) |
+| Attribution inspector | complete |
+| Dual-lane goldens | complete |
+| ADR-015/016 sync | complete |

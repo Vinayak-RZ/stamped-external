@@ -4,7 +4,7 @@ import Link from "next/link";
 import { goldenDir } from "@/lib/paths";
 import { WindowForensic } from "@/components/WindowForensic";
 import type { RunArtifact } from "@/lib/types";
-import { countByStatus } from "@/lib/status";
+import { countByDelivery, countByStatus } from "@/lib/status";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +31,7 @@ export default async function WindowPage({
   }
   const artifact = JSON.parse(fs.readFileSync(file, "utf-8")) as RunArtifact;
   const counts = countByStatus(artifact.detections);
+  const lanes = countByDelivery(artifact.detections);
 
   return (
     <>
@@ -38,8 +39,9 @@ export default async function WindowPage({
       <p className="lede">
         run <span className="mono">{artifact.run_id}</span> · plant{" "}
         <span className="mono">{artifact.plant_id}</span> · core {artifact.core_version} ·{" "}
+        schema {artifact.schema_version} · {lanes.l4} L4 · {lanes.lab_only} Lab-only ·{" "}
         {counts.emitted} emitted · {counts.suppressed} suppressed · {counts.shadow_only}{" "}
-        shadow
+        shadow · {counts.hypothesis} hypothesis
       </p>
       <WindowForensic artifact={artifact} />
     </>

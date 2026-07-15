@@ -13,8 +13,13 @@ export function CompareClient({ artifacts }: { artifacts: RunArtifact[] }) {
 
   const diff = useMemo(() => {
     if (!left || !right) return { onlyLeft: [], onlyRight: [], both: [] as string[] };
-    const l = new Set(left.detections.filter((d) => d.status === "emitted").map((d) => d.rule_or_model_ref));
-    const r = new Set(right.detections.filter((d) => d.status === "emitted").map((d) => d.rule_or_model_ref));
+    // Compare L4 delivery lane only (ADR-015) — Lab-only noise excluded by default
+    const l = new Set(
+      left.detections.filter((d) => d.delivery === "l4").map((d) => d.rule_or_model_ref),
+    );
+    const r = new Set(
+      right.detections.filter((d) => d.delivery === "l4").map((d) => d.rule_or_model_ref),
+    );
     return {
       onlyLeft: [...l].filter((x) => !r.has(x)),
       onlyRight: [...r].filter((x) => !l.has(x)),

@@ -32,9 +32,19 @@
 ./scripts/validate.sh
 ```
 
+## Dual-lane Lab retention (2026-07-15)
+
+| Item | Status |
+|------|--------|
+| ADR-015 / ADR-016 | done |
+| RunArtifact 1.1.0 + Lab UI lanes | done |
+| Attribution explainability + shadows | done |
+| Core hot-path LabLog (no silent drop) | done |
+
 ## Next (P1 — out of P0 scope)
 
 - Live L2 query API integration
 - LangGraph full agent lane
 - Forging/auto rulepacks
 - TimesFM promotion re-eval with pilot data
+- Event NILM-lite attribution shadow (gated 1-min + labels)

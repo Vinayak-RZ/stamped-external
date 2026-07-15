@@ -14,7 +14,7 @@ timestamp: "2026-07-09T00:00:00Z"
 >
 > **Siblings:** [L2 — Universal Repository](L2-universal-repository.md) · [L4 — Knowledge & Reasoning](L4-knowledge-and-reasoning.md) · [Evaluation & Quality](../cross-cutting/04-evaluation-and-quality.md) · [Technical architecture v2](../02-technical-architecture.md) (canonical) · Finding contract: [`contracts/schemas/finding.json`](../../contracts/schemas/finding.json)
 >
-> **Defend these decisions:** [L3 — Decision defense brief](L3-decision-defense-brief.md) (rules vs ML vs LLM, engine cards, ADR-012/014, debate drills)
+> **Defend these decisions:** [L3 — Decision defense brief](L3-decision-defense-brief.md) (rules vs ML vs LLM, engine cards, ADR-012/014, debate drills) · [Attribution explainability](L3-attribution-explainability.md) · [ADR-015 dual-lane](../../decisions/ADR-015-l3-dual-lane-lab-detections.md) · [ADR-016 attribution shadows](../../decisions/ADR-016-attribution-shadow-challengers.md)
 
 L3 is the **numeric intelligence layer** of the Stamped stack: it converts normalised telemetry, bills, and production context from [L2](L2-universal-repository.md) into **structured, category-tagged finding objects** that [L4](L4-knowledge-and-reasoning.md) turns into prescriptions. L3 never emits prose. It emits numbers, evidence windows, confidence, and waste-category tags.
 
@@ -433,6 +433,8 @@ Deliberate sequencing logic: **deterministic ₹ engines first** (they verify fa
 | **Cold** | Nightly + historian backfill | TOW-P refit, eval backtest, TimesFM shadow (P2) | Batch |
 
 Historian backfill: replay windows through cold path with `late: true` envelopes; findings tagged `engine_version` for audit. Hot path never blocks on cold refit.
+
+**Lab retention (ADR-015):** every structured candidate is logged to RunArtifact with `delivery` ∈ {`l4`,`lab_only`}. Suppressions, hypothesis near-misses, and attribution/MD shadows stay `lab_only` — only `emitted`/`l4` stages the Finding outbox. Attribution shadows: [ADR-016](../../decisions/ADR-016-attribution-shadow-challengers.md).
 
 ---
 

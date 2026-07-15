@@ -15,6 +15,12 @@ Findings cite: `rulepack://{pack}/{semver}#{rule_id}`
 
 Example: `rulepack://furnace/1.0.0#furnace_holding_detect`
 
+## Attribution explainability
+
+MD / co-start ranking formulas and dual-lane / shadow policy live in the platform pack:
+
+[`technical/layers/L3-attribution-explainability.md`](../../../technical/layers/L3-attribution-explainability.md) · pack defaults: `domain/attribution/*/rules/costart_window.yaml`
+
 ## Merge order into core
 
 1. Load domain pack for category  

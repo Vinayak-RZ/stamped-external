@@ -39,13 +39,22 @@ def cmd_backtest_run(args: argparse.Namespace) -> int:
 
 def cmd_artifact_show(args: argparse.Namespace) -> int:
     data = load_artifact(args.path)
-    emitted = sum(1 for d in data["detections"] if d["status"] == "emitted")
-    suppressed = sum(1 for d in data["detections"] if d["status"] == "suppressed")
-    shadow = sum(1 for d in data["detections"] if d["status"] == "shadow_only")
-    print(f"run_id={data['run_id']} window={data['window_id']}")
-    print(f"detections: emitted={emitted} suppressed={suppressed} shadow={shadow}")
-    for d in data["detections"]:
-        print(f"  [{d['status']}] {d['detector_kind']} {d['rule_or_model_ref']}")
+    dets = data["detections"]
+    emitted = sum(1 for d in dets if d["status"] == "emitted")
+    suppressed = sum(1 for d in dets if d["status"] == "suppressed")
+    shadow = sum(1 for d in dets if d["status"] == "shadow_only")
+    hypothesis = sum(1 for d in dets if d.get("status") == "hypothesis")
+    l4 = sum(1 for d in dets if d.get("delivery") == "l4")
+    lab_only = sum(1 for d in dets if d.get("delivery") == "lab_only")
+    print(f"run_id={data['run_id']} window={data['window_id']} schema={data.get('schema_version')}")
+    print(f"lanes: l4={l4} lab_only={lab_only}")
+    print(
+        f"detections: emitted={emitted} suppressed={suppressed} "
+        f"shadow={shadow} hypothesis={hypothesis}"
+    )
+    for d in dets:
+        delivery = d.get("delivery", "?")
+        print(f"  [{delivery}/{d['status']}] {d['detector_kind']} {d['rule_or_model_ref']}")
     return 0
 
 
@@ -56,7 +65,8 @@ def cmd_lab_run(args: argparse.Namespace) -> int:
     Real engines stay in stamped-l3-core lab export (Phase D).
     """
     window_id = args.window
-    out_dir = Path(args.out) if args.out else GOLDEN_DIR
+    runs_dir = Path(__file__).resolve().parents[2] / "artifacts" / "runs"
+    out_dir = Path(args.out) if args.out else runs_dir
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / f"run_{window_id}.json"
 
@@ -80,7 +90,7 @@ def cmd_lab_run(args: argparse.Namespace) -> int:
         print(f"unknown window: {window_id}", file=sys.stderr)
         return 1
     stub = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "run_id": f"run-{window_id}-stub",
         "window_id": window_id,
         "plant_id": win["plant_id"],
@@ -95,6 +105,7 @@ def cmd_lab_run(args: argparse.Namespace) -> int:
                 "rule_or_model_ref": win.get("rulepack_ref", "rulepack://incomer/1.0.0#unknown"),
                 "category": win["category"],
                 "status": "emitted",
+                "delivery": "l4",
                 "finding": None,
                 "suppressions_checked": [],
                 "scores": None,
