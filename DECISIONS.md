@@ -9,6 +9,8 @@
 | ADR-012 | L3 artifact repo topology | **Accepted** |
 | ADR-013 | Counterfactual savings ledger | **Accepted** |
 | ADR-014 | TS foundation model shadow role | **Accepted** |
+| ADR-015 | L3 dual-lane lab detections | **Accepted** |
+| ADR-016 | Attribution shadow challengers | **Accepted** |
 
 ## ADR-014 promotion (Phase P2)
 
@@ -25,3 +27,5 @@
 | Optimization methods | First-class rule IDs in furnace / idle / load_management packs |
 | Eval Lab UI | Internal Next.js lab in `stamped-l3-eval` over RunArtifact + optional CORE_LAB_URL |
 | L3 decision defense brief | Synthesis doc for arguing rules/ML/LLM/FM placement — [`technical/layers/L3-decision-defense-brief.md`](technical/layers/L3-decision-defense-brief.md) |
+| Dual-lane Lab retention | All structured candidates → RunArtifact; only `delivery=l4` / `emitted` → L4 outbox — [ADR-015](decisions/ADR-015-l3-dual-lane-lab-detections.md) |
+| Attribution explainability | Graph co-start of-record; shadows = ablations + STUMPY — [`L3-attribution-explainability.md`](technical/layers/L3-attribution-explainability.md) · [ADR-016](decisions/ADR-016-attribution-shadow-challengers.md) |

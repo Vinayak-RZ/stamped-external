@@ -200,10 +200,26 @@ Format of each card: **Decision → Why → Rejected → Attack / Answer → Eva
 | --- | --- |
 | **Decision** | Ramp/changepoint catalogue + energy-graph traversal + `score = ramp_kw × proximity(asset)` with correlation tie-break. |
 | **Proximity locked** | `proximity = 1/(1+hops)`; hops via `feeds` / `shares_electrical_bus`; max depth 4. Shared-bus boolean alone rejected as too coarse. |
-| **Rejected** | Full industrial NILM as core — immature, label-starved, residential toolkits; P3 signature hints only `[!]`. |
+| **Rejected** | Full industrial NILM as core — immature, label-starved, residential toolkits; P3/P2 Lab-only NILM-lite hints only `[!]`. |
+| **Shadows (ADR-016)** | Ranking ablations + STUMPY motif — Lab-only. **Not SHAP** (wrong question). |
+| **Deep dive** | [L3-attribution-explainability.md](L3-attribution-explainability.md) |
 
 **Attack:** *“Competitors claim AI disaggregation from the incomer alone.”*  
-**Answer:** Industrial NILM reviews (2024) still list overlapping continuous loads and scarce labels as open problems. We **monotonically improve** with feeder metering (Path A depth) and stay explainable. Feeder meters beat magic disaggregation for trust.
+**Answer:** Industrial NILM reviews (2024) still list overlapping continuous loads and scarce labels as open problems; HIPE work calls single-meter industrial disaggregation unrealistic. We **monotonically improve** with feeder metering (Path A depth) and stay explainable. Feeder meters beat magic disaggregation for trust.
+
+**Attack:** *“At least put SHAP/NILM in shadow.”*  
+**Answer:** Shadows must ask the same question (which asset/event?). Ablations + STUMPY do. SHAP explains model features; full NILM floods Lab before Path A meters exist ([ADR-016](../../decisions/ADR-016-attribution-shadow-challengers.md)).
+
+### 4.4b Dual-lane Lab retention — ADR-015
+
+| | |
+| --- | --- |
+| **Decision** | Every structured candidate logged to RunArtifact with `delivery` ∈ {`l4`,`lab_only`}. Only `emitted`/`l4` stages to Finding outbox. |
+| **Why** | Strict gates must not erase discovery (runner-ups, near-misses, shadows). |
+| **Non-goal** | Per-row promote-to-L4 — observation only. |
+
+**Attack:** *“Stringent conditions miss savings.”*  
+**Answer:** Missed L4 emits still appear in **Lab-only** for engineers; L4 stays precision-first for closure trust.
 
 ---
 

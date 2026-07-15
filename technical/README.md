@@ -47,6 +47,7 @@ L6  Experience & integration (dashboard, API)      → layers/L6-experience-and-
 | [L2 — Universal Repository](layers/L2-universal-repository.md) | Time-series DB choice, energy graph modelling, feature/baseline stores, commercial context (Indian tariff structures), append-only M&V ledger, tenancy and retention |
 | [L3 — Intelligence core](layers/L3-intelligence-core.md) | Model families per engine (baselines, anomaly, MD forecasting, attribution), rules/physics packs, per-plant calibration, cold start, and the per-engine evaluation protocol |
 | [L3 — Decision defense brief](layers/L3-decision-defense-brief.md) | Debate-ready synthesis: rules vs ML vs LLM vs foundation models, engine attack/response cards, ADR-012/014 topology & shadowing, eval gates, Zerowatt counters |
+| [L3 — Attribution explainability](layers/L3-attribution-explainability.md) | Co-start/graph ranking of-record; quality grade; why not SHAP/NILM; dual-lane + ADR-016 shadows |
 | [L4 — Knowledge & reasoning](layers/L4-knowledge-and-reasoning.md) | Agentic RAG design (planner → tools → verifier → rules veto), corpus taxonomy, retrieval stack, guardrails, and the L4 eval harness |
 | [L5 — Closure & verification](layers/L5-closure-and-verification.md) | Workflow engine, WhatsApp Business Platform integration, IPMVP-style M&V, Indian bill reconciliation, savings ledger |
 | [L6 — Experience & integration](layers/L6-experience-and-integration.md) | Dashboard stack, prescription queue UX, report/export generation, REST API + webhooks, tiered "connect to any system" integration menu |

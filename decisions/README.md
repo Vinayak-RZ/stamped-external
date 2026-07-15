@@ -18,6 +18,8 @@ Decision records for the Stamped platform. **Distributed via [stamped-external](
 | [ADR-012](ADR-012-l3-artifact-repo-topology.md) | L3 artifact repos — core, rulepacks, eval | **Accepted** (2026-07-13) |
 | [ADR-013](ADR-013-counterfactual-savings-ledger.md) | Counterfactual savings ledger (`opportunity_cost`) | **Accepted** (2026-07-13) |
 | [ADR-014](ADR-014-ts-foundation-model-role.md) | Time-series foundation model shadow-only role | **Accepted** (2026-07-13) |
+| [ADR-015](ADR-015-l3-dual-lane-lab-detections.md) | L3 dual-lane lab detections (`delivery` l4 vs lab_only) | **Accepted** (2026-07-15) |
+| [ADR-016](ADR-016-attribution-shadow-challengers.md) | Attribution shadow challengers (ablations + STUMPY; not SHAP/NILM) | **Accepted** (2026-07-15) |
 
 Compliance register: [../compliance/india-compliance-register.md](../compliance/india-compliance-register.md)
 
