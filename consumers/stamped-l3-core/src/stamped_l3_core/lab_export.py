@@ -12,9 +12,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import urlparse
 
+from stamped_l3_core.detection_lane import assert_lane_invariant, delivery_for
+
 
 class LabLog:
-    """Accumulate detections (emitted, suppressed, shadow) for one or more windows."""
+    """Accumulate detections (emitted, suppressed, shadow, hypothesis) for windows."""
 
     def __init__(self) -> None:
         self.core_version = "0.1.0"
@@ -58,7 +60,10 @@ class LabLog:
         finding: dict[str, Any] | None = None,
         scores: dict[str, Any] | None = None,
         logs: list[str] | None = None,
+        delivery: str | None = None,
     ) -> None:
+        lane = delivery if delivery is not None else delivery_for(status)
+        assert_lane_invariant(status, lane)
         self.detections.append(
             {
                 "detection_id": detection_id,
@@ -66,17 +71,18 @@ class LabLog:
                 "rule_or_model_ref": rule_or_model_ref,
                 "category": category,
                 "status": status,
+                "delivery": lane,
                 "finding": finding,
                 "suppressions_checked": suppressions_checked or [],
                 "scores": scores,
                 "logs": logs or [],
             }
         )
-        self.add_timeline(f"{detector_kind}.{category}", status)
+        self.add_timeline(f"{detector_kind}.{category}", f"{lane}/{status}")
 
     def to_run_artifact(self) -> dict[str, Any]:
         return {
-            "schema_version": "1.0.0",
+            "schema_version": "1.1.0",
             "run_id": self.run_id,
             "window_id": self.window_id,
             "plant_id": self.plant_id,
@@ -128,6 +134,15 @@ def seed_demo_lab() -> LabLog:
         logs=["live demo suppress"],
     )
     lab.add_detection(
+        detection_id="live-hypothesis",
+        detector_kind="rule",
+        rule_or_model_ref="rulepack://attribution/1.0.0#costart_window",
+        category="md_overlap",
+        status="hypothesis",
+        scores={"rank": 2, "ramp_kw": 40, "hops": 2, "proximity": 0.333, "score": 13.3},
+        logs=["live demo runner-up lab_only"],
+    )
+    lab.add_detection(
         detection_id="live-shadow",
         detector_kind="ml_shadow",
         rule_or_model_ref="mlflow://timesfm/shadow#md_exceedance",
@@ -135,6 +150,19 @@ def seed_demo_lab() -> LabLog:
         status="shadow_only",
         scores={"p90": 960},
         logs=["live demo shadow"],
+    )
+    lab.add_detection(
+        detection_id="live-attr-shadow",
+        detector_kind="ml_shadow",
+        rule_or_model_ref="shadow://attribution/rank_ablation_corr_primary",
+        category="md_overlap",
+        status="shadow_only",
+        scores={
+            "shadow_method": "rank_ablation_corr_primary",
+            "agree_with_primary": True,
+            "primary_rank_ref": "furnace-a",
+        },
+        logs=["live demo ADR-016 ablation"],
     )
     return lab
 

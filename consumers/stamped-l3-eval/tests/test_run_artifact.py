@@ -32,10 +32,31 @@ def test_golden_valid(path: Path) -> None:
 
 def test_md_artifact_has_all_statuses() -> None:
     data = load_artifact(GOLDEN_DIR / "run_w-md-001.json")
+    assert data["schema_version"] == "1.1.0"
     statuses = {d["status"] for d in data["detections"]}
-    assert statuses >= {"emitted", "suppressed", "shadow_only"}
+    assert statuses >= {"emitted", "suppressed", "shadow_only", "hypothesis"}
+    deliveries = {d["delivery"] for d in data["detections"]}
+    assert deliveries == {"l4", "lab_only"}
+    for d in data["detections"]:
+        if d["status"] == "emitted":
+            assert d["delivery"] == "l4"
+        else:
+            assert d["delivery"] == "lab_only"
+
+
+def test_md_attribution_scores_and_shadow() -> None:
+    data = load_artifact(GOLDEN_DIR / "run_w-md-001.json")
+    by_id = {d["detection_id"]: d for d in data["detections"]}
+    top = by_id["d-md-attr-top1"]
+    assert top["scores"]["rank"] == 1
+    assert top["delivery"] == "l4"
+    runner = by_id["d-md-attr-runner"]
+    assert runner["status"] == "hypothesis"
+    assert runner["delivery"] == "lab_only"
+    shadow = by_id["d-md-attr-shadow-ablation"]
+    assert shadow["scores"]["shadow_method"] == "rank_ablation_corr_primary"
 
 
 def test_invalid_rejected() -> None:
     with pytest.raises(Exception):
-        validate_artifact({"schema_version": "1.0.0"})
+        validate_artifact({"schema_version": "1.1.0"})

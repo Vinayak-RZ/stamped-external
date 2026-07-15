@@ -23,6 +23,8 @@ Engineer at a desk auditing why MD fired — bright office or dim evening — ne
 | `--status-suppressed` | Muted slate |
 | `--status-shadow` | Info teal |
 | `--status-error` | Red |
+| delivery-l4 / lab_only chips | Green-tint vs slate — lane primary |
+| hypothesis chip | Warm muted — weak signal, not error |
 
 Accent ≤10% of surface. Status chips carry semantic meaning.
 

@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "run_id": "run-w-pf-001-001",
   "window_id": "w-pf-001",
   "plant_id": "plant_ghaziabad_1",
@@ -21,6 +21,7 @@
       "rule_or_model_ref": "rulepack://incomer/1.0.0#pf_slab",
       "category": "pf_slab_breach",
       "status": "emitted",
+      "delivery": "l4",
       "finding": {
         "finding_id": "f-pf-001",
         "category": "pf_slab_breach",
@@ -36,6 +37,7 @@
       "rule_or_model_ref": "rulepack://load_management/1.0.0#pf_kvAr_correct",
       "category": "pf_slab_breach",
       "status": "emitted",
+      "delivery": "l4",
       "finding": {
         "finding_id": "f-pf-kvar-001",
         "category": "pf_slab_breach",

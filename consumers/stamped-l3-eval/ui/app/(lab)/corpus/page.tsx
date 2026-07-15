@@ -38,10 +38,13 @@ export default function CorpusPage() {
             let hits = "—";
             if (fs.existsSync(art)) {
               const a = JSON.parse(fs.readFileSync(art, "utf-8"));
-              const e = a.detections.filter((d: { status: string }) => d.status === "emitted").length;
-              const s = a.detections.filter((d: { status: string }) => d.status === "suppressed").length;
-              const sh = a.detections.filter((d: { status: string }) => d.status === "shadow_only").length;
-              hits = `${e}E / ${s}S / ${sh}Sh`;
+              const l4 = a.detections.filter(
+                (d: { delivery?: string }) => d.delivery === "l4",
+              ).length;
+              const lab = a.detections.filter(
+                (d: { delivery?: string }) => d.delivery === "lab_only",
+              ).length;
+              hits = `${l4} L4 / ${lab} Lab`;
             }
             return (
               <tr key={w.window_id}>

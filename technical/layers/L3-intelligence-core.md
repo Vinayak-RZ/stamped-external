@@ -434,6 +434,8 @@ Deliberate sequencing logic: **deterministic ₹ engines first** (they verify fa
 
 Historian backfill: replay windows through cold path with `late: true` envelopes; findings tagged `engine_version` for audit. Hot path never blocks on cold refit.
 
+**Lab retention (ADR-015):** every structured candidate is logged to RunArtifact with `delivery` ∈ {`l4`,`lab_only`}. Suppressions, hypothesis near-misses, and attribution/MD shadows stay `lab_only` — only `emitted`/`l4` stages the Finding outbox. Attribution shadows: [ADR-016](../../decisions/ADR-016-attribution-shadow-challengers.md).
+
 ---
 
 ## 10. Suppression service — shared contract
