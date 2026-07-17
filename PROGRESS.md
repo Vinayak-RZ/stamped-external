@@ -41,10 +41,18 @@
 | Attribution explainability + shadows | done |
 | Core hot-path LabLog (no silent drop) | done |
 
+## L4 architecture SSOT (2026-07-17)
+
+| Item | Status |
+|------|--------|
+| L4 layer spec rewrite | done — adaptive RAG, dual lane, eval stack |
+| ADR-017 adaptive retrieval + web T4 | done |
+| handoff/stamped-l4-architecture-handoff.md | done (supersedes build-order) |
+
 ## Next (P1 — out of P0 scope)
 
 - Live L2 query API integration
-- LangGraph full agent lane
+- LangGraph full agent lane (per L4 handoff)
 - Forging/auto rulepacks
 - TimesFM promotion re-eval with pilot data
 - Event NILM-lite attribution shadow (gated 1-min + labels)

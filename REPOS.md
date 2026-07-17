@@ -15,6 +15,8 @@ Consumer repos mount this platform pack as a git submodule at `external/`.
 | stamped-l5 | `Vinayak-RZ/stamped-l5` (planned) | L5 | `external/` | — |
 | stamped-l6 | `Vinayak-RZ/stamped-l6` (planned) | L6 | `external/` | — |
 
+**L4 handoff:** [handoff/stamped-l4-architecture-handoff.md](handoff/stamped-l4-architecture-handoff.md) · [ADR-017](decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md)
+
 **Platform repo:** `vinayak-rz/stamped-external` — see [SUBMODULE.md](SUBMODULE.md)
 
 Update this table when a consumer bumps its pin.

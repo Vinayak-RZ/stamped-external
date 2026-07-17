@@ -113,7 +113,7 @@ flowchart TD
 | **L1** | Protocol adapters, edge gateway, bill ingest, schema normalisation, MQTT ingress | `connectors-edge`, `connectors-cloud`, `connectors-bill` | [`technical/layers/L1-connect-and-normalise.md`](technical/layers/L1-connect-and-normalise.md) |
 | **L2** | Six stores: time-series, energy graph, commercial context, features, baselines, M&V ledger | `stamped-l2` | [`technical/layers/L2-universal-repository.md`](technical/layers/L2-universal-repository.md) |
 | **L3** | Baselines, anomaly, MD/demand, attribution, rules/physics, waste classifier | `stamped-l3` | [`technical/layers/L3-intelligence-core.md`](technical/layers/L3-intelligence-core.md) |
-| **L4** | Agentic RAG, prescription agent (planner → tools → verifier), impact calculator | `stamped-l4` | [`technical/layers/L4-knowledge-and-reasoning.md`](technical/layers/L4-knowledge-and-reasoning.md) |
+| **L4** | Dual-lane prescription agent, adaptive RAG, impact calculator, OSS eval stack | `stamped-l4` | [`technical/layers/L4-knowledge-and-reasoning.md`](technical/layers/L4-knowledge-and-reasoning.md) · [`handoff/stamped-l4-architecture-handoff.md`](handoff/stamped-l4-architecture-handoff.md) |
 | **L5** | Workflow, WhatsApp, IPMVP M&V, bill reconciliation, savings ledger | `stamped-l5` | [`technical/layers/L5-closure-and-verification.md`](technical/layers/L5-closure-and-verification.md) |
 | **L6** | Dashboard, prescription queue, REST API, exports, webhooks | `stamped-l6` | [`technical/layers/L6-experience-and-integration.md`](technical/layers/L6-experience-and-integration.md) |
 
