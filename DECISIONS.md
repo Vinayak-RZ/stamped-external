@@ -11,6 +11,17 @@
 | ADR-014 | TS foundation model shadow role | **Accepted** |
 | ADR-015 | L3 dual-lane lab detections | **Accepted** |
 | ADR-016 | Attribution shadow challengers | **Accepted** |
+| ADR-017 | L4 adaptive retrieval + web trust tiers | **Accepted** |
+
+## L4 architecture (2026-07-17)
+
+| Topic | Choice |
+|-------|--------|
+| Repo | Single `stamped-l4` (runtime + corpus + eval) |
+| Agent | Dual-lane: template (0 LLM) + bounded LangGraph (≤5 soft / 6 hard) |
+| Retrieval | Adaptive hybrid H/G/V + allowlisted web T4 — [ADR-017](decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md) |
+| Eval | Langfuse + Arize Phoenix + DeepEval (LangSmith optional) |
+| Handoff | [handoff/stamped-l4-architecture-handoff.md](handoff/stamped-l4-architecture-handoff.md) |
 
 ## ADR-014 promotion (Phase P2)
 

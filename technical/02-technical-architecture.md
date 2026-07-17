@@ -86,7 +86,7 @@ Each layer has a dedicated deep-research spec in this pack:
 | L1 | [L1 — Connect & normalise](layers/L1-connect-and-normalise.md) | Protocols, connectors, edge gateway, bill ingest, normalisation schema |
 | L2 | [L2 — Universal Repository](layers/L2-universal-repository.md) | Six stores: TSDB, graph, context, features, baselines, ledger |
 | L3 | [L3 — Intelligence core](layers/L3-intelligence-core.md) | Model families per engine, rules/physics packs, calibration, per-engine eval protocol |
-| L4 | [L4 — Knowledge & reasoning](layers/L4-knowledge-and-reasoning.md) | Agentic RAG design, corpus, guardrails, eval harness |
+| L4 | [L4 — Knowledge & reasoning](layers/L4-knowledge-and-reasoning.md) | Dual-lane agent, adaptive RAG (ADR-017), guardrails, Langfuse/Phoenix/DeepEval |
 | L5 | [L5 — Closure & verification](layers/L5-closure-and-verification.md) | Workflow, WhatsApp, IPMVP M&V, bill reconciliation, ledger |
 | L6 | [L6 — Experience & integration](layers/L6-experience-and-integration.md) | Dashboard, exports, REST API, webhooks, custom-system integration |
 | Cross | [Production engineering](cross-cutting/03-production-engineering.md) | Streaming backbone, reliability patterns, edge, tenancy, observability |

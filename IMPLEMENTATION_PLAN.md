@@ -50,7 +50,7 @@ Deliver an L3/L4 stack that beats Zerowatt on **bill-verified savings proof**, *
 
 - Updated L1–L5 specs + **ADR-012/013/014**
 - New contracts: `finding.json`, `prescription.json`, `ledger-entry.json`, `capex-proposal.json` (+ envelope wrapping)
-- [handoff/stamped-l3-build-order.md](handoff/stamped-l3-build-order.md) + [handoff/stamped-l4-build-order.md](handoff/stamped-l4-build-order.md)
+- [handoff/stamped-l3-build-order.md](handoff/stamped-l3-build-order.md) + [handoff/stamped-l4-architecture-handoff.md](handoff/stamped-l4-architecture-handoff.md)
 - `stamped-l3-core` — engines, suppression, transactional outbox
 - `stamped-l3-rulepacks` — semver physics/tariff packs + golden CI
 - `stamped-l3-eval` — corpus + backtest CLI (P1)
@@ -332,7 +332,7 @@ flowchart LR
 | 21 | 1 | `test(contracts): golden fixtures finding/prescription/ledger` | contract-check |
 | 22 | 1 | `chore(contracts): semver bump CHANGELOG` | contract-check |
 | 23 | 1 | `handoff: stamped-l3-build-order` | — |
-| 24 | 1 | `handoff: stamped-l4-build-order` | — |
+| 24 | 1 | `handoff: stamped-l4-architecture-handoff` (+ ADR-017) | — |
 | 25 | 1 | `docs: update REPOS.md for l3 artifact repos` | — |
 
 ### Phase B (WS-2) — 12 commits — branch `cursor/stamped-l3-core-272a`

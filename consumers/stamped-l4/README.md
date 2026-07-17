@@ -2,7 +2,7 @@
 
 L4 **template-fast-path** scaffold (Lane A, P0). Maps high-confidence `Finding` categories to deterministic `Prescription` JSON — no LLM.
 
-Aligned with [handoff/stamped-l4-build-order.md](../../handoff/stamped-l4-build-order.md) and platform contracts under `external/contracts/` (submodule).
+Aligned with [handoff/stamped-l4-architecture-handoff.md](../../handoff/stamped-l4-architecture-handoff.md), [L4 SSOT](../../technical/layers/L4-knowledge-and-reasoning.md), [ADR-017](../../decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md), and platform contracts under `external/contracts/` (submodule).
 
 ## Supported categories
 

@@ -95,6 +95,22 @@ Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · 
 
 ---
 
+## stamped-l4 — read first
+
+| # | Document | Purpose |
+|---|----------|---------|
+| 1 | [stamped-l4-architecture-handoff.md](./stamped-l4-architecture-handoff.md) | **Primary handoff** — dual-lane agent, adaptive RAG, T4 web, eval stack, L3 prompt |
+| 2 | [../technical/layers/L4-knowledge-and-reasoning.md](../technical/layers/L4-knowledge-and-reasoning.md) | Architecture SSOT |
+| 3 | [../decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md](../decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md) | Adaptive hybrid RAG + web trust tiers |
+| 4 | [stamped-l4-build-order.md](./stamped-l4-build-order.md) | Superseded stub (redirects here) |
+| 5 | [../consumers/stamped-l4/README.md](../consumers/stamped-l4/README.md) | Platform Lane A scaffold reference |
+
+### stamped-l4 one-line mission
+
+**stamped-l4** is the **Knowledge & Reasoning** layer — Finding → Prescription with template fast path + bounded LangGraph, adaptive RAG over industrial practice corpus, and OSS-first RAG/agent eval (Langfuse + Phoenix + DeepEval).
+
+---
+
 ## Contracts & fixtures (shared)
 
 | Path | Use |
@@ -112,8 +128,11 @@ Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · 
 
 | Layer | Document |
 |-------|----------|
+| L4 depth | [../technical/layers/L4-knowledge-and-reasoning.md](../technical/layers/L4-knowledge-and-reasoning.md) |
+| L3 depth | [../technical/layers/L3-intelligence-core.md](../technical/layers/L3-intelligence-core.md) |
 | L2 depth | [../technical/layers/L2-universal-repository.md](../technical/layers/L2-universal-repository.md) |
 | L1 depth | [../technical/layers/L1-connect-and-normalise.md](../technical/layers/L1-connect-and-normalise.md) |
+| Eval spine | [../technical/cross-cutting/04-evaluation-and-quality.md](../technical/cross-cutting/04-evaluation-and-quality.md) |
 | Master | [../technical/00-stamped-master-document.md](../technical/00-stamped-master-document.md) |
 
 ---
@@ -125,3 +144,4 @@ Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · 
 | 2026-07-11 | Initial handoff for connectors-bill bootstrap |
 | 2026-07-12 | Added stamped-l2 handoff section, ADR-009, layer-interfaces-l2 |
 | 2026-07-12 | Submodule distribution (ADR-011); playbooks + deployment-profiles |
+| 2026-07-17 | L4 architecture handoff + ADR-017; build-order superseded |

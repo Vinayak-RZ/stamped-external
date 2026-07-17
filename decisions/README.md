@@ -20,6 +20,7 @@ Decision records for the Stamped platform. **Distributed via [stamped-external](
 | [ADR-014](ADR-014-ts-foundation-model-role.md) | Time-series foundation model shadow-only role | **Accepted** (2026-07-13) |
 | [ADR-015](ADR-015-l3-dual-lane-lab-detections.md) | L3 dual-lane lab detections (`delivery` l4 vs lab_only) | **Accepted** (2026-07-15) |
 | [ADR-016](ADR-016-attribution-shadow-challengers.md) | Attribution shadow challengers (ablations + STUMPY; not SHAP/NILM) | **Accepted** (2026-07-15) |
+| [ADR-017](ADR-017-l4-adaptive-retrieval-and-web-trust.md) | L4 adaptive hybrid RAG + web-search trust tiers (T1–T4) | **Accepted** (2026-07-17) |
 
 Compliance register: [../compliance/india-compliance-register.md](../compliance/india-compliance-register.md)
 
