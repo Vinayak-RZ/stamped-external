@@ -1,9 +1,12 @@
 # Demo decks
 
-Client-facing HTML presentation decks for Stamped Energy. Lives at the repo root (`demo-decks/`), separate from `handoff/`.
+Client-facing HTML presentation decks for Stamped Energy.
 
-| Deck | Use |
+| Path | Use |
 |------|-----|
-| [stamped-energy-demo-deck.html](./stamped-energy-demo-deck.html) | First-meeting / Proof Run walkthrough |
+| [index.html](./index.html) | First-meeting / Proof Run walkthrough (this folder) |
+| [/index.html](../index.html) | Same file at repo root for GitHub Pages |
 
-Open the HTML file in a browser. Arrow keys, space, or on-screen controls navigate. On phones, slides scroll vertically when content is taller than the viewport; horizontal swipe changes slides.
+Open `index.html` in a browser. Arrow keys, space, or on-screen controls navigate. On phones, slides scroll vertically when content is taller than the viewport; horizontal swipe changes slides.
+
+**GitHub Pages:** enable Pages from the repo root so `/` serves the root `index.html`.
