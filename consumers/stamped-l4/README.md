@@ -1,9 +1,12 @@
-# stamped-l4
+# stamped-l4 (platform scaffold)
 
 L4 **template-fast-path** scaffold (Lane A, P0). Maps high-confidence `Finding` categories to deterministic `Prescription` JSON — no LLM.
 
-Aligned with [handoff/stamped-l4-architecture-handoff.md](../../handoff/stamped-l4-architecture-handoff.md), [L4 SSOT](../../technical/layers/L4-knowledge-and-reasoning.md), [ADR-017](../../decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md), and platform contracts under `external/contracts/` (submodule).
+> **Live consumer:** The production L4 implementation (P0–P2) lives in **[knowledge-reasoning](https://github.com/Vinayak-RZ/knowledge-reasoning)**.  
+> Platform mirror of its README: [`../knowledge-reasoning/README.md`](../knowledge-reasoning/README.md).  
+> Pilot decisions: [ADR-018](../../decisions/ADR-018-l4-pilot-execution-knowledge-reasoning.md).
 
+Aligned with [handoff/stamped-l4-architecture-handoff.md](../../handoff/stamped-l4-architecture-handoff.md), [L4 SSOT](../../technical/layers/L4-knowledge-and-reasoning.md), [ADR-017](../../decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md), [ADR-018](../../decisions/ADR-018-l4-pilot-execution-knowledge-reasoning.md), and platform contracts under `contracts/`.
 ## Supported categories
 
 | Finding category | Template ID |
@@ -48,8 +51,8 @@ ok, errors = verify(prescription, finding_dict)
 - [x] Numeric verifier (impact within 1% of finding estimate)
 - [x] Required-field schema gate
 - [x] Eval manifest with ≥20 task entries
-- [ ] LangGraph lane (P1)
-- [ ] HTTP tools to L2 (P1)
+- [x] LangGraph lanes + analyst — shipped in **knowledge-reasoning** (P0–P2); see ADR-018
+- [ ] Live HTTP tools to L2 — post-P2 deploy (fixtures until then)
 
 ## Contracts
 

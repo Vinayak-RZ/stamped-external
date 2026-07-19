@@ -21,6 +21,7 @@ Decision records for the Stamped platform. **Distributed via [stamped-external](
 | [ADR-015](ADR-015-l3-dual-lane-lab-detections.md) | L3 dual-lane lab detections (`delivery` l4 vs lab_only) | **Accepted** (2026-07-15) |
 | [ADR-016](ADR-016-attribution-shadow-challengers.md) | Attribution shadow challengers (ablations + STUMPY; not SHAP/NILM) | **Accepted** (2026-07-15) |
 | [ADR-017](ADR-017-l4-adaptive-retrieval-and-web-trust.md) | L4 adaptive hybrid RAG + web-search trust tiers (T1–T4) | **Accepted** (2026-07-17) |
+| [ADR-018](ADR-018-l4-pilot-execution-knowledge-reasoning.md) | L4 pilot execution — LangGraph early pull, L6 UI, Path H hop-2, Path W/Phoenix in P2, English through P2 | **Accepted** (2026-07-19) |
 
 Compliance register: [../compliance/india-compliance-register.md](../compliance/india-compliance-register.md)
 
