@@ -111,6 +111,18 @@ Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · 
 
 ---
 
+## Consumer README snapshots (L1–L4)
+
+Mirrored root READMEs from live consumer repos (context only — canonical docs stay in each repo):
+
+| Layer | Snapshot index |
+|-------|----------------|
+| L1–L4 | [../consumers/readmes/README.md](../consumers/readmes/README.md) |
+
+L5 / L6 slots are empty until those repos exist.
+
+---
+
 ## Contracts & fixtures (shared)
 
 | Path | Use |
@@ -145,3 +157,4 @@ Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · 
 | 2026-07-12 | Added stamped-l2 handoff section, ADR-009, layer-interfaces-l2 |
 | 2026-07-12 | Submodule distribution (ADR-011); playbooks + deployment-profiles |
 | 2026-07-17 | L4 architecture handoff + ADR-017; build-order superseded |
+| 2026-07-19 | Link consumer README snapshots under `consumers/readmes/` |
