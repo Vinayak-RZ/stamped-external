@@ -1215,72 +1215,163 @@
       .show-mobile.btn-row,
       .show-mobile.flow-tags { display: flex !important; }
 
-      /* Title: one clean first screen */
+      /* Overflow safety */
+      .slide, .slide__inner, .hero-copy, .brand-name, h1, h2, .lede,
+      .rx-action, .wa-bubble, .wa-bubble h4, .tech-card, .waste-card,
+      .silo-card, .audit-col, .bound-list li, .chip, .ask-box, .contact-line,
+      .tl-item, .commercial, .cred-quiet, .video-caption, p, td, th {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      img, svg, video, iframe, canvas {
+        max-width: 100%;
+      }
+      .rx-ev-table, .bill-table-wrap, .ledger-wrap, .phase-table,
+      .table-scroll, .rx-layout {
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .phase-table {
+        display: block;
+        width: 100%;
+      }
+
+      /* Title: content starts in upper third, full width, no dead top */
       #scene-title.slide {
-        justify-content: center;
+        justify-content: flex-start;
         overflow: hidden;
-        padding-bottom: max(5rem, calc(var(--safe-b) + 4.5rem));
+        padding-top: calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + 8vh);
+        padding-bottom: max(5.5rem, calc(var(--safe-b) + 5rem));
       }
       #scene-title .slide__inner {
         width: 100%;
-        display: flex;
-        align-items: center;
-        min-height: calc(100dvh - var(--chrome-h) - var(--progress-h) - var(--safe-t) - 5.5rem);
+        min-height: 0;
+        display: block;
+        transform: none !important;
+        animation: none !important;
       }
       #scene-title .hero-shell {
         width: 100%;
         gap: 0;
+        display: block;
       }
       #scene-title .hero-copy {
         width: 100%;
-        max-width: 22rem;
-        margin: 0 auto;
+        max-width: 100%;
+        margin: 0;
       }
       #scene-title .brand-name {
-        font-size: clamp(2.6rem, 12vw, 3.4rem);
-        margin-bottom: 0.85rem;
-        line-height: 0.92;
+        font-size: clamp(2.5rem, 11vw, 3.2rem);
+        margin-bottom: 0.65rem;
+        line-height: 0.95;
       }
       #scene-title h1 {
-        font-size: clamp(1.2rem, 5.2vw, 1.45rem);
+        font-size: clamp(1.15rem, 4.8vw, 1.35rem);
         font-weight: 650;
-        max-width: none;
-        margin-bottom: 0.85rem;
+        max-width: 16em;
+        margin-bottom: 0.7rem;
         line-height: 1.3;
       }
       #scene-title .lede {
-        font-size: 0.95rem;
-        line-height: 1.45;
-        margin-bottom: 1.5rem;
+        font-size: 0.92rem;
+        line-height: 1.4;
+        margin-bottom: 1.35rem;
+        max-width: 28em;
         color: var(--on-surface-variant);
       }
       #scene-title .btn-row {
         margin-top: 0;
         width: 100%;
+        max-width: 20rem;
       }
       #scene-title .btn {
         width: 100%;
-        height: 52px;
+        height: 50px;
         font-size: 1rem;
       }
+      #scene-title .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+      }
 
-      /* Live workspace: iframe only */
-      #scene-live .dash-title-row { display: none !important; }
-      #scene-live .dash-shell {
-        height: calc(100dvh - var(--chrome-h) - var(--progress-h) - var(--safe-t) - 5.5rem);
-        max-height: none;
-        margin-top: 0;
+      /* Floor: proper phone, no nested-phone clutter */
+      #scene-floor.slide {
+        justify-content: flex-start;
+        overflow: hidden;
+        padding-top: calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + 0.55rem);
+        padding-bottom: max(4.75rem, calc(var(--safe-b) + 4.25rem));
       }
-      #scene-live.slide {
-        justify-content: stretch;
-        padding-top: calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + 0.5rem);
-        padding-bottom: max(4.25rem, calc(var(--safe-b) + 3.75rem));
-      }
-      #scene-live .slide__inner {
+      #scene-floor .slide__inner {
         height: 100%;
         display: flex;
         flex-direction: column;
+        min-height: 0;
       }
+      #scene-floor .floor-layout {
+        margin-top: 0.45rem;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      #scene-floor .phone {
+        width: min(100%, 340px);
+        max-width: 100%;
+        margin: 0 auto;
+        border-radius: 30px;
+        padding: 9px;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        max-height: calc(100dvh - var(--chrome-h) - var(--progress-h) - var(--safe-t) - 7.5rem);
+      }
+      #scene-floor .phone::before {
+        width: 72px;
+        height: 14px;
+        top: 12px;
+      }
+      #scene-floor .phone__screen {
+        flex: 1;
+        min-height: 0;
+        border-radius: 22px;
+        display: flex;
+        flex-direction: column;
+      }
+      #scene-floor .wa-header {
+        padding: 1.35rem 0.9rem 0.75rem;
+        flex-shrink: 0;
+      }
+      #scene-floor .wa-body {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+        padding: 0.8rem;
+      }
+      #scene-floor .wa-bubble {
+        font-size: 0.86rem;
+        line-height: 1.4;
+      }
+      #scene-floor .wa-bubble h4 {
+        font-size: 1rem;
+        line-height: 1.25;
+      }
+      #scene-floor .wa-actions {
+        flex-shrink: 0;
+        margin-top: 0.55rem;
+      }
+      #scene-floor .wa-actions button {
+        min-height: 44px;
+        font-size: 0.8rem;
+      }
+
+      /* ponytail: desktop-only simulated workspace — unusable on phone */
+      #scene-live { display: none !important; }
 
       .nav-btn {
         top: auto; bottom: max(0.85rem, calc(var(--safe-b) + 0.55rem));
@@ -1311,16 +1402,12 @@
       .tech-card > p { margin-bottom: 0; }
       .rx-layout { gap: 0.85rem; }
       .rx-flip, .rx-flip__inner { min-height: min(58vh, 380px); }
-      .floor-layout { gap: 1.1rem; }
-      .phone { max-width: min(100%, 320px); }
-      .phone__screen { min-height: 360px; }
+      .floor-layout { gap: 0.75rem; }
       .video-frame {
         width: 100%;
         max-height: none;
         aspect-ratio: 16 / 9;
       }
-      .dash-shell { height: min(62vh, 420px); }
-      .dash-title-row { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
       .phase-table { font-size: 0.84rem; }
       .phase-table th, .phase-table td { padding: 0.65rem 0.75rem; }
       .ask-box { max-width: none; }
@@ -1334,7 +1421,8 @@
         padding-left: max(0.9rem, var(--safe-l));
         padding-right: max(0.9rem, var(--safe-r));
       }
-      #scene-title .brand-name { font-size: clamp(2.4rem, 11vw, 3rem); }
+      #scene-title .brand-name { font-size: clamp(2.35rem, 10.5vw, 2.9rem); }
+      #scene-title h1 { max-width: 100%; }
       .tl-item { grid-template-columns: 56px 1fr; gap: 0.55rem; }
       .tl-time { font-size: 0.8rem; }
       .rx-flip, .rx-flip__inner { min-height: 320px; }
@@ -1385,12 +1473,12 @@
               <span class="wordmark-fallback">Stamped Energy</span>
             </div>
             <p class="eyebrow reveal hide-mobile">Operational energy decisions, verified on the bill</p>
-            <p class="eyebrow reveal show-mobile">Bill-verified plant decisions</p>
+            <p class="eyebrow reveal show-mobile">Bill-verified decisions</p>
             <p class="brand-name reveal">Stamped Energy</p>
             <h1 class="reveal hide-mobile">From plant signals to owned actions on the invoice.</h1>
-            <h1 class="reveal show-mobile">Plant data to owned ₹ actions on the bill.</h1>
+            <h1 class="reveal show-mobile">Owned ₹ actions on the bill.</h1>
             <p class="lede reveal hide-mobile">You already have meters, EMS, and often renewables. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.</p>
-            <p class="lede reveal show-mobile">Reads meters and EMS you already run. Sends the floor a ranked action. Checks the next DISCOM bill.</p>
+            <p class="lede reveal show-mobile">Ranked floor actions from your meters and EMS. Verified on the DISCOM bill.</p>
             <div class="flow-tags reveal hide-mobile">
               <span class="chip">Physics &amp; rules</span>
               <span class="chip">Foundation models</span>
@@ -1710,8 +1798,9 @@
     <!-- 7 Floor -->
     <section class="slide slide--light" id="scene-floor" data-theme="light" aria-label="Floor delivery">
       <div class="slide__inner slide__inner--wide">
-        <p class="eyebrow reveal">Execution channel</p>
-        <h2 class="reveal">The action reaches the floor.</h2>
+        <p class="eyebrow reveal hide-mobile">Execution channel</p>
+        <h2 class="reveal hide-mobile">The action reaches the floor.</h2>
+        <p class="eyebrow reveal show-mobile">On the floor</p>
         <div class="floor-layout">
           <div class="phone reveal" aria-hidden="true">
             <div class="phone__screen">
@@ -2053,7 +2142,7 @@
           <p>Simulated data, not your plant</p>
         </div>
         <div class="dash-shell reveal">
-          <div class="dash-badge">Simulated sample</div>
+          <div class="dash-badge hide-mobile">Simulated sample</div>
           <iframe
             id="dashFrame"
             data-src="https://stamped-energy.vercel.app/"
@@ -2125,7 +2214,11 @@
 
   <script>
     (function () {
-      const slides = Array.from(document.querySelectorAll(".slide"));
+      const isMobileDeck = window.matchMedia("(max-width: 720px)").matches;
+      // ponytail: skip simulated dashboard on phone — desktop iframe only
+      const slides = Array.from(document.querySelectorAll(".slide")).filter(function (s) {
+        return !(isMobileDeck && s.id === "scene-live");
+      });
       const total = slides.length;
       const progressFill = document.getElementById("progressFill");
       const counter = document.getElementById("sceneCounter");
