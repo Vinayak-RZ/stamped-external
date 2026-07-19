@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Stamped Energy - Demo Deck</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,14 +35,26 @@
       --progress-h: 3px;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
       --grid-line: color-mix(in srgb, var(--primary) 10%, transparent);
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --safe-t: env(safe-area-inset-top, 0px);
+      --safe-b: env(safe-area-inset-bottom, 0px);
+      --safe-l: env(safe-area-inset-left, 0px);
+      --safe-r: env(safe-area-inset-right, 0px);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       height: 100%;
+      height: 100dvh;
       overflow: hidden;
-      background: var(--secondary);
+      background: var(--surface);
       color: var(--on-surface);
       font-family: var(--font-body);
       -webkit-font-smoothing: antialiased;
@@ -60,10 +72,10 @@
     }
 
     .chrome-top {
-      position: fixed; top: var(--progress-h); left: 0; right: 0;
+      position: fixed; top: calc(var(--progress-h) + var(--safe-t)); left: 0; right: 0;
       height: var(--chrome-h); z-index: 90;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 clamp(1rem, 3vw, 2.25rem);
+      padding: 0 max(clamp(1rem, 3vw, 2.25rem), var(--safe-l)) 0 max(clamp(1rem, 3vw, 2.25rem), var(--safe-r));
       pointer-events: none;
     }
     .chrome-logo {
@@ -83,15 +95,19 @@
     }
     .chrome-logo, .chrome-counter { color: var(--on-surface); }
 
-    .stage { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+    .stage {
+      position: relative; width: 100%;
+      height: 100%; height: 100dvh;
+      overflow: hidden;
+    }
 
     .slide {
       position: absolute; inset: 0;
       display: flex; flex-direction: column; justify-content: center;
       padding:
-        calc(var(--chrome-h) + var(--progress-h) + clamp(0.25rem, 0.8vh, 0.65rem))
-        clamp(4.25rem, 7.5vw, 6.5rem)
-        clamp(3.25rem, 6vh, 4.4rem);
+        calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + clamp(0.25rem, 0.8vh, 0.65rem))
+        max(clamp(4.25rem, 7.5vw, 6.5rem), var(--safe-r))
+        max(clamp(3.25rem, 6vh, 4.4rem), calc(var(--safe-b) + 2.5rem));
       opacity: 0; visibility: hidden; pointer-events: none;
       transition: opacity 0.28s var(--ease), visibility 0.28s;
       overflow: hidden;
@@ -354,18 +370,47 @@
     /* 1 Title */
     #scene-title .hero-shell {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.95fr);
-      gap: clamp(1.5rem, 4vw, 3rem);
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: clamp(1.75rem, 4.5vw, 3.25rem);
       align-items: center;
+    }
+    #scene-title .hero-copy {
+      display: flex; flex-direction: column; align-items: flex-start;
+      gap: 0;
+    }
+    #scene-title .hero-logo {
+      height: clamp(36px, 4.2vw, 48px); width: auto;
+      margin-bottom: var(--space-5);
+    }
+    #scene-title .eyebrow {
+      margin-bottom: var(--space-3);
     }
     #scene-title .brand-name {
       font-family: var(--font-display); font-weight: 800;
-      font-size: clamp(2.6rem, 5.8vw, 4.2rem);
-      letter-spacing: -0.04em; line-height: 0.98; color: var(--secondary);
-      margin: 0.35rem 0 0.55rem;
+      font-size: clamp(2.8rem, 6vw, 4.4rem);
+      letter-spacing: -0.045em; line-height: 0.95; color: var(--secondary);
+      margin: 0 0 var(--space-4);
     }
-    #scene-title .hero-logo { height: clamp(42px, 5vw, 58px); width: auto; }
-    #scene-title .wordmark-fallback { display: none; font-family: var(--font-display); font-weight: 800; font-size: 2rem; color: var(--secondary); }
+    #scene-title h1 {
+      font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      max-width: 18em;
+      margin: 0 0 var(--space-4);
+      color: var(--on-surface);
+    }
+    #scene-title .lede {
+      margin: 0 0 var(--space-5);
+      max-width: 38em;
+    }
+    #scene-title .flow-tags { margin-top: 0; margin-bottom: var(--space-2); }
+    #scene-title .btn-row { margin-top: var(--space-5); }
+    #scene-title .meta { margin-top: var(--space-4); }
+    #scene-title .wordmark-fallback {
+      display: none; font-family: var(--font-display); font-weight: 800;
+      font-size: 1.75rem; color: var(--secondary); margin-bottom: var(--space-5);
+    }
     #scene-title.logo-failed .hero-logo { display: none; }
     #scene-title.logo-failed .wordmark-fallback { display: block; }
     .hero-canvas {
@@ -374,13 +419,13 @@
       background:
         linear-gradient(160deg, rgba(247,84,64,0.06), transparent 45%),
         var(--white);
-      padding: 1.15rem;
-      min-height: 320px;
+      padding: clamp(0.85rem, 1.5vw, 1.15rem);
+      min-height: 0;
       position: relative;
       overflow: hidden;
       box-shadow: 0 18px 40px -28px rgba(5,31,19,0.18);
     }
-    .hero-canvas svg { width: 100%; height: 280px; display: block; }
+    .hero-canvas svg { width: 100%; height: auto; aspect-ratio: 420 / 280; display: block; }
     .flow-tags {
       display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem;
     }
@@ -1110,21 +1155,142 @@
     .contact-line a:hover { text-decoration: underline; }
     .cred-quiet { margin-top: 0.7rem; font-size: 0.72rem; color: var(--outline); }
 
-    @media (max-width: 980px) {
-      .hero-shell, .two-col, .rx-layout, .floor-layout, .loop-grid, .ba-grid, .bound-grid, .tech-grid, .audit-grid, .gap-outcomes { grid-template-columns: 1fr; }
-      .rx-flip, .rx-flip__inner { min-height: 380px; }
-      .tech-card { min-height: 0; }
-      .silo-board, .do-chain, .waste-grid, .stat-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .phone { max-width: 300px; }
-      .phone__screen { min-height: 420px; }
-      .dash-shell { height: clamp(320px, 58vh, 520px); }
+    .bill-table-wrap, .ledger-wrap, .phase-table { max-width: 100%; }
+    .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    @media (max-width: 1100px) {
+      .waste-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .tech-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .do-chain { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .do-arrow { display: none; }
     }
-    @media (max-height: 760px) {
+
+    @media (max-width: 980px) {
+      .hero-shell, .two-col, .rx-layout, .floor-layout, .loop-grid, .ba-grid, .bound-grid, .audit-grid, .gap-outcomes { grid-template-columns: 1fr; }
+      .rx-flip, .rx-flip__inner { min-height: 360px; }
+      .tech-card, .waste-card, .do-step, .silo-card { min-height: 0; }
+      .silo-board, .stat-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .phone { max-width: 300px; }
+      .phone__screen { min-height: 400px; }
+      .dash-shell { height: clamp(320px, 58vh, 520px); }
+      #scene-title .hero-shell { gap: var(--space-6); }
+    }
+
+    @media (max-width: 720px) {
+      :root { --chrome-h: 48px; }
+
+      .slide {
+        justify-content: flex-start;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        padding:
+          calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + 0.75rem)
+          max(1.1rem, var(--safe-r))
+          max(4.5rem, calc(var(--safe-b) + 4.25rem));
+      }
+      .slide__inner,
+      .slide__inner--media {
+        transform: none;
+        max-width: 100%;
+        padding-bottom: 0.5rem;
+      }
+      .slide.active > .slide__inner,
+      .slide.active > .slide__inner--media {
+        animation: fadeUp 0.4s var(--ease) both;
+      }
+
+      h1 { font-size: clamp(1.55rem, 7vw, 2.1rem); margin-bottom: 0.55rem; }
+      h2 { font-size: clamp(1.35rem, 6vw, 1.75rem); margin-bottom: 0.45rem; }
+      .lede { font-size: 0.95rem; line-height: 1.5; max-width: none; }
+      .eyebrow { margin-bottom: 0.4rem; letter-spacing: 0.1em; }
+
+      #scene-title .brand-name {
+        font-size: clamp(2.35rem, 11vw, 3.1rem);
+        margin-bottom: var(--space-3);
+      }
+      #scene-title h1 {
+        font-size: clamp(1.15rem, 4.8vw, 1.4rem);
+        max-width: none;
+        margin-bottom: var(--space-3);
+      }
+      #scene-title .hero-logo { height: 34px; margin-bottom: var(--space-4); }
+      #scene-title .lede { margin-bottom: var(--space-4); }
+      #scene-title .btn-row { margin-top: var(--space-4); width: 100%; }
+      #scene-title .btn { width: 100%; height: 48px; }
+      #scene-title .hero-canvas { order: 2; }
+      #scene-title .hero-copy { order: 1; }
+
+      .nav-btn {
+        top: auto; bottom: max(0.85rem, calc(var(--safe-b) + 0.55rem));
+        transform: none; width: 44px; height: 44px;
+        background: rgba(255,255,255,0.95);
+        box-shadow: 0 8px 20px -12px rgba(5,31,19,0.35);
+      }
+      .nav-btn--prev { left: max(0.65rem, var(--safe-l)); }
+      .nav-btn--next { right: max(0.65rem, var(--safe-r)); }
+
+      .dots {
+        bottom: max(0.95rem, calc(var(--safe-b) + 0.65rem));
+        padding: 0.4rem 0.65rem;
+      }
+      .dots__dot { width: 8px; height: 8px; min-width: 8px; min-height: 8px; }
+      .dots__dot.active { width: 22px; }
+
+      .silo-board, .do-chain, .waste-grid, .tech-grid, .stat-row, .kpi-pair {
+        grid-template-columns: 1fr;
+      }
+      .rx-layout { gap: 0.85rem; }
+      .rx-flip, .rx-flip__inner { min-height: 340px; }
+      .floor-layout { gap: 1.1rem; }
+      .phone { max-width: min(100%, 320px); }
       .phone__screen { min-height: 380px; }
-      .dash-shell { height: clamp(300px, 58vh, 480px); }
-      .video-frame { max-height: min(52vh, 420px); }
+      .video-frame {
+        width: 100%;
+        max-height: none;
+        aspect-ratio: 16 / 9;
+      }
+      .dash-shell { height: min(62vh, 420px); }
+      .dash-title-row { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+      .phase-table { font-size: 0.84rem; }
+      .phase-table th, .phase-table td { padding: 0.65rem 0.75rem; }
+      .ask-box { max-width: none; }
+      .commercial { gap: 0.4rem; }
+      .chip { font-size: 0.7rem; }
+      .btn { min-height: 44px; }
+    }
+
+    @media (max-width: 420px) {
+      .slide {
+        padding-left: max(0.9rem, var(--safe-l));
+        padding-right: max(0.9rem, var(--safe-r));
+      }
+      #scene-title .brand-name { font-size: 2.2rem; }
+      #scene-title .flow-tags { gap: 0.35rem; }
+      .tl-item { grid-template-columns: 56px 1fr; gap: 0.55rem; }
+      .tl-time { font-size: 0.8rem; }
+      .rx-flip, .rx-flip__inner { min-height: 320px; }
+      .rx-row { grid-template-columns: 68px 1fr; font-size: 0.76rem; }
+      .waste-card, .tech-card, .silo-card, .audit-col { padding: 0.85rem; }
+    }
+
+    @media (max-height: 760px) and (min-width: 721px) {
+      .phone__screen { min-height: 360px; }
+      .dash-shell { height: clamp(280px, 56vh, 460px); }
+      .video-frame { max-height: min(50vh, 400px); }
       h1 { font-size: clamp(1.7rem, 3.8vw, 2.5rem); }
       h2 { font-size: clamp(1.35rem, 2.8vw, 1.9rem); }
+      #scene-title .brand-name { font-size: clamp(2.2rem, 4.5vw, 3.4rem); }
+      #scene-title h1 { font-size: clamp(1.2rem, 2.2vw, 1.55rem); }
+      .slide__inner { transform: translateY(-1vh); }
+    }
+
+    @media (pointer: coarse) {
+      .nav-btn { width: 48px; height: 48px; }
+      .dots__dot { width: 10px; height: 10px; }
+      .dots__dot.active { width: 24px; }
+      .btn { min-height: 48px; }
     }
   </style>
 </head>
@@ -1146,7 +1312,7 @@
     <section class="slide slide--light grid-bg active" id="scene-title" data-theme="light" aria-label="Title">
       <div class="slide__inner slide__inner--wide">
         <div class="hero-shell">
-          <div>
+          <div class="hero-copy">
             <div class="reveal">
               <img class="hero-logo" src="https://stamped.work/LogoOrange.png" alt="Stamped Energy logo" id="heroLogo" />
               <span class="wordmark-fallback">Stamped Energy</span>
@@ -1894,6 +2060,7 @@
 
       let index = 0;
       let touchX = null;
+      let touchY = null;
 
       function onLogoFail(img) {
         chromeLogo.classList.add("fallback");
@@ -1958,6 +2125,7 @@
         index = i;
         const slide = slides[index];
         slide.classList.add("active");
+        slide.scrollTop = 0;
         document.body.setAttribute("data-theme", "light");
 
         progressFill.style.width = ((index + 1) / total * 100) + "%";
@@ -2030,12 +2198,15 @@
       stage.addEventListener("touchstart", function (e) {
         if (!e.changedTouches || !e.changedTouches[0]) return;
         touchX = e.changedTouches[0].clientX;
+        touchY = e.changedTouches[0].clientY;
       }, { passive: true });
       stage.addEventListener("touchend", function (e) {
-        if (touchX == null || !e.changedTouches || !e.changedTouches[0]) return;
+        if (touchX == null || touchY == null || !e.changedTouches || !e.changedTouches[0]) return;
         const dx = e.changedTouches[0].clientX - touchX;
+        const dy = e.changedTouches[0].clientY - touchY;
         touchX = null;
-        if (Math.abs(dx) < 50) return;
+        touchY = null;
+        if (Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy)) return;
         if (dx < 0) next(); else prev();
       }, { passive: true });
 
