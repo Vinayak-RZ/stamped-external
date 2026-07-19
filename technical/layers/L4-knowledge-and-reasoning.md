@@ -10,7 +10,7 @@ status: Accepted pilot architecture — 1–2 plants, English only
 
 *Architecture SSOT · July 2026 · Pilot target: **1–2 plants***
 *Siblings: [L3 — Intelligence core](L3-intelligence-core.md) · [L4 decision defense](L4-decision-defense-brief.md) · [L5 — Closure & verification](L5-closure-and-verification.md) · [Technical architecture](../02-technical-architecture.md) · [Evaluation & quality](../cross-cutting/04-evaluation-and-quality.md)*
-*Related decisions: [ADR-013 counterfactual ledger](../../decisions/ADR-013-counterfactual-savings-ledger.md) · [ADR-015 L3 dual lane](../../decisions/ADR-015-l3-dual-lane-lab-detections.md) · [ADR-017 retrieval trust tiers](../../decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md)*
+*Related decisions: [ADR-013 counterfactual ledger](../../decisions/ADR-013-counterfactual-savings-ledger.md) · [ADR-015 L3 dual lane](../../decisions/ADR-015-l3-dual-lane-lab-detections.md) · [ADR-017 retrieval trust tiers](../../decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md) · [ADR-018 pilot execution](../../decisions/ADR-018-l4-pilot-execution-knowledge-reasoning.md)*
 
 > **Honesty convention:** `[~]` is an estimate or target; `[!]` must be validated on pilot data.
 >
@@ -23,11 +23,11 @@ status: Accepted pilot architecture — 1–2 plants, English only
 L4 is not a free-running “society of agents.” It is a **durable, mostly deterministic prescription compiler** with four bounded surfaces:
 
 1. **Finding → Prescription** — production-critical; zero or one normal LLM call.
-2. **Conversational energy analyst** — read-only, cited, bounded to four model turns.
-3. **Sustainability narrative** — ledger-backed templates with optional one-call language composition.
+2. **Conversational energy analyst** — read-only, cited, budgeted ReAct (API-only; product UX is L6).
+3. **Sustainability narrative** — ledger-backed templates with optional one-call language composition (**P3** for the pilot consumer).
 4. **Curated web research** — explicit, allowlisted, separately labelled; never silent evidence.
 
-LangChain supplies model adapters, retrievers, structured output, and composable `Runnable` primitives. **Application code owns routing, state transitions, budgets, retries, permissions, and final decisions.** The prescription path does not use `AgentExecutor`, an LLM-generated plan, or an unbounded ReAct loop.
+LangChain supplies model adapters, retrievers, structured output, and composable `Runnable` primitives. **LangGraph supplies the orchestration shell** for Lane A/B and the analyst (pilot early pull of the §17 LangGraph trigger — see [ADR-018](../../decisions/ADR-018-l4-pilot-execution-knowledge-reasoning.md)). **Application code owns routing, state transitions, budgets, retries, permissions, and final decisions.** The prescription path does not use `AgentExecutor`, an LLM-generated plan, or an unbounded ReAct loop; the analyst ReAct loop is hard-budgeted.
 
 The cheapest correct path always wins:
 
@@ -57,13 +57,14 @@ An LLM is used only when language or synthesis adds measurable value.
 
 ### 2.2 Non-goals
 
-- Hindi or Hinglish generation/retrieval
+- Hindi or Hinglish generation/retrieval (**far future** — not a Core/P1/P2 milestone; English only through P2 per ADR-018)
 - Autonomous plant control or SCADA/PLC writes
 - Automatic unrestricted web crawling
 - Generic autonomous research
 - Fine-tuning, custom embedding training, or local GPU procurement before benchmark evidence
 - Multi-agent role-play
 - Cross-plant memory or fleet learning
+- Product / operator UI in the L4 consumer (L6 owns dashboard and chat UX)
 - Exactly-once claims across remote calls
 
 ---
@@ -127,16 +128,18 @@ Answers questions such as:
 - “Which open opportunities have the strongest evidence?”
 - “What does the OEM manual say about this compressor condition?”
 
-The analyst is read-only and source-cited. It has:
+The analyst is read-only and source-cited. Pilot budgets ([ADR-018](../../decisions/ADR-018-l4-pilot-execution-knowledge-reasoning.md)):
 
-- maximum four model turns;
-- maximum six tool calls;
-- maximum two retrieval hops;
-- no persistent semantic memory;
+- maximum **six** model turns per user-message cycle (hard max eight);
+- maximum **eight** tool calls (hard max twelve);
+- maximum **two** retrieval hops (Path H tool invocations);
+- at most **one** Path W pass per cycle;
+- wall-clock ~45 s (hard max 60 s);
+- no persistent semantic / cross-plant memory;
 - no write or dispatch tools;
 - explicit abstention when evidence is missing.
 
-Conversation history is session state, not product truth. A summary may be stored for UX, but every factual answer is rebuilt from current tools and cited evidence.
+Conversation history is **session state** (plus optional rolling summary and **explicit** saved notes). Notes are never auto-embedded into the corpus. Every factual answer is rebuilt from current tools and cited evidence. **Product chat UX is owned by L6**; L4 exposes the chat API only.
 
 ### 4.3 Sustainability narrative — deterministic-first
 
@@ -282,10 +285,10 @@ Normal call budget: **one**. Hard maximum: **two** generation calls.
 
 ### 6.4 Analyst workflow
 
-The conversational analyst uses a bounded LangChain tool loop because query shapes vary, but routing remains constrained:
+The conversational analyst uses a **budgeted LangGraph ReAct** loop (`agent` ↔ `tools` → finalize) because query shapes vary, with hard turn/tool/hop/Path W/time caps ([ADR-018](../../decisions/ADR-018-l4-pilot-execution-knowledge-reasoning.md)):
 
-1. classify intent with deterministic rules; one structured classifier call only when ambiguous;
-2. generate a maximum two-subquestion `QueryPlan`;
+1. adversarial / forbidden-intent short-circuit → abstain;
+2. structured agent step selects `tool` | `answer` | `abstain` (mock or `openai_compat` model);
 3. call read-only tools;
 4. synthesize once with citations;
 5. verify sources and numeric claims;
@@ -322,11 +325,17 @@ Baseline retrieval is:
 4. top evidence chunks;
 5. optional bounded second hop.
 
+**Pilot Path H ([ADR-018](../../decisions/ADR-018-l4-pilot-execution-knowledge-reasoning.md)):** CI/early-plant seed corpus uses FTS5 + hash-dense embeddings (portable, no GPU), then RRF, then **hop-2 = same-`doc_id` neighbor expand (≤3 chunks)** — not a second LLM query rewrite. Production may swap in PostgreSQL FTS + pgvector behind the same `lookup` contract.
+
 Reranking is **off by default**. Enable a cross-encoder only when a labelled retrieval slice improves enough to justify its added latency and cost.
 
 ### 7.2 Bounded multi-hop synthesis
 
-Multi-hop does not require a GraphRAG index.
+Multi-hop does not require a GraphRAG index. Two complementary mechanisms:
+
+**A. Path H hop-2 (pilot default)** — after RRF, expand siblings of the top hit within the same playbook `doc_id` so citations are not a single orphaned paragraph.
+
+**B. Recipe / analyst hop (architecture target)** — for richer cross-document cases:
 
 **Hop 1 — remedy/standard discovery**
 
@@ -352,7 +361,7 @@ md_overlap
   → Hop 2: L2 graph/shift-calendar constraints for the implicated assets
 ```
 
-For prescriptions, second-hop expansion is deterministic from the evidence recipe and validated metadata. For analyst questions, one structured decomposition call may propose at most two subquestions. Unresolved references cause abstention or human review, not a third hop.
+For prescriptions, second-hop expansion is deterministic from the evidence recipe and validated metadata (pilot: same-doc expand). For analyst questions, the ReAct loop may call Path H at most twice per user message; unresolved references cause abstention or human review, not a third hop.
 
 ### 7.3 Why not GraphRAG or vectorless retrieval now
 
@@ -849,14 +858,15 @@ No model, prompt, template, retrieval change, or corpus snapshot goes live witho
 | Small hybrid RAG corpus | **Required for Lane B/analyst** | Feature-flagged |
 | Bounded two-hop synthesis | **Included** | Maximum two hops |
 | Lane B one-call drafting | Shadow first | Category-gated |
-| Conversational analyst | Showcase/read-only | Separate budgets |
-| Sustainability narrative | Showcase/batch | Ledger-backed |
-| Curated web research | Manual/explicit | No automatic Rx fallback |
+| Conversational analyst | **API shipped (P2)**; product UX is L6 | Separate budgets (ADR-018) |
+| Sustainability narrative | Deferred to **P3** | Ledger-backed |
+| Curated web research (Path W) | **Analyst P2**; T4 labelled | No automatic Rx fallback |
 | Local model | Qualification path | Same frozen gates |
 | Reranker | Off | Enable on measured eval win |
-| LangGraph/Temporal | Not used | Upgrade only on workflow evidence |
+| LangGraph | **Used in pilot** as orchestration shell (ADR-018 early pull) | Temporal still upgrade-only |
+| Temporal | Not used | Upgrade only on multi-day scheduling evidence |
 | GraphRAG/vectorless | Not used | Upgrade only on retrieval evidence |
-| English | **Only supported language** | Revisit on customer demand |
+| English | **Only supported language through P2** | Hindi far future |
 
 ---
 
@@ -868,7 +878,7 @@ No model, prompt, template, retrieval change, or corpus snapshot goes live witho
 | GraphRAG/light KG index | >20% important queries require 3+ cross-document relationship traversals and L2 graph + two-hop retrieval fails |
 | Vectorless/tree retrieval | Repeated misses within long structured manuals despite section metadata/chunking |
 | Dedicated vector DB | Measured pgvector filtered-search p95 exceeds SLO at real corpus size |
-| LangGraph | Multiple resumable model branches/HITL loops make the explicit state machine harder to test than a graph |
+| LangGraph | **Pulled early for pilot** (ADR-018) when Lane B + analyst resume landed in the same delivery train; further graph complexity still justified by HITL/multi-branch evidence |
 | Temporal | Multi-service, multi-day workflows need stronger scheduling/recovery than Postgres jobs |
 | LiteLLM gateway | Multiple applications/providers need central key, budget, and routing policy |
 | Local GPU serving | Qualified local model meets quality/SLO and measured TCO beats API including utilisation/ops |
@@ -898,7 +908,7 @@ No model, prompt, template, retrieval change, or corpus snapshot goes live witho
 Primary/official references guiding this design:
 
 1. LangChain retrieval and Runnables — https://docs.langchain.com/oss/python/langchain/retrieval
-2. LangGraph persistence (upgrade reference, not pilot dependency) — https://docs.langchain.com/oss/python/langgraph/persistence
+2. LangGraph persistence (pilot dependency per ADR-018) — https://docs.langchain.com/oss/python/langgraph/persistence
 3. pgvector hybrid search with PostgreSQL FTS — https://github.com/pgvector/pgvector
 4. vLLM OpenAI-compatible server — https://docs.vllm.ai/en/stable/serving/openai_compatible_server/
 5. OpenTelemetry GenAI conventions — https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/
