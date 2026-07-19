@@ -1155,6 +1155,10 @@
     .contact-line a:hover { text-decoration: underline; }
     .cred-quiet { margin-top: 0.7rem; font-size: 0.72rem; color: var(--outline); }
 
+
+    .show-mobile { display: none !important; }
+    .hide-mobile { display: revert; }
+
     .bill-table-wrap, .ledger-wrap, .phase-table { max-width: 100%; }
     .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
@@ -1206,21 +1210,77 @@
       .lede { font-size: 0.95rem; line-height: 1.5; max-width: none; }
       .eyebrow { margin-bottom: 0.4rem; letter-spacing: 0.1em; }
 
+      .hide-mobile { display: none !important; }
+      .show-mobile { display: block !important; }
+      .show-mobile.btn-row,
+      .show-mobile.flow-tags { display: flex !important; }
+
+      /* Title: one clean first screen */
+      #scene-title.slide {
+        justify-content: center;
+        overflow: hidden;
+        padding-bottom: max(5rem, calc(var(--safe-b) + 4.5rem));
+      }
+      #scene-title .slide__inner {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        min-height: calc(100dvh - var(--chrome-h) - var(--progress-h) - var(--safe-t) - 5.5rem);
+      }
+      #scene-title .hero-shell {
+        width: 100%;
+        gap: 0;
+      }
+      #scene-title .hero-copy {
+        width: 100%;
+        max-width: 22rem;
+        margin: 0 auto;
+      }
       #scene-title .brand-name {
-        font-size: clamp(2.35rem, 11vw, 3.1rem);
-        margin-bottom: var(--space-3);
+        font-size: clamp(2.6rem, 12vw, 3.4rem);
+        margin-bottom: 0.85rem;
+        line-height: 0.92;
       }
       #scene-title h1 {
-        font-size: clamp(1.15rem, 4.8vw, 1.4rem);
+        font-size: clamp(1.2rem, 5.2vw, 1.45rem);
+        font-weight: 650;
         max-width: none;
-        margin-bottom: var(--space-3);
+        margin-bottom: 0.85rem;
+        line-height: 1.3;
       }
-      #scene-title .hero-logo { height: 34px; margin-bottom: var(--space-4); }
-      #scene-title .lede { margin-bottom: var(--space-4); }
-      #scene-title .btn-row { margin-top: var(--space-4); width: 100%; }
-      #scene-title .btn { width: 100%; height: 48px; }
-      #scene-title .hero-canvas { order: 2; }
-      #scene-title .hero-copy { order: 1; }
+      #scene-title .lede {
+        font-size: 0.95rem;
+        line-height: 1.45;
+        margin-bottom: 1.5rem;
+        color: var(--on-surface-variant);
+      }
+      #scene-title .btn-row {
+        margin-top: 0;
+        width: 100%;
+      }
+      #scene-title .btn {
+        width: 100%;
+        height: 52px;
+        font-size: 1rem;
+      }
+
+      /* Live workspace: iframe only */
+      #scene-live .dash-title-row { display: none !important; }
+      #scene-live .dash-shell {
+        height: calc(100dvh - var(--chrome-h) - var(--progress-h) - var(--safe-t) - 5.5rem);
+        max-height: none;
+        margin-top: 0;
+      }
+      #scene-live.slide {
+        justify-content: stretch;
+        padding-top: calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + 0.5rem);
+        padding-bottom: max(4.25rem, calc(var(--safe-b) + 3.75rem));
+      }
+      #scene-live .slide__inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
 
       .nav-btn {
         top: auto; bottom: max(0.85rem, calc(var(--safe-b) + 0.55rem));
@@ -1238,14 +1298,22 @@
       .dots__dot { width: 8px; height: 8px; min-width: 8px; min-height: 8px; }
       .dots__dot.active { width: 22px; }
 
-      .silo-board, .do-chain, .waste-grid, .tech-grid, .stat-row, .kpi-pair {
+      .silo-board, .do-chain, .tech-grid, .stat-row, .kpi-pair {
         grid-template-columns: 1fr;
       }
+      .waste-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.55rem;
+      }
+      .waste-card:last-child { grid-column: 1 / -1; }
+      .waste-card ul li:nth-child(n+3) { display: none; }
+      .tech-card ul { display: none; }
+      .tech-card > p { margin-bottom: 0; }
       .rx-layout { gap: 0.85rem; }
-      .rx-flip, .rx-flip__inner { min-height: 340px; }
+      .rx-flip, .rx-flip__inner { min-height: min(58vh, 380px); }
       .floor-layout { gap: 1.1rem; }
       .phone { max-width: min(100%, 320px); }
-      .phone__screen { min-height: 380px; }
+      .phone__screen { min-height: 360px; }
       .video-frame {
         width: 100%;
         max-height: none;
@@ -1266,8 +1334,7 @@
         padding-left: max(0.9rem, var(--safe-l));
         padding-right: max(0.9rem, var(--safe-r));
       }
-      #scene-title .brand-name { font-size: 2.2rem; }
-      #scene-title .flow-tags { gap: 0.35rem; }
+      #scene-title .brand-name { font-size: clamp(2.4rem, 11vw, 3rem); }
       .tl-item { grid-template-columns: 56px 1fr; gap: 0.55rem; }
       .tl-time { font-size: 0.8rem; }
       .rx-flip, .rx-flip__inner { min-height: 320px; }
@@ -1313,15 +1380,18 @@
       <div class="slide__inner slide__inner--wide">
         <div class="hero-shell">
           <div class="hero-copy">
-            <div class="reveal">
+            <div class="reveal hide-mobile">
               <img class="hero-logo" src="https://stamped.work/LogoOrange.png" alt="Stamped Energy logo" id="heroLogo" />
               <span class="wordmark-fallback">Stamped Energy</span>
             </div>
-            <p class="eyebrow reveal">Operational energy decisions, verified on the bill</p>
+            <p class="eyebrow reveal hide-mobile">Operational energy decisions, verified on the bill</p>
+            <p class="eyebrow reveal show-mobile">Bill-verified plant decisions</p>
             <p class="brand-name reveal">Stamped Energy</p>
-            <h1 class="reveal">From plant signals to owned actions on the invoice.</h1>
-            <p class="lede reveal">You already have meters, EMS, and often renewables. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.</p>
-            <div class="flow-tags reveal">
+            <h1 class="reveal hide-mobile">From plant signals to owned actions on the invoice.</h1>
+            <h1 class="reveal show-mobile">Plant data to owned ₹ actions on the bill.</h1>
+            <p class="lede reveal hide-mobile">You already have meters, EMS, and often renewables. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.</p>
+            <p class="lede reveal show-mobile">Reads meters and EMS you already run. Sends the floor a ranked action. Checks the next DISCOM bill.</p>
+            <div class="flow-tags reveal hide-mobile">
               <span class="chip">Physics &amp; rules</span>
               <span class="chip">Foundation models</span>
               <span class="chip">Agentic prescriptions</span>
@@ -1330,9 +1400,9 @@
             <div class="btn-row reveal">
               <button type="button" class="btn btn--primary" id="btnBegin">Begin</button>
             </div>
-            <p class="meta reveal">stamped.work</p>
+            <p class="meta reveal hide-mobile">stamped.work</p>
           </div>
-          <div class="hero-canvas reveal" aria-hidden="true">
+          <div class="hero-canvas reveal hide-mobile" aria-hidden="true">
             <svg viewBox="0 0 420 280" fill="none">
               <defs>
                 <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -1373,7 +1443,8 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Monday 07:15 · Shift handover</p>
         <h2 class="reveal">Your plant already has the data.</h2>
-        <p class="lede reveal">The incomer saw the MD spike. The EMS logged it. Nobody on the floor received a work order with a rupee figure attached.</p>
+        <p class="lede reveal hide-mobile">The incomer saw the MD spike. The EMS logged it. Nobody on the floor received a work order with a rupee figure attached.</p>
+        <p class="lede reveal show-mobile">MD spiked. EMS logged it. Nobody got a ₹ work order.</p>
         <div class="two-col">
           <div class="timeline reveal">
             <div class="tl-item">
@@ -1402,7 +1473,7 @@
             <div class="meter-label">Sample demand window</div>
             <div class="meter-value">1,180 <span style="font-size:0.45em;color:var(--on-surface-variant)">kVA</span></div>
             <div class="meter-bar"><i class="grow-on-active"></i></div>
-            <p class="meter-note">The EMS recorded the spike, but nobody was assigned to change the next shift start.</p>
+            <p class="meter-note hide-mobile">The EMS recorded the spike, but nobody was assigned to change the next shift start.</p>
             <div class="stat-row" style="grid-template-columns:1fr 1fr;margin-top:1rem;">
               <div class="stat-card">
                 <strong>~₹42k</strong>
@@ -1423,11 +1494,12 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Why savings get missed</p>
         <h2 class="reveal">The systems are there. The handoff is not.</h2>
-        <p class="lede reveal">Most plants already meter and log. What breaks is the step between an alert and an owned action that finance can later see on the bill.</p>
+        <p class="lede reveal hide-mobile">Most plants already meter and log. What breaks is the step between an alert and an owned action that finance can later see on the bill.</p>
+        <p class="lede reveal show-mobile">Meters and EMS exist. The owned action that hits the bill does not.</p>
         <div class="silo-board reveal" aria-label="Fragmented plant systems">
           <article class="silo-card">
             <h3>SCADA</h3>
-            <p>Live process signals and historian tags.</p>
+            <p class="hide-mobile">Live process signals and historian tags.</p>
             <div class="silo-meta">
               <div class="has">Has: run states, starts, setpoints</div>
               <div class="miss">Missing: owner, due date, ₹ impact</div>
@@ -1435,7 +1507,7 @@
           </article>
           <article class="silo-card">
             <h3>EMS</h3>
-            <p>Trends, thresholds, and unread alerts.</p>
+            <p class="hide-mobile">Trends, thresholds, and unread alerts.</p>
             <div class="silo-meta">
               <div class="has">Has: spike logged at 07:15</div>
               <div class="miss">Missing: who acts before next shift</div>
@@ -1443,7 +1515,7 @@
           </article>
           <article class="silo-card">
             <h3>Meters</h3>
-            <p>Interval kWh and demand windows.</p>
+            <p class="hide-mobile">Interval kWh and demand windows.</p>
             <div class="silo-meta">
               <div class="has">Has: MD window and load profile</div>
               <div class="miss">Missing: link to a floor sequence change</div>
@@ -1451,7 +1523,7 @@
           </article>
           <article class="silo-card">
             <h3>DISCOM bill</h3>
-            <p>The scoreboard finance already reviews.</p>
+            <p class="hide-mobile">The scoreboard finance already reviews.</p>
             <div class="silo-meta">
               <div class="has">Has: MD, energy, PF line items</div>
               <div class="miss">Missing: ops trail that explains the ₹</div>
@@ -1459,7 +1531,7 @@
           </article>
         </div>
         <div class="gap-break reveal">No assignment <span>→</span> no floor action <span>→</span> bill settles unchanged</div>
-        <div class="gap-outcomes reveal">
+        <div class="gap-outcomes reveal hide-mobile">
           <article class="gap-outcome">
             <strong>MD locked for the month</strong>
             <p>Once the demand window prints, the coincidence cost is already on the invoice.</p>
@@ -1507,7 +1579,7 @@
             <p>Potential and realised savings are checked against the same bill lines finance already reviews each month.</p>
           </article>
         </div>
-        <div class="flow-tags reveal" style="margin-top:1.25rem;">
+        <div class="flow-tags reveal hide-mobile" style="margin-top:1.25rem;">
           <span class="chip">Software-only</span>
           <span class="chip">Read-only OT</span>
           <span class="chip">Pilot first</span>
@@ -1521,7 +1593,8 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Sample prescriptions</p>
         <h2 class="reveal">A clear action, priced on a bill line.</h2>
-        <p class="lede reveal">Each card is an owned work order: what to change, who does it, when it is due, and the expected ₹ impact. Click to flip and see the backing evidence <span class="tilde">[~]</span>.</p>
+        <p class="lede reveal hide-mobile">Each card is an owned work order: what to change, who does it, when it is due, and the expected ₹ impact. Click to flip and see the backing evidence <span class="tilde">[~]</span>.</p>
+        <p class="lede reveal show-mobile">Tap a card to flip from the decision to the evidence <span class="tilde">[~]</span>.</p>
         <div class="rx-layout">
           <button type="button" class="rx-flip reveal" data-rx-flip aria-pressed="false" aria-label="MD stagger prescription. Show evidence.">
             <div class="rx-flip__inner">
@@ -1576,7 +1649,7 @@
             </div>
           </button>
 
-          <button type="button" class="rx-flip reveal" data-rx-flip aria-pressed="false" aria-label="Idle compressor prescription. Show evidence.">
+          <button type="button" class="rx-flip reveal hide-mobile" data-rx-flip aria-pressed="false" aria-label="Idle compressor prescription. Show evidence.">
             <div class="rx-flip__inner">
               <div class="rx-face rx-face--front">
                 <div class="rx-hero__head">
@@ -1667,7 +1740,7 @@
               </div>
             </div>
           </div>
-          <div class="status-rail reveal">
+          <div class="status-rail reveal hide-mobile">
             <p class="lede" style="margin-bottom:0.35rem;">The prescription arrives as assigned work. Its status changes when the supervisor acts, not when the next review meeting happens.</p>
             <div class="status-item">
               <span class="status-dot done"></span>
@@ -1700,7 +1773,8 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Measurement and verification</p>
         <h2 class="reveal">Verified on the bill.</h2>
-        <p class="lede reveal">A saving counts only when operating data and the matching DISCOM bill line both move. Finance and plant review the same numbers.</p>
+        <p class="lede reveal hide-mobile">A saving counts only when operating data and the matching DISCOM bill line both move. Finance and plant review the same numbers.</p>
+        <p class="lede reveal show-mobile">Savings count only when the DISCOM bill line moves.</p>
         <div class="kpi-pair reveal">
           <div class="kpi">
             <div class="kpi__label">Potential</div>
@@ -1743,7 +1817,7 @@
             </tbody>
           </table>
         </div>
-        <p class="meta reveal">Sample ledger for walkthrough · labelled <span class="tilde">[~]</span> · not a customer guarantee</p>
+        <p class="meta reveal hide-mobile">Sample ledger for walkthrough · labelled <span class="tilde">[~]</span> · not a customer guarantee</p>
       </div>
     </section>
 
@@ -1752,7 +1826,8 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Technology</p>
         <h2 class="reveal">The stack behind every prescription</h2>
-        <p class="lede reveal">Each recommendation is produced by industrial rules, domain foundation models, and an agentic layer that turns findings into owned floor work, then closes the result on the bill.</p>
+        <p class="lede reveal hide-mobile">Each recommendation is produced by industrial rules, domain foundation models, and an agentic layer that turns findings into owned floor work, then closes the result on the bill.</p>
+        <p class="lede reveal show-mobile">Rules, foundation models, and agents turn findings into owned floor work closed on the bill.</p>
         <div class="tech-grid reveal">
           <article class="tech-card">
             <div class="tech-card__num">01 · Physics</div>
@@ -1795,7 +1870,7 @@
             </ul>
           </article>
         </div>
-        <div class="flow-tags reveal" style="margin-top:1rem;">
+        <div class="flow-tags reveal hide-mobile" style="margin-top:1rem;">
           <span class="chip">Read-only OT</span>
           <span class="chip">No PLC writes</span>
           <span class="chip">Multi-plant ready</span>
@@ -1808,7 +1883,8 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Auditability and sustainability</p>
         <h2 class="reveal">A full trail from action to bill to evidence pack.</h2>
-        <p class="lede reveal">Closed prescriptions leave a record plant, finance, and assurance partners can reuse. Sustainability numbers come from the same actions, not a second system.</p>
+        <p class="lede reveal hide-mobile">Closed prescriptions leave a record plant, finance, and assurance partners can reuse. Sustainability numbers come from the same actions, not a second system.</p>
+        <p class="lede reveal show-mobile">Full trail from action to bill. Sustainability evidence from the same closures.</p>
         <div class="audit-grid">
           <div class="audit-col reveal">
             <h3>Auditability</h3>
@@ -1829,7 +1905,7 @@
             </ul>
           </div>
         </div>
-        <p class="audit-note reveal">For teams that already run EnMS, renewables, and intensity programmes, and still need day-to-day actions that show up on the invoice.</p>
+        <p class="audit-note reveal hide-mobile">For teams that already run EnMS, renewables, and intensity programmes, and still need day-to-day actions that show up on the invoice.</p>
       </div>
     </section>
 
@@ -1838,7 +1914,8 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Where electricity cost usually hides</p>
         <h2 class="reveal">Five areas we check first</h2>
-        <p class="lede reveal">These are the first places we look when a plant already has metering and still sees avoidable ₹ on the HT bill.</p>
+        <p class="lede reveal hide-mobile">These are the first places we look when a plant already has metering and still sees avoidable ₹ on the HT bill.</p>
+        <p class="lede reveal show-mobile">First places we look for avoidable ₹ on the HT bill.</p>
         <div class="waste-grid reveal">
           <article class="waste-card">
             <h3>MD / demand</h3>
@@ -1848,7 +1925,7 @@
               <li>Contract demand headroom</li>
             </ul>
             <div class="waste-bill">Bill line · MD (kVA)</div>
-            <p class="waste-sample">Sample: compressors and furnace bay starting together at 07:15</p>
+            <p class="waste-sample hide-mobile">Sample: compressors and furnace bay starting together at 07:15</p>
           </article>
           <article class="waste-card">
             <h3>Process heat</h3>
@@ -1858,7 +1935,7 @@
               <li>Unnecessary preheat windows</li>
             </ul>
             <div class="waste-bill">Bill line · Energy (kWh)</div>
-            <p class="waste-sample">Sample: holding heat across a long changeover with no production</p>
+            <p class="waste-sample hide-mobile">Sample: holding heat across a long changeover with no production</p>
           </article>
           <article class="waste-card">
             <h3>Idle loads</h3>
@@ -1868,7 +1945,7 @@
               <li>Banks left in unload</li>
             </ul>
             <div class="waste-bill">Bill line · Energy (kWh)</div>
-            <p class="waste-sample">Sample: compressor bank B unload with zero production tag</p>
+            <p class="waste-sample hide-mobile">Sample: compressor bank B unload with zero production tag</p>
           </article>
           <article class="waste-card">
             <h3>Air / HVAC</h3>
@@ -1878,7 +1955,7 @@
               <li>Simultaneous bank starts</li>
             </ul>
             <div class="waste-bill">Bill line · Energy + MD</div>
-            <p class="waste-sample">Sample: two air banks starting into the same demand window</p>
+            <p class="waste-sample hide-mobile">Sample: two air banks starting into the same demand window</p>
           </article>
           <article class="waste-card">
             <h3>Tariff dispatch</h3>
@@ -1888,7 +1965,7 @@
               <li>TOU mistiming</li>
             </ul>
             <div class="waste-bill">Bill line · ToD energy</div>
-            <p class="waste-sample">Sample: grid draw during peak while captive capacity sits idle</p>
+            <p class="waste-sample hide-mobile">Sample: grid draw during peak while captive capacity sits idle</p>
           </article>
         </div>
         <div class="bill-table-wrap reveal">
@@ -1907,7 +1984,7 @@
             </tbody>
           </table>
         </div>
-        <p class="footnote reveal">Indicative ranges from comparable plants <span class="tilde">[~]</span>. A 90-day proof run replaces estimates with figures from your DISCOM bills.</p>
+        <p class="footnote reveal hide-mobile">Indicative ranges from comparable plants <span class="tilde">[~]</span>. A 90-day proof run replaces estimates with figures from your DISCOM bills.</p>
       </div>
     </section>
 
@@ -1917,7 +1994,7 @@
         <p class="eyebrow reveal">How we engage OT</p>
         <h2 class="reveal">Read-only first. Clear boundaries.</h2>
         <div class="bound-grid">
-          <div class="bound-col bound-col--not reveal">
+          <div class="bound-col bound-col--not reveal hide-mobile">
             <h3>What we are not</h3>
             <ul class="bound-list">
               <li>EMS / SCADA replacement</li>
@@ -1951,7 +2028,8 @@
       <div class="slide__inner slide__inner--media">
         <p class="eyebrow reveal">2-minute walkthrough</p>
         <h2 class="reveal">How Stamped works, end to end</h2>
-        <p class="lede reveal">Connect plant data, issue a prescription in rupees, hand it to the floor, and verify on the bill.</p>
+        <p class="lede reveal hide-mobile">Connect plant data, issue a prescription in rupees, hand it to the floor, and verify on the bill.</p>
+        <p class="lede reveal show-mobile">Connect, prescribe, hand off, verify.</p>
         <div class="video-frame reveal">
           <video
             controls
@@ -1963,7 +2041,7 @@
             <source src="https://stamped.work/video/how-it-works-cinematic.webm" type="video/webm" />
           </video>
         </div>
-        <p class="video-caption reveal">The video follows the same sequence shown here. Pause whenever a point needs discussion.</p>
+        <p class="video-caption reveal hide-mobile">The video follows the same sequence shown here. Pause whenever a point needs discussion.</p>
       </div>
     </section>
 
@@ -1992,7 +2070,8 @@
       <div class="slide__inner">
         <p class="eyebrow reveal">90-day bill verification</p>
         <h2 class="reveal">Proof Run</h2>
-        <p class="lede reveal">Start with one plant. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90. Wider rollout only after that memo is signed.</p>
+        <p class="lede reveal hide-mobile">Start with one plant. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90. Wider rollout only after that memo is signed.</p>
+        <p class="lede reveal show-mobile">One plant. Joint M&amp;V memo. Go or no-go at Day 90.</p>
         <table class="phase-table reveal">
           <thead>
             <tr>
@@ -2029,7 +2108,7 @@
           ·
           <a href="https://stamped.work" target="_blank" rel="noopener noreferrer">stamped.work</a>
         </p>
-        <p class="cred-quiet reveal">Built on energy systems research at IIT Roorkee.</p>
+        <p class="cred-quiet reveal hide-mobile">Built on energy systems research at IIT Roorkee.</p>
       </div>
     </section>
 
