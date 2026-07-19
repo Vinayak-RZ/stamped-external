@@ -193,6 +193,7 @@ Quality spine: [`technical/cross-cutting/04-evaluation-and-quality.md`](technica
 | [`contracts/`](contracts/) | JSON schemas, MQTT topics, dedupe golden fixtures | **High** — CI-enforced | 9 schemas, 5 fixtures, [TOPICS.md](contracts/TOPICS.md) |
 | [`decisions/`](decisions/) | Architecture Decision Records (ADRs) | **High** — living | 11 ADRs — [index](decisions/README.md) |
 | [`handoff/`](handoff/) | Cross-repo integration, playbooks, bootstrap guides | Medium | 15+ handoff docs |
+| [`consumers/readmes/`](consumers/readmes/) | Mirrored consumer-repo root READMEs (L1–L4) | Medium | Context snapshots; not canonical |
 | [`technical/`](technical/) | Product + engineering reference (L0–L6) | Low | Master doc + 6 layer specs + 2 cross-cutting |
 | [`architecture/`](architecture/) | Layer interface contracts (implementation authority) | Medium | [`layer-interfaces-l2.md`](architecture/layer-interfaces-l2.md) |
 | [`compliance/`](compliance/) | India regulatory register | Low | [`india-compliance-register.md`](compliance/india-compliance-register.md) |
@@ -212,13 +213,15 @@ Quality spine: [`technical/cross-cutting/04-evaluation-and-quality.md`](technica
 | connectors-edge | [Vinayak-RZ/connectors-edge](https://github.com/Vinayak-RZ/connectors-edge) | L1 plant | `external/` | `v2026.07.12` |
 | connectors-cloud | [Vinayak-RZ/connectors-cloud](https://github.com/Vinayak-RZ/connectors-cloud) | L1 cloud | `external/` | `v2026.07.12` |
 | connectors-bill | [Vinayak-RZ/connectors-bill](https://github.com/Vinayak-RZ/connectors-bill) | L1 bill | `external/` | `v2026.07.12` |
-| stamped-l2 | [Vinayak-RZ/universal-repositary](https://github.com/Vinayak-RZ/universal-repositary) | L2 | `external/` | `v2026.07.12` |
-| stamped-l3 | planned | L3 | `external/` | — |
-| stamped-l4 | planned | L4 | `external/` | — |
+| universal-repositary | [Vinayak-RZ/universal-repositary](https://github.com/Vinayak-RZ/universal-repositary) | L2 (stamped-l2) | `external/` | `v2026.07.12` |
+| intelligence-core | [Vinayak-RZ/intelligence-core](https://github.com/Vinayak-RZ/intelligence-core) | L3 engine | `external/` | — |
+| intelligence-rulepacks | [Vinayak-RZ/intelligence-rulepacks](https://github.com/Vinayak-RZ/intelligence-rulepacks) | L3 artifacts | `external/` | — |
+| intelligence-evals | [Vinayak-RZ/intelligence-evals](https://github.com/Vinayak-RZ/intelligence-evals) | L3 eval | `external/` | — |
+| knowledge-reasoning | [Vinayak-RZ/knowledge-reasoning](https://github.com/Vinayak-RZ/knowledge-reasoning) | L4 | `external/` | — |
 | stamped-l5 | planned | L5 | `external/` | — |
 | stamped-l6 | planned | L6 | `external/` | — |
 
-Full table: [REPOS.md](REPOS.md). Pin each consumer to a **semver tag** of this repo. Do not float on `main` in production branches.
+Full table: [REPOS.md](REPOS.md). Mirrored root READMEs: [`consumers/readmes/`](consumers/readmes/README.md). Pin each consumer to a **semver tag** of this repo. Do not float on `main` in production branches.
 
 ### 4.1 Layer repo one-line missions
 
@@ -227,8 +230,12 @@ Full table: [REPOS.md](REPOS.md). Pin each consumer to a **semver tag** of this 
 | **connectors-edge** | Plant runtime — protocol adapters, tag mapping, edge agent (Go), MQTT uplink |
 | **connectors-cloud** | Cloud ingest — validate, dedupe, relay `StampedRecordEnvelope` to L2 |
 | **connectors-bill** | Bill PDF/photo → validated `BillLine` → MQTT for cloud → L2 |
-| **stamped-l2** | Universal Repository — six Postgres/Timescale stores, ingest + query APIs |
-| **stamped-l3 … l6** | Intelligence → prescription → closure → experience (future repos) |
+| **universal-repositary** | Universal Repository (stamped-l2) — six Postgres/Timescale stores, ingest + query APIs |
+| **intelligence-core** | L3 engines — findings, dual-lane Lab, outbox to L4 |
+| **intelligence-rulepacks** | L3 YAML rulepack / tariff / vertical catalog |
+| **intelligence-evals** | L3 golden corpus, gates, Lab forensic UI |
+| **knowledge-reasoning** | L4 Finding → Prescription + cited analyst answers |
+| **stamped-l5 … l6** | Closure & verification → experience (planned) |
 
 Bootstrap index: [`handoff/README.md`](handoff/README.md).
 
@@ -499,6 +506,10 @@ stamped-external/
 │   ├── connectors-bill-*.md          ← bill repo charter, UI/UX
 │   └── *-portability-playbook.md     ← per-repo air-gap guides
 │
+├── consumers/
+│   ├── readmes/                      ← mirrored L1–L4 consumer root READMEs
+│   └── stamped-l3-* / stamped-l4/    ← reference scaffolds (not live repos)
+│
 ├── technical/                        ← engineering reference pack
 │   ├── 00-stamped-master-document.md ← product & company source of truth
 │   ├── 01-product-architecture.md    ← 10 capability modules, UX surfaces
@@ -725,6 +736,7 @@ Platform release notes: [CHANGELOG.md](CHANGELOG.md) · Schema semver: [contract
 
 | Date | Change |
 |------|--------|
+| 2026-07-19 | Consumer README snapshots under `consumers/readmes/` (L1–L4) |
 | 2026-07-12 | Extensive README — architecture, tech, ADRs, contracts catalog |
 | 2026-07-12 | Cursor config from `cursor-config-coding` vendored for cloud agents |
 | 2026-07-12 | Platform pack prepared for `stamped-external` + submodule distribution (ADR-011) |
