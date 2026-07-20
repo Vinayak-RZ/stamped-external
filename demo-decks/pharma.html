@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Stamped Energy · Pharma demo</title>
+  <link rel="preload" as="image" href="https://res.cloudinary.com/ddpyjpt4v/image/upload/v1784561673/pharma-hero_blsn7j.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -1665,7 +1666,7 @@
           <figure class="hero-photo reveal" id="heroPhoto">
             <img
               id="heroPhotoImg"
-              src="assets/pharma-hero.jpg"
+              src="https://res.cloudinary.com/ddpyjpt4v/image/upload/v1784561673/pharma-hero_blsn7j.jpg"
               alt="Pharmaceutical production line"
               width="1800"
               height="1200"
@@ -2404,7 +2405,7 @@
       if (el) el.textContent = "Pharma";
       var img = document.getElementById("heroPhotoImg");
       if (!img) return;
-      var rel = "assets/pharma-hero.jpg";
+      var rel = "https://res.cloudinary.com/ddpyjpt4v/image/upload/v1784561673/pharma-hero_blsn7j.jpg";
       var resolved = new URL(rel, window.location.href).href;
       if (img.src !== resolved) img.src = resolved;
       img.addEventListener("error", function onHeroErr() {
