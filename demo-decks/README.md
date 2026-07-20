@@ -19,7 +19,7 @@ Each industry deck keeps the same Proof Run structure. What changes:
 - **Optimisation targets** on the savings map (what we check first)
 - **Hero photo** matched to the industry
 
-Open an industry file in a browser. Arrow keys, space, or on-screen controls navigate. On phones, the title slide is **text → Begin → plant photo**; the simulated Sample workspace slide is skipped.
+Open an industry file in a browser. Arrow keys, space, or on-screen controls navigate. On phones, the title slide is **text → Begin → plant photo**; the simulated Sample workspace slide is skipped. On the **floor** slide, Snooze / Acknowledge cycle three prescriptions on the phone, then show **Stamped Energy**.
 
 **Rebuild from base:** edit `demo-decks/_base.snapshot.html` (generic template) and/or `scripts/build-industry-decks.py`, then:
 
@@ -33,4 +33,10 @@ python3 scripts/build-industry-decks.py
 
 ```bash
 cd demo-decks/pharma && vercel --prod
+```
+
+**Floor / verify check:**
+
+```bash
+python3 scripts/check-floor-phone.py
 ```
