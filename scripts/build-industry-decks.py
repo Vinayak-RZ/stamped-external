@@ -171,8 +171,8 @@ PACKS = {
             ],
         },
         "techBullet": "MD coincidence, mill/kiln idle, WHR vs peak grid, fan staging",
-        "offerLedeD": "Start with one cement line or grinding circuit. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90.",
-        "offerLedeM": "One cement circuit. Joint M&amp;V memo. Go or no-go at Day 90.",
+        "offerLedeD": "Start with one cement line or grinding circuit. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and plant fit.",
+        "offerLedeM": "One cement circuit. Audit → floor → go / no-go at Day 60.",
     },
     "steel": {
         "label": "Steel",
@@ -319,8 +319,8 @@ PACKS = {
             ],
         },
         "techBullet": "MD coincidence, furnace holding, mill idle, compressed air, tariff dispatch",
-        "offerLedeD": "Start with one melt shop or rolling line. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90.",
-        "offerLedeM": "One melt or roll line. Joint M&amp;V memo. Go or no-go at Day 90.",
+        "offerLedeD": "Start with one melt shop or rolling line. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and plant fit.",
+        "offerLedeM": "One melt or roll line. Audit → floor → go / no-go at Day 60.",
     },
     "pharma": {
         "label": "Pharma",
@@ -467,8 +467,8 @@ PACKS = {
             ],
         },
         "techBullet": "Load management, HVAC idle, chiller staging, batch-gap utilities, tariff dispatch",
-        "offerLedeD": "Start with one HVAC / utilities island or production block. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90.",
-        "offerLedeM": "One utilities island. Joint M&amp;V memo. Go or no-go at Day 90.",
+        "offerLedeD": "Start with one HVAC / utilities island or production block. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and plant fit.",
+        "offerLedeM": "One utilities island. Audit → floor → go / no-go at Day 60.",
     },
 }
 
@@ -882,10 +882,10 @@ def inject_ids_and_hooks(html: str) -> str:
             '<p id="whatStep1">Incomer, sub-meters, SCADA and PLC states, and utility line items. Read-only. No control writes to the plant.</p>',
         ),
         (
-            '<p class="lede reveal hide-mobile">Start with one plant. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90. Wider rollout only after that memo is signed.</p>\n'
-            '        <p class="lede reveal show-mobile">One plant. Joint M&amp;V memo. Go or no-go at Day 90.</p>',
-            '<p class="lede reveal hide-mobile" id="offerLedeD">Start with one plant. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90. Wider rollout only after that memo is signed.</p>\n'
-            '        <p class="lede reveal show-mobile" id="offerLedeM">One plant. Joint M&amp;V memo. Go or no-go at Day 90.</p>',
+            '<p class="lede reveal hide-mobile">Start with one plant. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and whether it actually made the plant easier to run.</p>\n'
+            '        <p class="lede reveal show-mobile">Audit → floor execution → go / no-go at Day 60.</p>',
+            '<p class="lede reveal hide-mobile" id="offerLedeD">Start with one plant. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and whether it actually made the plant easier to run.</p>\n'
+            '        <p class="lede reveal show-mobile" id="offerLedeM">Audit → floor execution → go / no-go at Day 60.</p>',
         ),
         (
             "<li>MD coincidence, idle and holding loads, compressed air, thermal</li>",
