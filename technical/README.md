@@ -49,7 +49,7 @@ L6  Experience & integration (dashboard, API)      → layers/L6-experience-and-
 | [L3 — Decision defense brief](layers/L3-decision-defense-brief.md) | Debate-ready synthesis: rules vs ML vs LLM vs foundation models, engine attack/response cards, ADR-012/014 topology & shadowing, eval gates, Zerowatt counters |
 | [L3 — Attribution explainability](layers/L3-attribution-explainability.md) | Co-start/graph ranking of-record; quality grade; why not SHAP/NILM; dual-lane + ADR-016 shadows |
 | [L4 — Knowledge & reasoning](layers/L4-knowledge-and-reasoning.md) | Architecture SSOT: dual-lane agent, adaptive hybrid RAG (H/G/V/W), T4 web trust, dual local/cloud retrieval, Langfuse+Phoenix+DeepEval — [ADR-017](../decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md) · [handoff](../handoff/stamped-l4-architecture-handoff.md) |
-| [L5 — Closure & verification](layers/L5-closure-and-verification.md) | Workflow engine, WhatsApp Business Platform integration, IPMVP-style M&V, Indian bill reconciliation, savings ledger |
+| [L5 — Closure & verification](layers/L5-closure-and-verification.md) | **SSOT** — workflow, WhatsApp, IPMVP M&V, bill reconciliation, L2 ledger append, evidence, P0–P3 cost (ADR-019/020/021) |
 | [L6 — Experience & integration](layers/L6-experience-and-integration.md) | Dashboard stack, prescription queue UX, report/export generation, REST API + webhooks, tiered "connect to any system" integration menu |
 
 ## Cross-cutting engineering specs
