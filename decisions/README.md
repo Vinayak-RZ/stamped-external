@@ -22,7 +22,12 @@ Decision records for the Stamped platform. **Distributed via [stamped-external](
 | [ADR-016](ADR-016-attribution-shadow-challengers.md) | Attribution shadow challengers (ablations + STUMPY; not SHAP/NILM) | **Accepted** (2026-07-15) |
 | [ADR-017](ADR-017-l4-adaptive-retrieval-and-web-trust.md) | L4 adaptive hybrid RAG + web-search trust tiers (T1–T4) | **Accepted** (2026-07-17) |
 | [ADR-018](ADR-018-l4-pilot-execution-knowledge-reasoning.md) | L4 pilot execution — LangGraph early pull, L6 UI, Path H hop-2, Path W/Phoenix in P2, English through P2 | **Accepted** (2026-07-19) |
+| [ADR-019](ADR-019-l5-runtime-and-consistency.md) | L5 runtime charter — modular monolith, Postgres workflow, L2 ledger append protocol | **Accepted** (2026-07-20) |
+| [ADR-020](ADR-020-l5-mv-claim-governance.md) | L5 M&V claim governance — two-tier IPMVP, analyst gate, verification_status | **Accepted** (2026-07-20) |
+| [ADR-021](ADR-021-l5-notification-and-evidence.md) | L5 notification + evidence — Meta direct, shared number, DLT P0/SMS P1 | **Accepted** (2026-07-20) |
 
 Compliance register: [../compliance/india-compliance-register.md](../compliance/india-compliance-register.md)
+
+**L5 handoff:** [../handoff/stamped-l5-architecture-handoff.md](../handoff/stamped-l5-architecture-handoff.md) · [../handoff/stamped-l5-build-plan.md](../handoff/stamped-l5-build-plan.md)
 
 When a downstream repo (L2, L3, …) needs L1 context, start with [../technical/README.md](../technical/README.md) then read ADRs here.
