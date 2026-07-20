@@ -16,17 +16,15 @@ DECKS_DIR = ROOT / "demo-decks"
 
 # Local industry heroes in demo-decks/assets/ (relative paths for GH Pages)
 HERO_BY_INDUSTRY = {
-    "cement": "./assets/cement-hero.jpg",
-    "steel": "./assets/steel-hero.jpg",
-    "pharma": "./assets/pharma-hero.jpg",
+    "cement": "assets/cement-hero.jpg",
+    "steel": "assets/steel-hero.jpg",
+    "pharma": "assets/pharma-hero.jpg",
 }
 HERO_ALT = {
     "cement": "Cement plant operations",
     "steel": "Steel fabrication and welding",
     "pharma": "Pharmaceutical production line",
 }
-HERO_PHOTO_FALLBACK = "https://stamped.work/video/how-it-works-poster.png"
-
 PACKS = {
     "cement": {
         "label": "Cement",
@@ -430,15 +428,12 @@ HERO_CSS = """
       width: 100%;
       height: 100%;
       min-height: 220px;
-      max-height: min(52vh, 420px);
+      max-height: none;
       object-fit: cover;
       object-position: center;
     }
-    .hero-photo__scrim {
-      position: absolute; inset: auto 0 0 0; height: 42%;
-      background: linear-gradient(180deg, transparent, rgba(5,31,19,0.45));
-      pointer-events: none;
-    }
+    /* ponytail: no bottom scrim — it read as a broken/wrong image block */
+    .hero-photo__scrim { display: none !important; }
     .industry-chip {
       display: inline-flex; align-items: center;
       font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
@@ -453,6 +448,39 @@ HERO_CSS = """
       color: var(--on-surface-variant); margin-left: 0.55rem;
       padding-left: 0.55rem; border-left: 1px solid var(--outline-variant);
       text-transform: uppercase;
+    }
+
+    /* Desktop gap slide: fewer blocks, more air */
+    @media (min-width: 721px) {
+      #scene-gap .gap-outcomes { display: none !important; }
+      #scene-gap .silo-board {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+        max-width: 640px;
+        width: 100%;
+        margin: 2.75rem auto 0;
+      }
+      #scene-gap .silo-card:nth-child(1),
+      #scene-gap .silo-card:nth-child(3) { display: none; }
+      #scene-gap .silo-card {
+        min-height: 0;
+        padding: 1.6rem 1.45rem;
+      }
+      #scene-gap .silo-card > p { display: none; }
+      #scene-gap .silo-meta { margin-top: 1.15rem; gap: 0.65rem; font-size: 0.84rem; }
+      #scene-gap .gap-break {
+        margin: 2.75rem auto 0;
+        max-width: 480px;
+        padding: 1.05rem 1.35rem;
+      }
+      #scene-gap .lede {
+        max-width: 32em;
+        margin-bottom: 0.25rem;
+      }
+      #scene-gap h2 { margin-bottom: 0.75rem; }
+      #scene-gap .slide__inner--wide {
+        padding-top: 0.5rem;
+      }
     }
 """
 
@@ -695,21 +723,22 @@ def inject_hero_photo(html: str, industry: str) -> str:
         1,
     )
 
-    src = HERO_BY_INDUSTRY[industry]
+    # Use path relative to the HTML file (no ./ and no query) for max compatibility
+    src = HERO_BY_INDUSTRY[industry].lstrip("./")
     alt = HERO_ALT[industry]
+    # ponytail: never fall back to how-it-works-poster (cement dashboard UI)
     photo_block = f"""
           <figure class="hero-photo reveal" id="heroPhoto">
             <img
               id="heroPhotoImg"
               src="{src}"
               alt="{alt}"
-              width="1400"
-              height="900"
+              width="1800"
+              height="1200"
               loading="eager"
               decoding="async"
-              onerror="this.onerror=null;this.src='{HERO_PHOTO_FALLBACK}'"
+              fetchpriority="high"
             />
-            <span class="hero-photo__scrim" aria-hidden="true"></span>
           </figure>"""
 
     # Insert photo before hero-canvas; keep canvas for desktop optional — hide canvas with CSS on all sizes in favor of photo
@@ -718,6 +747,13 @@ def inject_hero_photo(html: str, industry: str) -> str:
         photo_block + '\n          <div class="hero-canvas reveal hide-mobile" aria-hidden="true" hidden>',
         1,
     )
+    # Preload so the hero is requested immediately
+    if '<link rel="preload" as="image"' not in html:
+        html = html.replace(
+            "</title>",
+            f'</title>\n  <link rel="preload" as="image" href="{src}" />',
+            1,
+        )
     return html
 
 
@@ -1070,12 +1106,23 @@ def apply_static_pack_fields(html: str, pack: dict) -> str:
 
 
 def inject_boot_script(html: str, industry: str) -> str:
+    hero_rel = HERO_BY_INDUSTRY[industry].lstrip("./")
     boot = f"""
   <script>
-    /* Industry chrome label — content is baked per file by build-industry-decks.py */
+    /* Industry chrome + resolve hero against this HTML file's URL */
     (function () {{
       var el = document.getElementById("chromeIndustry");
       if (el) el.textContent = {json.dumps(PACKS[industry]["chromeHint"])};
+      var img = document.getElementById("heroPhotoImg");
+      if (!img) return;
+      var rel = {json.dumps(hero_rel)};
+      var resolved = new URL(rel, window.location.href).href;
+      if (img.src !== resolved) img.src = resolved;
+      img.addEventListener("error", function onHeroErr() {{
+        img.removeEventListener("error", onHeroErr);
+        // one retry with cache-bust — still the local industry photo, never the cement poster
+        img.src = new URL(rel + "?t=" + Date.now(), window.location.href).href;
+      }});
     }})();
   </script>
 """
@@ -1109,12 +1156,20 @@ def build_one(base_html: str, industry: str) -> str:
         "    }\n"
         "    #scene-title .hero-canvas[hidden] { display: none !important; }\n"
         "    #scene-title .hero-photo {\n"
-        "      min-height: 280px;\n"
         "      align-self: stretch;\n"
+        "      min-height: 0;\n"
+        "      height: 100%;\n"
+        "      max-height: min(62vh, 520px);\n"
+        "      display: flex;\n"
         "    }\n"
         "    #scene-title .hero-photo img {\n"
-        "      min-height: 280px;\n"
-        "      max-height: min(58vh, 480px);\n"
+        "      flex: 1 1 auto;\n"
+        "      width: 100%;\n"
+        "      height: 100%;\n"
+        "      min-height: 320px;\n"
+        "      max-height: none;\n"
+        "      object-fit: cover;\n"
+        "      object-position: center;\n"
         "    }",
         1,
     )

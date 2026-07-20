@@ -376,12 +376,20 @@
     }
     #scene-title .hero-canvas[hidden] { display: none !important; }
     #scene-title .hero-photo {
-      min-height: 280px;
       align-self: stretch;
+      min-height: 0;
+      height: 100%;
+      max-height: min(62vh, 520px);
+      display: flex;
     }
     #scene-title .hero-photo img {
-      min-height: 280px;
-      max-height: min(58vh, 480px);
+      flex: 1 1 auto;
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      max-height: none;
+      object-fit: cover;
+      object-position: center;
     }
     #scene-title .hero-copy {
       display: flex; flex-direction: column; align-items: flex-start;
@@ -450,15 +458,12 @@
       width: 100%;
       height: 100%;
       min-height: 220px;
-      max-height: min(52vh, 420px);
+      max-height: none;
       object-fit: cover;
       object-position: center;
     }
-    .hero-photo__scrim {
-      position: absolute; inset: auto 0 0 0; height: 42%;
-      background: linear-gradient(180deg, transparent, rgba(5,31,19,0.45));
-      pointer-events: none;
-    }
+    /* ponytail: no bottom scrim — it read as a broken/wrong image block */
+    .hero-photo__scrim { display: none !important; }
     .industry-chip {
       display: inline-flex; align-items: center;
       font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
@@ -473,6 +478,39 @@
       color: var(--on-surface-variant); margin-left: 0.55rem;
       padding-left: 0.55rem; border-left: 1px solid var(--outline-variant);
       text-transform: uppercase;
+    }
+
+    /* Desktop gap slide: fewer blocks, more air */
+    @media (min-width: 721px) {
+      #scene-gap .gap-outcomes { display: none !important; }
+      #scene-gap .silo-board {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+        max-width: 640px;
+        width: 100%;
+        margin: 2.75rem auto 0;
+      }
+      #scene-gap .silo-card:nth-child(1),
+      #scene-gap .silo-card:nth-child(3) { display: none; }
+      #scene-gap .silo-card {
+        min-height: 0;
+        padding: 1.6rem 1.45rem;
+      }
+      #scene-gap .silo-card > p { display: none; }
+      #scene-gap .silo-meta { margin-top: 1.15rem; gap: 0.65rem; font-size: 0.84rem; }
+      #scene-gap .gap-break {
+        margin: 2.75rem auto 0;
+        max-width: 480px;
+        padding: 1.05rem 1.35rem;
+      }
+      #scene-gap .lede {
+        max-width: 32em;
+        margin-bottom: 0.25rem;
+      }
+      #scene-gap h2 { margin-bottom: 0.75rem; }
+      #scene-gap .slide__inner--wide {
+        padding-top: 0.5rem;
+      }
     }
 
     .flow-tags {
@@ -1627,15 +1665,14 @@
           <figure class="hero-photo reveal" id="heroPhoto">
             <img
               id="heroPhotoImg"
-              src="./assets/pharma-hero.jpg"
+              src="assets/pharma-hero.jpg"
               alt="Pharmaceutical production line"
-              width="1400"
-              height="900"
+              width="1800"
+              height="1200"
               loading="eager"
               decoding="async"
-              onerror="this.onerror=null;this.src='https://stamped.work/video/how-it-works-poster.png'"
+              fetchpriority="high"
             />
-            <span class="hero-photo__scrim" aria-hidden="true"></span>
           </figure>
           <div class="hero-canvas reveal hide-mobile" aria-hidden="true" hidden>
             <svg viewBox="0 0 420 280" fill="none">
@@ -2361,10 +2398,20 @@
 
   
   <script>
-    /* Industry chrome label — content is baked per file by build-industry-decks.py */
+    /* Industry chrome + resolve hero against this HTML file's URL */
     (function () {
       var el = document.getElementById("chromeIndustry");
       if (el) el.textContent = "Pharma";
+      var img = document.getElementById("heroPhotoImg");
+      if (!img) return;
+      var rel = "assets/pharma-hero.jpg";
+      var resolved = new URL(rel, window.location.href).href;
+      if (img.src !== resolved) img.src = resolved;
+      img.addEventListener("error", function onHeroErr() {
+        img.removeEventListener("error", onHeroErr);
+        // one retry with cache-bust — still the local industry photo, never the cement poster
+        img.src = new URL(rel + "?t=" + Date.now(), window.location.href).href;
+      });
     })();
   </script>
 <script>
