@@ -1,12 +1,27 @@
 # Demo decks
 
-Client-facing HTML presentation decks for Stamped Energy.
+Client-facing HTML presentation decks for Stamped Energy — one walkthrough per industry.
 
 | Path | Use |
 |------|-----|
-| [index.html](./index.html) | First-meeting / Proof Run walkthrough (this folder) |
-| [/index.html](../index.html) | Same file at repo root for GitHub Pages |
+| [index.html](./index.html) | Industry picker (hub) |
+| [cement.html](./cement.html) | Cement — kiln, mills, WHR |
+| [steel.html](./steel.html) | Steel — furnace, rolling mill |
+| [pharma.html](./pharma.html) | Pharma — HVAC, chillers, batch utilities |
+| [/index.html](../index.html) | Same hub at repo root for GitHub Pages |
 
-Open `index.html` in a browser. Arrow keys, space, or on-screen controls navigate. On phones, slides scroll vertically when content is taller than the viewport; horizontal swipe changes slides.
+Each industry deck keeps the same Proof Run structure. What changes:
 
-**GitHub Pages:** enable Pages from the repo root so `/` serves the root `index.html`.
+- **Prescriptions** (actions, owners, evidence tags)
+- **Data sources** called out in the hook / gap / “what we read” slides
+- **Optimisation targets** on the savings map (what we check first)
+
+Open an industry file in a browser. Arrow keys, space, or on-screen controls navigate. On phones, the title slide is **text → Begin → plant photo**; the simulated Sample workspace slide is skipped.
+
+**Rebuild from base:** edit `demo-decks/_base.snapshot.html` (generic template), then:
+
+```bash
+python3 scripts/build-industry-decks.py
+```
+
+**GitHub Pages:** enable Pages from the repo root so `/` serves the hub and `/demo-decks/*.html` serves each deck.
