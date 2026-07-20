@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "event_id": "we-2026-07-08-0001",
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "prescription_id": "rx-2026-07-08-0031",
+  "event_type": "transition",
+  "from_status": "open",
+  "to_status": "in_progress",
+  "actor_type": "webhook",
+  "actor_id": "wa_user_supervisor_1",
+  "reason_code": null,
+  "channel": "whatsapp",
+  "wamid": "wamid.HBgMOTE5OTk5OTk5OTk5FQIAERgSM0E1QjJDM0Q0RTY1RjA3QjAA",
+  "occurred_at": "2026-07-08T07:22:00Z",
+  "workflow_version": 2,
+  "correlation_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+  "details": {
+    "button_id": "ack"
+  },
+  "dedupe_key": "sha256:e5f6789012345678901234567890abcdef1234567890abcdef1234567890abcd"
+}

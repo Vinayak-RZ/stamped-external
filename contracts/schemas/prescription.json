@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://stamped.energy/schemas/prescription.v1.json",
   "title": "Prescription",
-  "description": "L4 → L5 actionable prescription. See technical/02-technical-architecture.md §5.3.",
+  "description": "L4 → L5 actionable prescription intake. status here is intake/lifecycle at handoff — L5 runtime closure states (verified, disputed, …) live on WorkflowEvent/WorkflowState (ADR-019). See technical/layers/L5-closure-and-verification.md §2–3.",
   "type": "object",
   "required": [
     "schema_version",
@@ -34,7 +34,8 @@
     "plant_id": { "type": "string", "minLength": 1 },
     "status": {
       "type": "string",
-      "enum": ["open", "in_progress", "done", "deferred", "rejected", "blocked_incomplete"]
+      "enum": ["open", "in_progress", "done", "deferred", "rejected", "blocked_incomplete"],
+      "description": "Intake / L4-visible lifecycle only. Do not add verified|disputed here — those are L5 WorkflowState values."
     },
     "priority": { "type": "integer", "minimum": 1, "maximum": 5 },
     "what": { "type": "string", "minLength": 1 },

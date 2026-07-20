@@ -1,5 +1,14 @@
 # Changelog — stamped-l1-contracts
 
+## 0.7.0 — 2026-07-20
+
+- Add `workflow-event.json` v1.0.0 — L5 → L6 workflow/notification stream (ADR-019)
+- Extend `stamped-record-envelope.json` `record_type` with `workflow_event` (BACKWARD additive)
+- `ledger-entry.json`: add optional `supersedes_entry_id`, `emission_factor_ref`; clarify `verification_status` (pending|verified|disputed|modeled) — no `superseded` status (corrections are new rows)
+- `prescription.json`: document that `status` is intake-only; L5 verified/disputed live on WorkflowState
+- Golden fixture `workflow_event.valid.json`
+- Aligns with L5 architecture overhaul (ADR-019/020/021)
+
 ## 0.6.1 — 2026-07-14
 
 - Docs: reconcile `Finding` examples in L3/L4/`02-technical-architecture` §5.2 to match `finding.json` field names (`baseline_value`/`actual_value`, required `plant_id`/`org_id`, top-level `engine` + `rule_or_model_ref`). Schema unchanged.

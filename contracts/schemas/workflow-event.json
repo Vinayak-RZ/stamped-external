@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stamped.energy/schemas/workflow-event.v1.json",
+  "title": "WorkflowEvent",
+  "description": "L5 → L6 append-only workflow / notification event. Runtime truth for prescription closure lives here — not on L4 Prescription.status. See technical/layers/L5-closure-and-verification.md §2, ADR-019.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "event_id",
+    "org_id",
+    "plant_id",
+    "prescription_id",
+    "event_type",
+    "from_status",
+    "to_status",
+    "actor_type",
+    "occurred_at",
+    "workflow_version",
+    "dedupe_key"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "const": "1.0.0"
+    },
+    "event_id": { "type": "string", "minLength": 1 },
+    "org_id": { "type": "string", "minLength": 1 },
+    "plant_id": { "type": "string", "minLength": 1 },
+    "prescription_id": { "type": "string", "minLength": 1 },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "transition",
+        "notification_sent",
+        "notification_delivered",
+        "notification_failed",
+        "reminder",
+        "escalation",
+        "reason_coded",
+        "verification_decision",
+        "ledger_append_acked",
+        "duplicate_intent"
+      ]
+    },
+    "from_status": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "blocked",
+        "open",
+        "in_progress",
+        "done",
+        "verified",
+        "deferred",
+        "rejected",
+        "disputed"
+      ]
+    },
+    "to_status": {
+      "type": "string",
+      "enum": [
+        "blocked",
+        "open",
+        "in_progress",
+        "done",
+        "verified",
+        "deferred",
+        "rejected",
+        "disputed"
+      ]
+    },
+    "actor_type": {
+      "type": "string",
+      "enum": ["user", "system_timer", "mv_engine", "analyst", "webhook"]
+    },
+    "actor_id": { "type": ["string", "null"] },
+    "reason_code": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "wrong_owner",
+        "production_constraint",
+        "capex_blocked",
+        "already_fixed",
+        "disagree_diagnosis",
+        "safety_quality_risk",
+        "no_response"
+      ]
+    },
+    "channel": {
+      "type": ["string", "null"],
+      "enum": [null, "whatsapp", "sms", "email", "dashboard", "webhook"]
+    },
+    "wamid": {
+      "type": ["string", "null"],
+      "description": "WhatsApp message id for webhook dedupe"
+    },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "workflow_version": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Optimistic concurrency version after this event"
+    },
+    "correlation_id": { "type": ["string", "null"], "format": "uuid" },
+    "details": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Non-PII structured extras (template_name, ledger_entry_id, …)"
+    },
+    "dedupe_key": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}
