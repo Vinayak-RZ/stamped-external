@@ -19,8 +19,14 @@ vercel --prod demo-decks/pharma
 
 ## Rebuild
 
-Do not edit `index.html` by hand. Regenerate from the shared builder:
+Do not edit `index.html` by hand. Regenerate from the shared builder (keeps the interactive floor phone + verify table in sync):
 
 ```bash
 python3 scripts/build-industry-decks.py
+```
+
+Then redeploy:
+
+```bash
+cd demo-decks/pharma && vercel --prod
 ```

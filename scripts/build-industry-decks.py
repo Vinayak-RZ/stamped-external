@@ -101,16 +101,36 @@ PACKS = {
             ],
             "cite": "physics/whr_peak@v1.3 · model conf 0.88 · ToD peak line · baseline last 5 evenings",
         },
-        "floor": {
-            "title": "Stagger mill start and kiln fans by 10 min",
-            "why": "MD peak from Monday overlap",
-            "impact": "₹3-5L/mo on MD line",
-            "owner": "Grinding supervisor · B",
-        },
+        "floor": [
+            {
+                "title": "Stagger mill start and kiln fans by 10 min",
+                "why": "MD peak from Monday overlap",
+                "impact": "₹3-5L/mo on MD line",
+                "owner": "Grinding supervisor · B",
+                "priority": "High",
+                "due": "This week · before next peak",
+            },
+            {
+                "title": "Raise WHR draw in the ToD peak window",
+                "why": "Peak grid import while WHR capacity sits idle",
+                "impact": "₹1.2-2.4L/mo on ToD line",
+                "owner": "Power plant lead · A",
+                "priority": "High",
+                "due": "Next ToD peak",
+            },
+            {
+                "title": "Stage idle mill offline on kiln stop",
+                "why": "Mill left online across kiln stop with no clinker pull",
+                "impact": "₹0.8-1.5L/mo on energy",
+                "owner": "Grinding supervisor · B",
+                "priority": "Med",
+                "due": "Next kiln stop",
+            },
+        ],
         "verify": [
-            ("MD stagger · mill vs kiln aux", "Apr MD peak", "10-min mill lag", "VERIFIED"),
+            ("MD stagger · mill/kiln", "Apr MD peak", "10-min mill lag", "VERIFIED"),
             ("WHR peak dispatch", "Peak grid import", "Raise WHR draw", "PENDING"),
-            ("Idle mill during kiln stop", "Night unload hours", "Staging rule", "IN REVIEW"),
+            ("Idle mill on kiln stop", "Night unload hours", "Staging rule", "IN REVIEW"),
         ],
         "math": {
             "eyebrow": "Where cement electricity cost usually hides",
@@ -229,15 +249,35 @@ PACKS = {
             ],
             "cite": "physics/idle_hold@v1.8 · model conf 0.87 · ToD energy line · baseline last 5 delays",
         },
-        "floor": {
-            "title": "Stagger furnace and mill start by 8 min",
-            "why": "MD peak from Monday overlap",
-            "impact": "₹2.5-4.5L/mo on MD line",
-            "owner": "Melt-shop supervisor · B",
-        },
+        "floor": [
+            {
+                "title": "Stagger furnace and mill start by 8 min",
+                "why": "MD peak from Monday overlap",
+                "impact": "₹2.5-4.5L/mo on MD line",
+                "owner": "Melt-shop supervisor · B",
+                "priority": "High",
+                "due": "This week · before next peak",
+            },
+            {
+                "title": "Cut furnace holding on planned delay",
+                "why": "Holding power during cast delay with no production",
+                "impact": "₹1.5-2.8L/mo on energy",
+                "owner": "Melt-shop supervisor · B",
+                "priority": "High",
+                "due": "Next delay window",
+            },
+            {
+                "title": "Shift non-critical load off peak tariff",
+                "why": "Peak grid draw that can move to shoulder",
+                "impact": "₹0.9-1.8L/mo on ToD",
+                "owner": "Electrical lead · A",
+                "priority": "Med",
+                "due": "Next tariff window",
+            },
+        ],
         "verify": [
-            ("MD stagger · furnace vs mill", "Apr MD peak", "8-min furnace lag", "VERIFIED"),
-            ("Furnace holding cut", "Delay holding hours", "Holding SOP", "PENDING"),
+            ("MD stagger · furnace/mill", "Apr MD peak", "8-min furnace lag", "VERIFIED"),
+            ("Furnace holding cut", "Delay holding hrs", "Holding SOP", "PENDING"),
             ("Tariff window import", "Peak grid draw", "Dispatch nudge", "IN REVIEW"),
         ],
         "math": {
@@ -357,15 +397,35 @@ PACKS = {
             ],
             "cite": "physics/hvac_idle@v1.5 · model conf 0.86 · ToD energy line · baseline last 6 idle windows",
         },
-        "floor": {
-            "title": "Stagger chillers and autoclave by 10 min",
-            "why": "MD peak from Monday load overlap",
-            "impact": "₹1.8-3.2L/mo on MD line",
-            "owner": "Utilities supervisor · B",
-        },
+        "floor": [
+            {
+                "title": "Stagger chillers and autoclave by 10 min",
+                "why": "MD peak from Monday load overlap",
+                "impact": "₹1.8-3.2L/mo on MD line",
+                "owner": "Utilities supervisor · B",
+                "priority": "High",
+                "due": "This week · before next peak",
+            },
+            {
+                "title": "Set back AHU Suite 3 in idle window",
+                "why": "Full duty HVAC with no batch occupancy",
+                "impact": "₹0.7-1.4L/mo on energy",
+                "owner": "HVAC lead · A",
+                "priority": "High",
+                "due": "Next idle window",
+            },
+            {
+                "title": "Stage utility island off across changeover",
+                "why": "Non-critical loads left on between batches",
+                "impact": "₹0.5-1.1L/mo on energy",
+                "owner": "Utilities supervisor · B",
+                "priority": "Med",
+                "due": "Next changeover",
+            },
+        ],
         "verify": [
-            ("MD stagger · chiller vs autoclave", "Apr MD peak", "10-min chiller lag", "VERIFIED"),
-            ("AHU Suite 3 setback", "Idle suite hours", "Validated setback SOP", "PENDING"),
+            ("MD stagger · chiller/autoclave", "Apr MD peak", "10-min chiller lag", "VERIFIED"),
+            ("AHU Suite 3 setback", "Idle suite hours", "Setback SOP", "PENDING"),
             ("Tariff window import", "Peak grid draw", "Dispatch nudge", "IN REVIEW"),
         ],
         "math": {
@@ -1021,16 +1081,23 @@ def replace_rx_block(html: str, pack: dict) -> str:
         1,
     )
 
-    # floor bubble
-    old_floor = '''                  <h4>Stagger Comp 1 &amp; 3 vs furnace bay ≥8 min</h4>
-                  <p class="wa-line"><b>Why:</b> MD peak Mon 07:12-07:20 overlap</p>
-                  <p class="wa-line"><b>Impact:</b> ₹2.5-4L/mo on MD line <span class="tilde">[~]</span></p>
-                  <p class="wa-line"><b>Owner:</b> Electrical shift supervisor · B</p>'''
-    f = pack["floor"]
-    new_floor = f'''                  <h4 id="floorTitle">{f["title"]}</h4>
+    # floor bubble — first of 3 interactive prescriptions (rest via __FLOOR_RX__)
+    floors = pack["floor"]
+    if not isinstance(floors, list) or len(floors) != 3:
+        raise SystemExit("pack['floor'] must be a list of 3 prescriptions")
+    f = floors[0]
+    old_floor = '''                  <span class="tag" id="floorTag">New prescription · High</span>
+                  <h4 id="floorTitle">Stagger Comp 1 &amp; 3 vs furnace bay ≥8 min</h4>
+                  <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak Mon 07:12-07:20 overlap</p>
+                  <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹2.5-4L/mo on MD line <span class="tilde">[~]</span></p>
+                  <p class="wa-line" id="floorOwner"><b>Owner:</b> Electrical shift supervisor · B</p>
+                  <p class="wa-line" id="floorDue"><b>Due:</b> This week · before next peak</p>'''
+    new_floor = f'''                  <span class="tag" id="floorTag">New prescription · {f.get("priority", "High")}</span>
+                  <h4 id="floorTitle">{f["title"]}</h4>
                   <p class="wa-line" id="floorWhy"><b>Why:</b> {f["why"]}</p>
                   <p class="wa-line" id="floorImpact"><b>Impact:</b> {f["impact"]} <span class="tilde">[~]</span></p>
-                  <p class="wa-line" id="floorOwner"><b>Owner:</b> {f["owner"]}</p>'''
+                  <p class="wa-line" id="floorOwner"><b>Owner:</b> {f["owner"]}</p>
+                  <p class="wa-line" id="floorDue"><b>Due:</b> {f.get("due", "This week · before next peak")}</p>'''
     if old_floor not in html:
         raise SystemExit("floor bubble not found")
     html = html.replace(old_floor, new_floor, 1)
@@ -1107,9 +1174,11 @@ def apply_static_pack_fields(html: str, pack: dict) -> str:
 
 def inject_boot_script(html: str, industry: str) -> str:
     hero_rel = HERO_BY_INDUSTRY[industry].lstrip("./")
+    floor_rx = json.dumps(PACKS[industry]["floor"], ensure_ascii=False)
     boot = f"""
   <script>
-    /* Industry chrome + resolve hero against this HTML file's URL */
+    /* Industry chrome + floor prescriptions + resolve hero against this HTML file's URL */
+    window.__FLOOR_RX__ = {floor_rx};
     (function () {{
       var el = document.getElementById("chromeIndustry");
       if (el) el.textContent = {json.dumps(PACKS[industry]["chromeHint"])};

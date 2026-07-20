@@ -971,6 +971,48 @@
     .wa-actions button.primary {
       background: var(--primary); border-color: var(--primary); color: #fff;
     }
+    .wa-actions button:disabled { opacity: 0.55; cursor: wait; }
+    #floorBubble { cursor: pointer; }
+    #floorBubble:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    .wa-bubble.is-dismiss-ack {
+      animation: floorAckOut 0.34s var(--ease) forwards;
+    }
+    .wa-bubble.is-dismiss-snooze {
+      animation: floorSnoozeOut 0.34s var(--ease) forwards;
+    }
+    .wa-bubble.is-enter {
+      animation: floorEnter 0.34s var(--ease) both;
+    }
+    @keyframes floorAckOut {
+      to { opacity: 0; transform: translateY(-18px) scale(0.96); }
+    }
+    @keyframes floorSnoozeOut {
+      to { opacity: 0; transform: translateX(28px) scale(0.97); }
+    }
+    @keyframes floorEnter {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+    .wa-end {
+      flex: 1;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem;
+    }
+    .wa-end[hidden] { display: none !important; }
+    .wa-end strong {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--secondary);
+    }
     .status-rail { display: grid; gap: 0.65rem; }
     .status-item {
       display: grid; grid-template-columns: 14px 1fr; gap: 0.75rem;
@@ -995,16 +1037,19 @@
     }
     .ledger-table {
       width: 100%; border-collapse: collapse;
-      font-size: clamp(0.8rem, 1.15vw, 0.9rem);
+      font-size: clamp(0.68rem, 1vw, 0.8rem);
       font-variant-numeric: tabular-nums;
     }
     .ledger-table th, .ledger-table td {
-      padding: 0.8rem 1rem; text-align: left;
+      padding: 0.65rem 0.75rem; text-align: left;
       border-bottom: 1px solid #e0e3df;
       color: var(--on-surface);
+      word-break: normal;
+      overflow-wrap: normal;
+      hyphens: none;
     }
     .ledger-table th {
-      font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase;
+      font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase;
       color: var(--on-surface-variant); background: #fafcfa;
     }
     .ledger-table tr:last-child td { border-bottom: none; }
@@ -1307,11 +1352,23 @@
       .slide, .slide__inner, .hero-copy, .brand-name, h1, h2, .lede,
       .rx-action, .wa-bubble, .wa-bubble h4, .tech-card, .waste-card,
       .silo-card, .audit-col, .bound-list li, .chip, .ask-box, .contact-line,
-      .tl-item, .commercial, .cred-quiet, .video-caption, p, td, th {
+      .tl-item, .commercial, .cred-quiet, .video-caption, p {
         max-width: 100%;
         overflow-wrap: anywhere;
         word-break: break-word;
       }
+      /* ponytail: ledger cells wrap at spaces only — never mid-word */
+      #scene-verify .ledger-table th,
+      #scene-verify .ledger-table td {
+        max-width: none;
+        word-break: normal;
+        overflow-wrap: normal;
+        hyphens: none;
+        padding: 0.5rem 0.45rem;
+        font-size: 0.66rem;
+        line-height: 1.35;
+      }
+      #scene-verify .ledger-table th { font-size: 0.58rem; }
       img, svg, video, iframe, canvas {
         max-width: 100%;
       }
@@ -1984,10 +2041,10 @@
     <section class="slide slide--light" id="scene-floor" data-theme="light" aria-label="Floor delivery">
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal hide-mobile">Execution channel</p>
-        <h2 class="reveal hide-mobile">The action reaches the floor.</h2>
         <p class="eyebrow reveal show-mobile">On the floor</p>
+        <h2 class="reveal">The action reaches the floor.</h2>
         <div class="floor-layout">
-          <div class="phone reveal" aria-hidden="true">
+          <div class="phone reveal" id="floorPhone" role="region" aria-label="Plant prescription phone">
             <div class="phone__screen">
               <div class="wa-header">
                 <div class="wa-avatar">SE</div>
@@ -1996,20 +2053,23 @@
                   <span>online · plant prescriptions</span>
                 </div>
               </div>
-              <div class="wa-body">
-                <p class="wa-meta">Today · Shift B · 07:18</p>
-                <div class="wa-bubble">
-                  <span class="tag">New prescription · High</span>
+              <div class="wa-body" id="floorWaBody">
+                <p class="wa-meta" id="floorMeta">Today · Shift B · 07:18</p>
+                <div class="wa-bubble" id="floorBubble" role="button" tabindex="0" aria-label="Acknowledge prescription">
+                  <span class="tag" id="floorTag">New prescription · High</span>
                   <h4 id="floorTitle">Stagger chillers and autoclave by 10 min</h4>
                   <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak from Monday load overlap</p>
                   <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹1.8-3.2L/mo on MD line <span class="tilde">[~]</span></p>
                   <p class="wa-line" id="floorOwner"><b>Owner:</b> Utilities supervisor · B</p>
-                  <p class="wa-line"><b>Due:</b> This week · before next peak</p>
+                  <p class="wa-line" id="floorDue"><b>Due:</b> This week · before next peak</p>
                   <div class="wa-cta">Tap to acknowledge &rarr;</div>
                 </div>
-                <div class="wa-actions">
-                  <button type="button">Snooze</button>
-                  <button type="button" class="primary">Acknowledge</button>
+                <div class="wa-actions" id="floorActions">
+                  <button type="button" id="floorSnooze" aria-label="Snooze prescription">Snooze</button>
+                  <button type="button" class="primary" id="floorAck" aria-label="Acknowledge prescription">Acknowledge</button>
+                </div>
+                <div class="wa-end" id="floorEnd" hidden>
+                  <strong>Stamped Energy</strong>
                 </div>
               </div>
             </div>
@@ -2071,7 +2131,7 @@
             </thead>
             <tbody>
               <tr>
-                <td>MD stagger · chiller vs autoclave</td>
+                <td>MD stagger · chiller/autoclave</td>
                 <td>Apr MD peak</td>
                 <td>10-min chiller lag</td>
                 <td>VERIFIED</td>
@@ -2079,7 +2139,7 @@
               <tr>
                 <td>AHU Suite 3 setback</td>
                 <td>Idle suite hours</td>
-                <td>Validated setback SOP</td>
+                <td>Setback SOP</td>
                 <td>PENDING</td>
               </tr>
               <tr>
@@ -2399,7 +2459,8 @@
 
   
   <script>
-    /* Industry chrome + resolve hero against this HTML file's URL */
+    /* Industry chrome + floor prescriptions + resolve hero against this HTML file's URL */
+    window.__FLOOR_RX__ = [{"title": "Stagger chillers and autoclave by 10 min", "why": "MD peak from Monday load overlap", "impact": "₹1.8-3.2L/mo on MD line", "owner": "Utilities supervisor · B", "priority": "High", "due": "This week · before next peak"}, {"title": "Set back AHU Suite 3 in idle window", "why": "Full duty HVAC with no batch occupancy", "impact": "₹0.7-1.4L/mo on energy", "owner": "HVAC lead · A", "priority": "High", "due": "Next idle window"}, {"title": "Stage utility island off across changeover", "why": "Non-critical loads left on between batches", "impact": "₹0.5-1.1L/mo on energy", "owner": "Utilities supervisor · B", "priority": "Med", "due": "Next changeover"}];
     (function () {
       var el = document.getElementById("chromeIndustry");
       if (el) el.textContent = "Pharma";
@@ -2480,6 +2541,108 @@
         });
       }
 
+      /* Interactive floor phone: 3 prescriptions → Stamped Energy end state */
+      var floorRx = Array.isArray(window.__FLOOR_RX__) ? window.__FLOOR_RX__ : [];
+      var floorIdx = 0;
+      var floorBusy = false;
+      var floorBubble = document.getElementById("floorBubble");
+      var floorActions = document.getElementById("floorActions");
+      var floorEnd = document.getElementById("floorEnd");
+      var floorMeta = document.getElementById("floorMeta");
+      var floorTag = document.getElementById("floorTag");
+      var floorTitle = document.getElementById("floorTitle");
+      var floorWhy = document.getElementById("floorWhy");
+      var floorImpact = document.getElementById("floorImpact");
+      var floorOwner = document.getElementById("floorOwner");
+      var floorDue = document.getElementById("floorDue");
+      var floorSnooze = document.getElementById("floorSnooze");
+      var floorAck = document.getElementById("floorAck");
+
+      function setFloorControlsEnabled(on) {
+        if (floorSnooze) floorSnooze.disabled = !on;
+        if (floorAck) floorAck.disabled = !on;
+        if (floorBubble) floorBubble.setAttribute("aria-disabled", on ? "false" : "true");
+      }
+
+      function renderFloorRx(i, animateIn) {
+        var rx = floorRx[i];
+        if (!rx || !floorBubble) return;
+        floorIdx = i;
+        if (floorTag) floorTag.textContent = "New prescription · " + (rx.priority || "High");
+        if (floorTitle) floorTitle.textContent = rx.title || "";
+        if (floorWhy) floorWhy.innerHTML = "<b>Why:</b> " + (rx.why || "");
+        if (floorImpact) floorImpact.innerHTML = "<b>Impact:</b> " + (rx.impact || "") + ' <span class="tilde">[~]</span>';
+        if (floorOwner) floorOwner.innerHTML = "<b>Owner:</b> " + (rx.owner || "");
+        if (floorDue) floorDue.innerHTML = "<b>Due:</b> " + (rx.due || "This week · before next peak");
+        if (floorMeta) floorMeta.textContent = "Today · Shift B · 07:18 · " + (i + 1) + "/" + floorRx.length;
+        floorBubble.hidden = false;
+        if (floorActions) floorActions.hidden = false;
+        if (floorEnd) floorEnd.hidden = true;
+        floorBubble.classList.remove("is-dismiss-ack", "is-dismiss-snooze", "is-enter");
+        if (animateIn) {
+          void floorBubble.offsetWidth;
+          floorBubble.classList.add("is-enter");
+        }
+        setFloorControlsEnabled(true);
+      }
+
+      function showFloorEnd() {
+        if (floorBubble) floorBubble.hidden = true;
+        if (floorActions) floorActions.hidden = true;
+        if (floorMeta) floorMeta.hidden = true;
+        if (floorEnd) floorEnd.hidden = false;
+        floorBusy = false;
+        setFloorControlsEnabled(false);
+      }
+
+      function resetFloorPhone() {
+        floorBusy = false;
+        if (floorMeta) floorMeta.hidden = false;
+        if (!floorRx.length) return;
+        renderFloorRx(0, false);
+      }
+
+      function dismissFloor(mode) {
+        if (floorBusy || !floorBubble || floorBubble.hidden || !floorRx.length) return;
+        floorBusy = true;
+        setFloorControlsEnabled(false);
+        floorBubble.classList.remove("is-enter", "is-dismiss-ack", "is-dismiss-snooze");
+        void floorBubble.offsetWidth;
+        floorBubble.classList.add(mode === "snooze" ? "is-dismiss-snooze" : "is-dismiss-ack");
+        window.setTimeout(function () {
+          var next = floorIdx + 1;
+          if (next >= floorRx.length) {
+            showFloorEnd();
+            return;
+          }
+          renderFloorRx(next, true);
+          floorBusy = false;
+        }, 340);
+      }
+
+      if (floorSnooze) {
+        floorSnooze.addEventListener("click", function (e) {
+          e.stopPropagation();
+          dismissFloor("snooze");
+        });
+      }
+      if (floorAck) {
+        floorAck.addEventListener("click", function (e) {
+          e.stopPropagation();
+          dismissFloor("ack");
+        });
+      }
+      if (floorBubble) {
+        floorBubble.addEventListener("click", function () { dismissFloor("ack"); });
+        floorBubble.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            dismissFloor("ack");
+          }
+        });
+      }
+      if (floorRx.length) resetFloorPhone();
+
       function goTo(i, force) {
         if (i < 0 || i >= total) return;
         if (i === index && !force) return;
@@ -2502,6 +2665,7 @@
         slide.classList.add("active");
         slide.scrollTop = 0;
         document.body.setAttribute("data-theme", "light");
+        if (slide.id === "scene-floor") resetFloorPhone();
 
         progressFill.style.width = ((index + 1) / total * 100) + "%";
         counter.textContent = pad(index + 1) + " / " + pad(total);
@@ -2538,8 +2702,9 @@
 
       document.addEventListener("keydown", function (e) {
         const tag = (e.target && e.target.tagName) || "";
-        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || tag === "VIDEO") return;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || tag === "VIDEO" || tag === "BUTTON") return;
         if (e.target && e.target.isContentEditable) return;
+        if (e.target && e.target.closest && e.target.closest("#floorPhone")) return;
 
         switch (e.key) {
           case "ArrowRight":
