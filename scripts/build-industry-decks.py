@@ -1,0 +1,1178 @@
+#!/usr/bin/env python3
+"""Build cement/steel/pharma demo decks from the shared base HTML.
+
+ponytail: one base file + industry packs; three entry HTML files share the same body.
+"""
+from __future__ import annotations
+
+import json
+import re
+import shutil
+from pathlib import Path
+
+ROOT = Path("/workspace")
+BASE = ROOT / "demo-decks" / "index.html"
+DECKS_DIR = ROOT / "demo-decks"
+
+# Website plant photo (stamped.work hero) + video poster fallback
+HERO_PHOTO = (
+    "https://res.cloudinary.com/ddpyjpt4v/image/upload/"
+    "c_fill,g_auto,w_1400,h_900,q_auto,f_auto/"
+    "v1782400113/copy_of_rahim-saikat-mwwl6l0kfpw-unsplash_1_slqcqd.jpg"
+)
+HERO_PHOTO_FALLBACK = "https://stamped.work/video/how-it-works-poster.png"
+
+PACKS = {
+    "cement": {
+        "label": "Cement",
+        "docTitle": "Stamped Energy · Cement demo",
+        "chromeHint": "Cement",
+        "title": {
+            "eyebrowD": "Cement · kiln, mills, and WHR decisions verified on the bill",
+            "eyebrowM": "Cement · bill-verified decisions",
+            "h1D": "From kiln and mill signals to owned actions on the invoice.",
+            "h1M": "Kiln & mill ₹ actions on the bill.",
+            "ledeD": "You already run kiln, mill, WHR, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.",
+            "ledeM": "Ranked kiln, mill, and WHR actions from meters you already run. Verified on the DISCOM bill.",
+        },
+        "hook": {
+            "eyebrow": "Monday 06:40 · Kiln / mill handover",
+            "h2": "Your cement plant already has the data.",
+            "ledeD": "The incomer saw the MD spike when the cement mill and kiln auxiliaries overlapped. The EMS logged it. Nobody got a work order with a rupee figure.",
+            "ledeM": "Mill + kiln aux overlapped. EMS logged it. Nobody got a ₹ work order.",
+            "t1s": "Cement mill + kiln ID-fan ramp together",
+            "t1p": "Shift B brings mill and kiln auxiliaries online in a short overlap.",
+            "t2s": "MD spike hits the incomer",
+            "t2p": "EMS threshold crossed. Alert created. Still no assigned owner.",
+            "t3s": "Clinker and grinding continue as usual",
+            "t3p": "The bill will price this later. The floor never saw the fix.",
+            "meterNote": "The EMS recorded the spike, but nobody was assigned to change the next mill start sequence.",
+            "statImpact": "~₹55k",
+            "statImpactLabel": "Monthly demand impact <span class=\"tilde\">[~]</span>",
+        },
+        "gapHas": {
+            "scada": "Has: kiln, mill, WHR run states",
+            "ems": "Has: spike logged at 06:40",
+            "meters": "Has: MD window and mill/kiln load profile",
+            "bill": "Has: MD, energy, PF line items",
+        },
+        "whatLede": "Stamped sits on top of the EMS and EnMS you already run. It reads kiln, mill, WHR, and incomer data, issues a ranked action in rupees, sends it to the floor, and closes the result on the next bill.",
+        "whatStep1": "Kiln / mill / WHR meters, SCADA and PLC states, and utility line items. Read-only. No control writes to the plant.",
+        "rx1": {
+            "badge": "Rx · MD coincidence",
+            "aria": "MD stagger prescription for cement mill vs kiln auxiliaries. Show evidence.",
+            "action": "Stagger cement-mill start vs kiln ID-fan ramp by ≥10 min at Shift B handover",
+            "why": "Mon 06:38-06:48 overlap drove the incomer MD window",
+            "bill": "MD (kVA) · billing demand",
+            "owner": "Electrical / grinding supervisor · Shift B",
+            "impact": "₹3-5L / month",
+            "effort": "Sequence only · no capex · no PLC write",
+            "rule": "md_overlap@v2.4 · Confidence High",
+            "due": "This week · verify on next MD line",
+            "evTitle": "Signal window · Mon 06:35-06:50",
+            "tags": [
+                ("HT_INCOMER.MD", "1,240 kVA", "06:42-06:46"),
+                ("CEMENT_MILL.START", "TRUE", "06:38"),
+                ("KILN_IDFAN.RAMP", "ON", "06:40+"),
+                ("RAW_MILL.RUN", "ON", "06:41+"),
+            ],
+            "cite": "physics/md_overlap@v2.4 · model conf 0.91 · tariff MD slab · baseline Apr peak week",
+        },
+        "rx2": {
+            "badge": "Rx · WHR / tariff",
+            "aria": "WHR peak dispatch prescription. Show evidence.",
+            "action": "Raise WHR draw 18:00-22:00; cut peak grid import while WHR output is available",
+            "why": "Peak ToD window still imported grid while WHR sat under-utilised",
+            "bill": "Energy (kWh) · ToD peak",
+            "owner": "Power / WHR desk · evening block",
+            "impact": "₹2-4L / month",
+            "effort": "Dispatch schedule · no capex · no PLC write",
+            "rule": "whr_peak@v1.3 · Confidence High",
+            "due": "Next peak block · verify on ToD energy line",
+            "evTitle": "Peak windows · last 5 evenings",
+            "tags": [
+                ("WHR.MW", "1.8-2.2 MW avail", "18:00-22:00"),
+                ("GRID.IMPORT", "High", "same window"),
+                ("CEMENT_MILL.kWh", "Peak draw", "ToD peak"),
+                ("TOD.PEAK_FLAG", "TRUE", "scheduled"),
+            ],
+            "cite": "physics/whr_peak@v1.3 · model conf 0.88 · ToD peak line · baseline last 5 evenings",
+        },
+        "floor": {
+            "title": "Stagger cement mill vs kiln ID-fan ≥10 min",
+            "why": "MD peak Mon 06:38-06:48 overlap",
+            "impact": "₹3-5L/mo on MD line",
+            "owner": "Grinding / electrical supervisor · B",
+        },
+        "verify": [
+            ("MD stagger · mill vs kiln aux", "Apr MD peak", "10-min mill lag", "VERIFIED"),
+            ("WHR peak dispatch", "Peak grid import", "Raise WHR draw", "PENDING"),
+            ("Idle mill during kiln stop", "Night unload hours", "Staging rule", "IN REVIEW"),
+        ],
+        "math": {
+            "eyebrow": "Where cement electricity cost usually hides",
+            "h2": "Five areas we check first in cement",
+            "ledeD": "First places we look when a cement plant already meters kiln, mills, and WHR — and still sees avoidable ₹ on the HT bill.",
+            "ledeM": "First places we look for avoidable ₹ on a cement HT bill.",
+            "cards": [
+                (
+                    "MD / demand",
+                    ["Mill + kiln aux overlap", "Baghouse / ID-fan coincidence", "Contract demand headroom"],
+                    "Bill line · MD (kVA)",
+                    "Sample: cement mill and kiln ID-fan ramping together at 06:40",
+                ),
+                (
+                    "Kiln & mills",
+                    ["Specific power drift (kWh/t)", "Raw mill idle on kiln stop", "Unnecessary pre-grinding windows"],
+                    "Bill line · Energy (kWh)",
+                    "Sample: mill left online across a kiln stop with no clinker pull",
+                ),
+                (
+                    "WHR / captive",
+                    ["WHR under-draw in peak", "Grid import while WHR available", "TOU mistiming"],
+                    "Bill line · ToD energy",
+                    "Sample: peak grid draw with WHR capacity sitting idle",
+                ),
+                (
+                    "Fans & utilities",
+                    ["Baghouse fan staging", "Idle compressor banks", "Utility run-on across stops"],
+                    "Bill line · Energy + MD",
+                    "Sample: baghouse fans at full duty during reduced kiln feed",
+                ),
+                (
+                    "SEC / intensity",
+                    ["kWh per ton clinker", "kWh per ton cement", "PAT-aligned drift signals"],
+                    "Bill + production tag",
+                    "Sample: grinding SEC drift without an owned corrective action",
+                ),
+            ],
+        },
+        "techBullet": "MD coincidence, mill/kiln idle, WHR vs peak grid, fan staging",
+        "offerLedeD": "Start with one cement line or grinding circuit. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90.",
+        "offerLedeM": "One cement circuit. Joint M&amp;V memo. Go or no-go at Day 90.",
+    },
+    "steel": {
+        "label": "Steel",
+        "docTitle": "Stamped Energy · Steel demo",
+        "chromeHint": "Steel",
+        "title": {
+            "eyebrowD": "Steel · furnace and mill decisions verified on the bill",
+            "eyebrowM": "Steel · bill-verified decisions",
+            "h1D": "From furnace and mill signals to owned actions on the invoice.",
+            "h1M": "Furnace & mill ₹ actions on the bill.",
+            "ledeD": "You already run furnace, rolling, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.",
+            "ledeM": "Ranked furnace and mill actions from meters you already run. Verified on the DISCOM bill.",
+        },
+        "hook": {
+            "eyebrow": "Monday 07:15 · Melt / roll handover",
+            "h2": "Your steel plant already has the data.",
+            "ledeD": "The incomer saw the MD spike when the furnace restart overlapped the rolling-mill bite. The EMS logged it. Nobody got a work order with a rupee figure.",
+            "ledeM": "Furnace + mill overlapped. EMS logged it. Nobody got a ₹ work order.",
+            "t1s": "Furnace restart + rolling-mill bite together",
+            "t1p": "Shift B brings melt and roll utilities online in a 4-minute overlap.",
+            "t2s": "MD spike hits the incomer",
+            "t2p": "EMS threshold crossed. Alert created. Still no assigned owner.",
+            "t3s": "Rolling continues as usual",
+            "t3p": "The bill will price this later. The floor never saw the fix.",
+            "meterNote": "The EMS recorded the spike, but nobody was assigned to change the next furnace–mill sequence.",
+            "statImpact": "~₹48k",
+            "statImpactLabel": "Monthly demand impact <span class=\"tilde\">[~]</span>",
+        },
+        "gapHas": {
+            "scada": "Has: furnace, mill, utility run states",
+            "ems": "Has: spike logged at 07:15",
+            "meters": "Has: MD window and melt/roll load profile",
+            "bill": "Has: MD, energy, PF line items",
+        },
+        "whatLede": "Stamped sits on top of the EMS and EnMS you already run. It reads furnace, mill, and incomer data, issues a ranked action in rupees, sends it to the floor, and closes the result on the next bill.",
+        "whatStep1": "Furnace / mill / utility meters, SCADA and PLC states, and utility line items. Read-only. No control writes to the plant.",
+        "rx1": {
+            "badge": "Rx · MD coincidence",
+            "aria": "MD stagger prescription for furnace vs rolling mill. Show evidence.",
+            "action": "Stagger furnace restart vs rolling-mill bite by ≥8 min at Shift B handover",
+            "why": "Mon 07:12-07:20 overlap drove the incomer MD window",
+            "bill": "MD (kVA) · billing demand",
+            "owner": "Electrical / melt-shop supervisor · Shift B",
+            "impact": "₹2.5-4.5L / month",
+            "effort": "Sequence only · no capex · no PLC write",
+            "rule": "md_overlap@v2.4 · Confidence High",
+            "due": "This week · verify on next MD line",
+            "evTitle": "Signal window · Mon 07:10-07:22",
+            "tags": [
+                ("HT_INCOMER.MD", "1,180 kVA", "07:14-07:18"),
+                ("FURNACE.RESTART", "TRUE", "07:12"),
+                ("MILL.BITE", "ON", "07:14+"),
+                ("COMP_BANK.RUN", "ON", "07:13+"),
+            ],
+            "cite": "physics/md_overlap@v2.4 · model conf 0.91 · tariff MD slab · baseline Apr peak week",
+        },
+        "rx2": {
+            "badge": "Rx · Idle / holding",
+            "aria": "Furnace holding prescription. Show evidence.",
+            "action": "Cut furnace holding power during planned delays longer than 30 minutes",
+            "why": "Holding kWh with no cast/roll tag on 3 of last 5 delay windows",
+            "bill": "Energy (kWh) · ToD shoulder",
+            "owner": "Melt-shop supervisor · Furnace 2",
+            "impact": "₹1-1.8L / month",
+            "effort": "Holding SOP · no capex · no PLC write",
+            "rule": "idle_hold@v1.8 · Confidence High",
+            "due": "Next delay window · verify on energy line",
+            "evTitle": "Delay / holding windows · last 5 events",
+            "tags": [
+                ("FURNACE2.HOLD", "ON", "35 min avg"),
+                ("CAST.PROD", "0 heats", "same window"),
+                ("FURNACE2.kWh", "~180 kWh", "per event <span class=\"tilde\">[~]</span>"),
+                ("DELAY.FLAG", "TRUE", "planned"),
+            ],
+            "cite": "physics/idle_hold@v1.8 · model conf 0.87 · ToD energy line · baseline last 5 delays",
+        },
+        "floor": {
+            "title": "Stagger furnace restart vs mill bite ≥8 min",
+            "why": "MD peak Mon 07:12-07:20 overlap",
+            "impact": "₹2.5-4.5L/mo on MD line",
+            "owner": "Melt-shop / electrical supervisor · B",
+        },
+        "verify": [
+            ("MD stagger · furnace vs mill", "Apr MD peak", "8-min furnace lag", "VERIFIED"),
+            ("Furnace holding cut", "Delay holding hours", "Holding SOP", "PENDING"),
+            ("Tariff window import", "Peak grid draw", "Dispatch nudge", "IN REVIEW"),
+        ],
+        "math": {
+            "eyebrow": "Where steel electricity cost usually hides",
+            "h2": "Five areas we check first in steel",
+            "ledeD": "First places we look when a steel plant already meters furnace and mill loads — and still sees avoidable ₹ on the HT bill.",
+            "ledeM": "First places we look for avoidable ₹ on a steel HT bill.",
+            "cards": [
+                (
+                    "MD / demand",
+                    ["Furnace + mill coincidence", "Auxiliary bank overlap", "Contract demand headroom"],
+                    "Bill line · MD (kVA)",
+                    "Sample: furnace restart and rolling-mill bite at 07:15",
+                ),
+                (
+                    "Process heat",
+                    ["Furnace holding loads", "Reheat setback gaps", "Unnecessary preheat windows"],
+                    "Bill line · Energy (kWh)",
+                    "Sample: holding heat across a long delay with no cast tag",
+                ),
+                (
+                    "Idle loads",
+                    ["Utilities across delays", "Compressor unload with no roll", "Cooling pumps run-on"],
+                    "Bill line · Energy (kWh)",
+                    "Sample: compressor bank unload with zero mill production",
+                ),
+                (
+                    "Air / utilities",
+                    ["Unload hours", "Staging discipline", "Simultaneous bank starts"],
+                    "Bill line · Energy + MD",
+                    "Sample: two utility banks starting into the same demand window",
+                ),
+                (
+                    "Tariff dispatch",
+                    ["Peak import timing", "Captive / grid mix", "TOU mistiming"],
+                    "Bill line · ToD energy",
+                    "Sample: peak grid draw while captive capacity sits idle",
+                ),
+            ],
+        },
+        "techBullet": "MD coincidence, furnace holding, mill idle, compressed air, tariff dispatch",
+        "offerLedeD": "Start with one melt shop or rolling line. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90.",
+        "offerLedeM": "One melt or roll line. Joint M&amp;V memo. Go or no-go at Day 90.",
+    },
+    "pharma": {
+        "label": "Pharma",
+        "docTitle": "Stamped Energy · Pharma demo",
+        "chromeHint": "Pharma",
+        "title": {
+            "eyebrowD": "Pharma · HVAC, cleanroom, and utility decisions verified on the bill",
+            "eyebrowM": "Pharma · bill-verified decisions",
+            "h1D": "From HVAC and batch utilities to owned actions on the invoice.",
+            "h1M": "HVAC & utility ₹ actions on the bill.",
+            "ledeD": "You already run HVAC, chillers, cleanroom, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.",
+            "ledeM": "Ranked HVAC and utility actions from meters you already run. Verified on the DISCOM bill.",
+        },
+        "hook": {
+            "eyebrow": "Monday 07:05 · Batch / utilities handover",
+            "h2": "Your pharma plant already has the data.",
+            "ledeD": "The incomer saw the MD spike when chiller bank B overlapped autoclave heat-up. The EMS logged it. Nobody got a work order with a rupee figure.",
+            "ledeM": "Chiller + autoclave overlapped. EMS logged it. Nobody got a ₹ work order.",
+            "t1s": "Chiller bank B + autoclave heat-up together",
+            "t1p": "Shift B brings chillers and batch utilities online in a short overlap.",
+            "t2s": "MD spike hits the incomer",
+            "t2p": "EMS threshold crossed. Alert created. Still no assigned owner.",
+            "t3s": "Batch schedule continues as usual",
+            "t3p": "The bill will price this later. The floor never saw the fix.",
+            "meterNote": "The EMS recorded the spike, but nobody was assigned to change the next chiller–autoclave sequence.",
+            "statImpact": "~₹36k",
+            "statImpactLabel": "Monthly demand impact <span class=\"tilde\">[~]</span>",
+        },
+        "gapHas": {
+            "scada": "Has: AHU, chiller, batch utility states",
+            "ems": "Has: spike logged at 07:05",
+            "meters": "Has: MD window and HVAC load profile",
+            "bill": "Has: MD, energy, PF line items",
+        },
+        "whatLede": "Stamped sits on top of the EMS and EnMS you already run. It reads HVAC, chiller, cleanroom, and incomer data, issues a ranked action in rupees, sends it to the floor, and closes the result on the next bill.",
+        "whatStep1": "HVAC / chiller / batch utility meters, BMS and PLC states, and utility line items. Read-only. No control writes to the plant.",
+        "rx1": {
+            "badge": "Rx · MD coincidence",
+            "aria": "MD stagger prescription for chillers vs autoclave. Show evidence.",
+            "action": "Stagger chiller bank B vs autoclave heat-up by ≥10 min at Shift B handover",
+            "why": "Mon 07:02-07:12 overlap drove the incomer MD window",
+            "bill": "MD (kVA) · billing demand",
+            "owner": "Utilities / engineering supervisor · Shift B",
+            "impact": "₹1.8-3.2L / month",
+            "effort": "Sequence only · no capex · no PLC write",
+            "rule": "md_overlap@v2.4 · Confidence High",
+            "due": "This week · verify on next MD line",
+            "evTitle": "Signal window · Mon 07:00-07:15",
+            "tags": [
+                ("HT_INCOMER.MD", "920 kVA", "07:06-07:10"),
+                ("CHILLER_B.START", "TRUE", "07:02"),
+                ("AUTOCLAVE.HEAT", "ON", "07:05+"),
+                ("AHU_SUITE3.RUN", "ON", "07:04+"),
+            ],
+            "cite": "physics/md_overlap@v2.4 · model conf 0.90 · tariff MD slab · baseline Apr peak week",
+        },
+        "rx2": {
+            "badge": "Rx · HVAC idle",
+            "aria": "AHU setback prescription. Show evidence.",
+            "action": "Setback non-critical AHU Suite 3 during validated idle batch windows",
+            "why": "Full AHU duty with no batch occupancy tag on 4 of last 6 idle windows",
+            "bill": "Energy (kWh) · ToD shoulder",
+            "owner": "HVAC / engineering · Suite 3",
+            "impact": "₹70k-1.1L / month",
+            "effort": "Validated setback SOP · no capex · no PLC write",
+            "rule": "hvac_idle@v1.5 · Confidence High",
+            "due": "Next idle window · verify on energy line",
+            "evTitle": "Idle suite windows · last 6 events",
+            "tags": [
+                ("AHU_S3.RUN", "Full duty", "40 min avg"),
+                ("BATCH.OCCUPANCY", "0", "same window"),
+                ("AHU_S3.kWh", "~95 kWh", "per event <span class=\"tilde\">[~]</span>"),
+                ("IDLE_WINDOW.FLAG", "TRUE", "validated"),
+            ],
+            "cite": "physics/hvac_idle@v1.5 · model conf 0.86 · ToD energy line · baseline last 6 idle windows",
+        },
+        "floor": {
+            "title": "Stagger chiller B vs autoclave heat-up ≥10 min",
+            "why": "MD peak Mon 07:02-07:12 overlap",
+            "impact": "₹1.8-3.2L/mo on MD line",
+            "owner": "Utilities / engineering supervisor · B",
+        },
+        "verify": [
+            ("MD stagger · chiller vs autoclave", "Apr MD peak", "10-min chiller lag", "VERIFIED"),
+            ("AHU Suite 3 setback", "Idle suite hours", "Validated setback SOP", "PENDING"),
+            ("Tariff window import", "Peak grid draw", "Dispatch nudge", "IN REVIEW"),
+        ],
+        "math": {
+            "eyebrow": "Where pharma electricity cost usually hides",
+            "h2": "Five areas we check first in pharma",
+            "ledeD": "First places we look when a pharma plant already meters HVAC and utilities — and still sees avoidable ₹ on the HT bill.",
+            "ledeM": "First places we look for avoidable ₹ on a pharma HT bill.",
+            "cards": [
+                (
+                    "MD / demand",
+                    ["Chiller + autoclave overlap", "AHU bank coincidence", "Contract demand headroom"],
+                    "Bill line · MD (kVA)",
+                    "Sample: chiller bank B and autoclave heat-up at 07:05",
+                ),
+                (
+                    "HVAC / cleanroom",
+                    ["Overcool in idle suites", "AHU full duty off-batch", "Simultaneous bank starts"],
+                    "Bill line · Energy (kWh)",
+                    "Sample: Suite 3 AHU at full duty with no occupancy tag",
+                ),
+                (
+                    "Chillers & utilities",
+                    ["Staging discipline", "Unload / bypass hours", "Purified-water run-on"],
+                    "Bill line · Energy + MD",
+                    "Sample: second chiller online into the same demand window",
+                ),
+                (
+                    "Batch gaps",
+                    ["Utilities across changeovers", "Idle CIP / WIP holding", "Non-critical loads left on"],
+                    "Bill line · Energy (kWh)",
+                    "Sample: utility island left running across a validated idle window",
+                ),
+                (
+                    "Tariff / intensity",
+                    ["Peak import timing", "kWh per batch drift", "TOU mistiming"],
+                    "Bill + batch tag",
+                    "Sample: peak grid draw during a non-critical utility window",
+                ),
+            ],
+        },
+        "techBullet": "MD coincidence, HVAC idle, chiller staging, batch-gap utilities, tariff dispatch",
+        "offerLedeD": "Start with one HVAC / utilities island or production block. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90.",
+        "offerLedeM": "One utilities island. Joint M&amp;V memo. Go or no-go at Day 90.",
+    },
+}
+
+
+HERO_CSS = """
+    .hero-photo {
+      margin: 0;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--outline-variant);
+      overflow: hidden;
+      background: var(--surface-low);
+      box-shadow: 0 18px 40px -28px rgba(5,31,19,0.18);
+      position: relative;
+    }
+    .hero-photo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      max-height: min(52vh, 420px);
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero-photo__scrim {
+      position: absolute; inset: auto 0 0 0; height: 42%;
+      background: linear-gradient(180deg, transparent, rgba(5,31,19,0.45));
+      pointer-events: none;
+    }
+    .industry-chip {
+      display: inline-flex; align-items: center;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--tertiary);
+      background: color-mix(in srgb, var(--tertiary) 10%, var(--white));
+      border: 1px solid color-mix(in srgb, var(--tertiary) 28%, transparent);
+      padding: 0.28rem 0.55rem; border-radius: 999px;
+      margin-bottom: var(--space-3);
+    }
+    #chromeIndustry {
+      font-size: 0.72rem; font-weight: 650; letter-spacing: 0.04em;
+      color: var(--on-surface-variant); margin-left: 0.55rem;
+      padding-left: 0.55rem; border-left: 1px solid var(--outline-variant);
+      text-transform: uppercase;
+    }
+"""
+
+MOBILE_HERO_CSS = """
+      /* Title: text → Begin → photo, fills the first screen */
+      #scene-title.slide {
+        justify-content: flex-start;
+        overflow: hidden;
+        padding-top: calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + 1.1rem);
+        padding-bottom: max(4.75rem, calc(var(--safe-b) + 4.25rem));
+      }
+      #scene-title .slide__inner {
+        width: 100%;
+        min-height: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transform: none !important;
+        animation: none !important;
+      }
+      #scene-title .hero-shell {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+        align-items: stretch;
+        justify-content: flex-start;
+      }
+      #scene-title .hero-copy {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        flex: 0 0 auto;
+      }
+      #scene-title .hero-canvas { display: none !important; }
+      #scene-title .hero-photo {
+        flex: 1 1 auto;
+        min-height: 140px;
+        margin-top: 0.15rem;
+        display: flex;
+        flex-direction: column;
+      }
+      #scene-title .hero-photo img {
+        flex: 1 1 auto;
+        min-height: 140px;
+        height: 100%;
+        max-height: none;
+        aspect-ratio: auto;
+      }
+      #scene-title .brand-name {
+        font-size: clamp(2.15rem, 9.5vw, 2.75rem);
+        margin-bottom: 0.45rem;
+        line-height: 0.95;
+      }
+      #scene-title h1 {
+        font-size: clamp(1.05rem, 4.4vw, 1.25rem);
+        font-weight: 650;
+        max-width: 18em;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+      }
+      #scene-title .lede {
+        font-size: 0.88rem;
+        line-height: 1.35;
+        margin-bottom: 0.85rem;
+        max-width: 32em;
+        color: var(--on-surface-variant);
+      }
+      #scene-title .btn-row {
+        margin-top: 0;
+        margin-bottom: 0.15rem;
+        width: 100%;
+        max-width: 20rem;
+      }
+      #scene-title .btn {
+        width: 100%;
+        height: 48px;
+        font-size: 1rem;
+      }
+      #scene-title .industry-chip { margin-bottom: 0.45rem; }
+      #scene-title .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+      }
+"""
+
+
+def rx_tags_html(tags: list[tuple[str, str, str]]) -> str:
+    rows = []
+    for code, val, window in tags:
+        rows.append(
+            f"<tr><td><code>{code}</code></td><td>{val}</td><td>{window}</td></tr>"
+        )
+    return "\n                      ".join(rows)
+
+
+def waste_cards_html(cards: list) -> str:
+    parts = []
+    for title, bullets, bill, sample in cards:
+        lis = "\n".join(f"              <li>{b}</li>" for b in bullets)
+        parts.append(
+            f"""          <article class="waste-card">
+            <h3>{title}</h3>
+            <ul>
+{lis}
+            </ul>
+            <div class="waste-bill">{bill}</div>
+            <p class="waste-sample hide-mobile">{sample}</p>
+          </article>"""
+        )
+    return "\n".join(parts)
+
+
+def verify_rows_html(rows: list[tuple[str, str, str, str]]) -> str:
+    out = []
+    for a, b, c, d in rows:
+        out.append(
+            f"""              <tr>
+                <td>{a}</td>
+                <td>{b}</td>
+                <td>{c}</td>
+                <td>{d}</td>
+              </tr>"""
+        )
+    return "\n".join(out)
+
+
+def inject_css(html: str) -> str:
+    # desktop hero grid stays; add photo styles after .hero-canvas svg rule
+    html = html.replace(
+        ".hero-canvas svg { width: 100%; height: auto; aspect-ratio: 420 / 280; display: block; }",
+        ".hero-canvas svg { width: 100%; height: auto; aspect-ratio: 420 / 280; display: block; }\n"
+        + HERO_CSS,
+    )
+    # Replace the old mobile title block with the new photo-first layout
+    pattern = re.compile(
+        r"/\* Title: content starts in upper third, full width, no dead top \*/.*?/\* Floor: proper phone",
+        re.S,
+    )
+    repl = MOBILE_HERO_CSS + "\n      /* Floor: proper phone"
+    html, n = pattern.subn(repl, html, count=1)
+    if n != 1:
+        raise SystemExit(f"mobile title CSS block not replaced (n={n})")
+    return html
+
+
+def inject_chrome_industry(html: str) -> str:
+    # After chrome logo block, add industry label
+    old = '<div class="chrome-logo" id="chromeLogo">'
+    # find closing of chrome-logo div is complex; instead insert after sceneCounter sibling area
+    # Insert industry span inside chrome next to logo
+    html = html.replace(
+        '<span class="chrome-fallback">Stamped</span>\n      </div>',
+        '<span class="chrome-fallback">Stamped</span>\n      </div>\n'
+        '      <span id="chromeIndustry" aria-live="polite"></span>',
+        1,
+    )
+    return html
+
+
+def inject_hero_photo(html: str) -> str:
+    # Add industry chip + photo; keep SVG for desktop as secondary (hide via CSS preference: show photo instead)
+    # Replace hero-copy opening content to add chip after brand area
+    html = html.replace(
+        '<p class="eyebrow reveal hide-mobile">Operational energy decisions, verified on the bill</p>\n'
+        '            <p class="eyebrow reveal show-mobile">Bill-verified decisions</p>\n'
+        '            <p class="brand-name reveal">Stamped Energy</p>\n'
+        '            <h1 class="reveal hide-mobile">From plant signals to owned actions on the invoice.</h1>\n'
+        '            <h1 class="reveal show-mobile">Owned ₹ actions on the bill.</h1>\n'
+        '            <p class="lede reveal hide-mobile">You already have meters, EMS, and often renewables. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.</p>\n'
+        '            <p class="lede reveal show-mobile">Ranked floor actions from your meters and EMS. Verified on the DISCOM bill.</p>',
+        '<p class="industry-chip reveal" id="industryChip">Industry</p>\n'
+        '            <p class="eyebrow reveal hide-mobile" id="titleEyebrowD">Operational energy decisions, verified on the bill</p>\n'
+        '            <p class="eyebrow reveal show-mobile" id="titleEyebrowM">Bill-verified decisions</p>\n'
+        '            <p class="brand-name reveal">Stamped Energy</p>\n'
+        '            <h1 class="reveal hide-mobile" id="titleH1D">From plant signals to owned actions on the invoice.</h1>\n'
+        '            <h1 class="reveal show-mobile" id="titleH1M">Owned ₹ actions on the bill.</h1>\n'
+        '            <p class="lede reveal hide-mobile" id="titleLedeD">You already have meters, EMS, and often renewables. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.</p>\n'
+        '            <p class="lede reveal show-mobile" id="titleLedeM">Ranked floor actions from your meters and EMS. Verified on the DISCOM bill.</p>',
+        1,
+    )
+
+    photo_block = f"""
+          <figure class="hero-photo reveal" id="heroPhoto">
+            <img
+              id="heroPhotoImg"
+              src="{HERO_PHOTO}"
+              alt="Industrial plant operations"
+              width="1400"
+              height="900"
+              loading="eager"
+              decoding="async"
+              onerror="this.onerror=null;this.src='{HERO_PHOTO_FALLBACK}'"
+            />
+            <span class="hero-photo__scrim" aria-hidden="true"></span>
+          </figure>"""
+
+    # Insert photo before hero-canvas; keep canvas for desktop optional — hide canvas with CSS on all sizes in favor of photo
+    html = html.replace(
+        '<div class="hero-canvas reveal hide-mobile" aria-hidden="true">',
+        photo_block + '\n          <div class="hero-canvas reveal hide-mobile" aria-hidden="true" hidden>',
+        1,
+    )
+    return html
+
+
+def inject_ids_and_hooks(html: str) -> str:
+    replacements = [
+        (
+            '<p class="eyebrow reveal">Monday 07:15 · Shift handover</p>\n'
+            '        <h2 class="reveal">Your plant already has the data.</h2>\n'
+            '        <p class="lede reveal hide-mobile">The incomer saw the MD spike. The EMS logged it. Nobody on the floor received a work order with a rupee figure attached.</p>\n'
+            '        <p class="lede reveal show-mobile">MD spiked. EMS logged it. Nobody got a ₹ work order.</p>',
+            '<p class="eyebrow reveal" id="hookEyebrow">Monday 07:15 · Shift handover</p>\n'
+            '        <h2 class="reveal" id="hookH2">Your plant already has the data.</h2>\n'
+            '        <p class="lede reveal hide-mobile" id="hookLedeD">The incomer saw the MD spike. The EMS logged it. Nobody on the floor received a work order with a rupee figure attached.</p>\n'
+            '        <p class="lede reveal show-mobile" id="hookLedeM">MD spiked. EMS logged it. Nobody got a ₹ work order.</p>',
+        ),
+        (
+            "<strong>Compressors + furnace bay start together</strong>\n"
+            "                <p>Shift B brings utilities online in a 4-minute overlap.</p>",
+            '<strong id="hookT1s">Compressors + furnace bay start together</strong>\n'
+            '                <p id="hookT1p">Shift B brings utilities online in a 4-minute overlap.</p>',
+        ),
+        (
+            "<strong>MD spike hits the incomer</strong>\n"
+            "                <p>EMS threshold crossed. Alert created. Still no assigned owner.</p>",
+            '<strong id="hookT2s">MD spike hits the incomer</strong>\n'
+            '                <p id="hookT2p">EMS threshold crossed. Alert created. Still no assigned owner.</p>',
+        ),
+        (
+            "<strong>Production continues as usual</strong>\n"
+            "                <p>The bill will price this later. The floor never saw the fix.</p>",
+            '<strong id="hookT3s">Production continues as usual</strong>\n'
+            '                <p id="hookT3p">The bill will price this later. The floor never saw the fix.</p>',
+        ),
+        (
+            '<p class="meter-note hide-mobile">The EMS recorded the spike, but nobody was assigned to change the next shift start.</p>',
+            '<p class="meter-note hide-mobile" id="hookMeterNote">The EMS recorded the spike, but nobody was assigned to change the next shift start.</p>',
+        ),
+        (
+            "<strong>~₹42k</strong>\n"
+            '                <span>Monthly demand impact <span class="tilde">[~]</span></span>',
+            '<strong id="hookStatImpact">~₹42k</strong>\n'
+            '                <span id="hookStatImpactLabel">Monthly demand impact <span class="tilde">[~]</span></span>',
+        ),
+        (
+            '<div class="has">Has: run states, starts, setpoints</div>',
+            '<div class="has" id="gapScadaHas">Has: run states, starts, setpoints</div>',
+        ),
+        (
+            '<div class="has">Has: spike logged at 07:15</div>',
+            '<div class="has" id="gapEmsHas">Has: spike logged at 07:15</div>',
+        ),
+        (
+            '<div class="has">Has: MD window and load profile</div>',
+            '<div class="has" id="gapMetersHas">Has: MD window and load profile</div>',
+        ),
+        (
+            '<div class="has">Has: MD, energy, PF line items</div>',
+            '<div class="has" id="gapBillHas">Has: MD, energy, PF line items</div>',
+        ),
+        (
+            '<p class="lede reveal">Stamped sits on top of the EMS and EnMS you already run. It reads existing data, issues a ranked action in rupees, sends it to the floor, and closes the result on the next bill.</p>',
+            '<p class="lede reveal" id="whatLede">Stamped sits on top of the EMS and EnMS you already run. It reads existing data, issues a ranked action in rupees, sends it to the floor, and closes the result on the next bill.</p>',
+        ),
+        (
+            "<p>Incomer, sub-meters, SCADA and PLC states, and utility line items. Read-only. No control writes to the plant.</p>",
+            '<p id="whatStep1">Incomer, sub-meters, SCADA and PLC states, and utility line items. Read-only. No control writes to the plant.</p>',
+        ),
+        (
+            '<p class="lede reveal hide-mobile">Start with one plant. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90. Wider rollout only after that memo is signed.</p>\n'
+            '        <p class="lede reveal show-mobile">One plant. Joint M&amp;V memo. Go or no-go at Day 90.</p>',
+            '<p class="lede reveal hide-mobile" id="offerLedeD">Start with one plant. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90. Wider rollout only after that memo is signed.</p>\n'
+            '        <p class="lede reveal show-mobile" id="offerLedeM">One plant. Joint M&amp;V memo. Go or no-go at Day 90.</p>',
+        ),
+        (
+            "<li>MD coincidence, idle and holding loads, compressed air, thermal</li>",
+            '<li id="techPhysicsBullet">MD coincidence, idle and holding loads, compressed air, thermal</li>',
+        ),
+    ]
+    for old, new in replacements:
+        if old not in html:
+            raise SystemExit(f"missing fragment for ID injection:\n{old[:120]}...")
+        html = html.replace(old, new, 1)
+    return html
+
+
+def replace_rx_block(html: str, pack: dict) -> str:
+    r1, r2 = pack["rx1"], pack["rx2"]
+    # Replace first rx-action and fields via unique current strings — do after generic IDs
+    # Wrap rx sections with ids by replacing the whole two buttons' key lines
+
+    def patch_rx(html: str, which: str, r: dict, action_old: str) -> str:
+        if action_old not in html:
+            raise SystemExit(f"rx action not found: {action_old}")
+        html = html.replace(
+            f'<p class="rx-action">{action_old}</p>',
+            f'<p class="rx-action" id="{which}Action">{r["action"]}</p>',
+            1,
+        )
+        return html
+
+    # We'll rebuild prescription + floor + verify + math from pack after marking containers
+    # Find waste-grid and replace inner cards
+    m = re.search(
+        r'(<div class="waste-grid reveal">)(.*?)(</div>\s*<div class="bill-table-wrap)',
+        html,
+        re.S,
+    )
+    if not m:
+        raise SystemExit("waste-grid not found")
+    html = html[: m.start(1)] + m.group(1) + "\n" + waste_cards_html(pack["math"]["cards"]) + "\n        " + m.group(3) + html[m.end(3) :]
+
+    # verify tbody
+    m = re.search(
+        r'(<div class="ledger-wrap reveal">\s*<table class="ledger-table">\s*<thead>.*?</thead>\s*<tbody>)(.*?)(</tbody>)',
+        html,
+        re.S,
+    )
+    if not m:
+        raise SystemExit("ledger tbody not found")
+    html = html[: m.start(2)] + "\n" + verify_rows_html(pack["verify"]) + "\n            " + html[m.start(3) :]
+
+    # math headers
+    html = html.replace(
+        '<p class="eyebrow reveal">Where electricity cost usually hides</p>\n'
+        '        <h2 class="reveal">Five areas we check first</h2>\n'
+        '        <p class="lede reveal hide-mobile">These are the first places we look when a plant already has metering and still sees avoidable ₹ on the HT bill.</p>\n'
+        '        <p class="lede reveal show-mobile">First places we look for avoidable ₹ on the HT bill.</p>',
+        f'<p class="eyebrow reveal" id="mathEyebrow">{pack["math"]["eyebrow"]}</p>\n'
+        f'        <h2 class="reveal" id="mathH2">{pack["math"]["h2"]}</h2>\n'
+        f'        <p class="lede reveal hide-mobile" id="mathLedeD">{pack["math"]["ledeD"]}</p>\n'
+        f'        <p class="lede reveal show-mobile" id="mathLedeM">{pack["math"]["ledeM"]}</p>',
+        1,
+    )
+
+    # Prescription card 1 — replace whole first button front+back key content by unique block
+    rx1_front = f'''                  <span class="rx-badge" id="rx1Badge">{r1["badge"]}</span>
+                  <span class="rx-priority">Priority · High</span>
+                </div>
+                <div class="rx-hero__body">
+                  <p class="rx-action" id="rx1Action">{r1["action"]}</p>
+                  <dl class="rx-fields">
+                    <div class="rx-row"><dt>Why</dt><dd id="rx1Why">{r1["why"]}</dd></div>
+                    <div class="rx-row"><dt>Bill line</dt><dd id="rx1Bill">{r1["bill"]}</dd></div>
+                    <div class="rx-row"><dt>Owner</dt><dd id="rx1Owner">{r1["owner"]}</dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong id="rx1Impact">₹{r1["impact"].replace("₹", "") if r1["impact"].startswith("₹") else r1["impact"]}</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Effort</dt><dd id="rx1Effort">{r1["effort"]}</dd></div>
+                    <div class="rx-row"><dt>Rule</dt><dd id="rx1Rule">{r1["rule"]}</dd></div>
+                    <div class="rx-row"><dt>Due</dt><dd id="rx1Due">{r1["due"]}</dd></div>
+                  </dl>'''
+
+    # Fix impact - packs already include ₹
+    impact1 = r1["impact"] if r1["impact"].startswith("₹") else "₹" + r1["impact"]
+    rx1_front = rx1_front.replace(
+        f'<strong id="rx1Impact">₹{r1["impact"].replace("₹", "") if r1["impact"].startswith("₹") else r1["impact"]}</strong>',
+        f'<strong id="rx1Impact">{impact1}</strong>',
+    )
+
+    old_rx1_front = '''                  <span class="rx-badge">Rx · MD coincidence</span>
+                  <span class="rx-priority">Priority · High</span>
+                </div>
+                <div class="rx-hero__body">
+                  <p class="rx-action">Stagger Compressors 1 &amp; 3 vs furnace-bay start by ≥8 min at Shift B handover</p>
+                  <dl class="rx-fields">
+                    <div class="rx-row"><dt>Why</dt><dd>Mon 07:12-07:20 overlap drove the incomer MD window</dd></div>
+                    <div class="rx-row"><dt>Bill line</dt><dd>MD (kVA) · billing demand</dd></div>
+                    <div class="rx-row"><dt>Owner</dt><dd>Electrical shift supervisor · Shift B</dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong>₹2.5-4L / month</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Effort</dt><dd>Sequence only · no capex · no PLC write</dd></div>
+                    <div class="rx-row"><dt>Rule</dt><dd>md_overlap@v2.4 · Confidence High</dd></div>
+                    <div class="rx-row"><dt>Due</dt><dd>This week · verify on next MD line</dd></div>
+                  </dl>'''
+    if old_rx1_front not in html:
+        raise SystemExit("rx1 front not found")
+    html = html.replace(old_rx1_front, rx1_front, 1)
+
+    html = html.replace(
+        'aria-label="MD stagger prescription. Show evidence."',
+        f'aria-label="{r1["aria"]}"',
+        1,
+    )
+
+    old_rx1_back_table = '''                    <tbody>
+                      <tr><td><code>HT_INCOMER.MD</code></td><td>1,180 kVA</td><td>07:14-07:18</td></tr>
+                      <tr><td><code>COMP1.RUN</code></td><td>ON</td><td>07:12+</td></tr>
+                      <tr><td><code>COMP3.RUN</code></td><td>ON</td><td>07:13+</td></tr>
+                      <tr><td><code>FURNACE_BAY.START</code></td><td>TRUE</td><td>07:14</td></tr>
+                    </tbody>'''
+    new_rx1_back_table = (
+        "                    <tbody>\n                      "
+        + rx_tags_html(r1["tags"])
+        + "\n                    </tbody>"
+    )
+    html = html.replace(old_rx1_back_table, new_rx1_back_table, 1)
+    html = html.replace(
+        '<p class="rx-ev-title">Signal window · Mon 07:10-07:22</p>',
+        f'<p class="rx-ev-title" id="rx1EvTitle">{r1["evTitle"]}</p>',
+        1,
+    )
+    html = html.replace(
+        '<p class="rx-cite"><strong>physics/md_overlap@v2.4</strong> · model conf 0.91 · tariff MD slab · baseline Apr peak week</p>',
+        f'<p class="rx-cite" id="rx1Cite"><strong>{r1["cite"].split(" · ")[0] if " · " in r1["cite"] else r1["cite"]}</strong> · {" · ".join(r1["cite"].split(" · ")[1:])}</p>'
+        if False
+        else f'<p class="rx-cite" id="rx1Cite">{r1["cite"]}</p>',
+        1,
+    )
+
+    # rx2
+    impact2 = r2["impact"] if r2["impact"].startswith("₹") else "₹" + r2["impact"]
+    old_rx2_front = '''                  <span class="rx-badge">Rx · Idle / holding</span>
+                  <span class="rx-priority rx-priority--med">Priority · Med</span>
+                </div>
+                <div class="rx-hero__body">
+                  <p class="rx-action">Stage Compressor Bank B offline during the planned 45-min changeover window</p>
+                  <dl class="rx-fields">
+                    <div class="rx-row"><dt>Why</dt><dd>Unload kWh with no production tag on 3 of last 5 changeovers</dd></div>
+                    <div class="rx-row"><dt>Bill line</dt><dd>Energy (kWh) · ToD shoulder</dd></div>
+                    <div class="rx-row"><dt>Owner</dt><dd>Utilities supervisor · Line 2</dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong>₹80k-1.2L / month</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Effort</dt><dd>Staging SOP · no capex · no PLC write</dd></div>
+                    <div class="rx-row"><dt>Rule</dt><dd>idle_hold@v1.8 · Confidence High</dd></div>
+                    <div class="rx-row"><dt>Due</dt><dd>Next changeover · verify on energy line</dd></div>
+                  </dl>'''
+    new_rx2_front = f'''                  <span class="rx-badge" id="rx2Badge">{r2["badge"]}</span>
+                  <span class="rx-priority rx-priority--med">Priority · Med</span>
+                </div>
+                <div class="rx-hero__body">
+                  <p class="rx-action" id="rx2Action">{r2["action"]}</p>
+                  <dl class="rx-fields">
+                    <div class="rx-row"><dt>Why</dt><dd id="rx2Why">{r2["why"]}</dd></div>
+                    <div class="rx-row"><dt>Bill line</dt><dd id="rx2Bill">{r2["bill"]}</dd></div>
+                    <div class="rx-row"><dt>Owner</dt><dd id="rx2Owner">{r2["owner"]}</dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong id="rx2Impact">{impact2}</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Effort</dt><dd id="rx2Effort">{r2["effort"]}</dd></div>
+                    <div class="rx-row"><dt>Rule</dt><dd id="rx2Rule">{r2["rule"]}</dd></div>
+                    <div class="rx-row"><dt>Due</dt><dd id="rx2Due">{r2["due"]}</dd></div>
+                  </dl>'''
+    if old_rx2_front not in html:
+        raise SystemExit("rx2 front not found")
+    html = html.replace(old_rx2_front, new_rx2_front, 1)
+    html = html.replace(
+        'aria-label="Idle compressor prescription. Show evidence."',
+        f'aria-label="{r2["aria"]}"',
+        1,
+    )
+    old_rx2_table = '''                    <tbody>
+                      <tr><td><code>BANK_B.RUN</code></td><td>ON · unload</td><td>45 min avg</td></tr>
+                      <tr><td><code>LINE2.PROD</code></td><td>0 units</td><td>same window</td></tr>
+                      <tr><td><code>BANK_B.kWh</code></td><td>~210 kWh</td><td>per event <span class="tilde">[~]</span></td></tr>
+                      <tr><td><code>CHANGEOVER.FLAG</code></td><td>TRUE</td><td>planned</td></tr>
+                    </tbody>'''
+    new_rx2_table = (
+        "                    <tbody>\n                      "
+        + rx_tags_html(r2["tags"])
+        + "\n                    </tbody>"
+    )
+    html = html.replace(old_rx2_table, new_rx2_table, 1)
+    html = html.replace(
+        '<p class="rx-ev-title">Changeover windows · last 5 events</p>',
+        f'<p class="rx-ev-title" id="rx2EvTitle">{r2["evTitle"]}</p>',
+        1,
+    )
+    html = html.replace(
+        '<p class="rx-cite"><strong>physics/idle_hold@v1.8</strong> · model conf 0.87 · ToD energy line · baseline last 5 changeovers</p>',
+        f'<p class="rx-cite" id="rx2Cite">{r2["cite"]}</p>',
+        1,
+    )
+
+    # floor bubble
+    old_floor = '''                  <h4>Stagger Comp 1 &amp; 3 vs furnace bay ≥8 min</h4>
+                  <p class="wa-line"><b>Why:</b> MD peak Mon 07:12-07:20 overlap</p>
+                  <p class="wa-line"><b>Impact:</b> ₹2.5-4L/mo on MD line <span class="tilde">[~]</span></p>
+                  <p class="wa-line"><b>Owner:</b> Electrical shift supervisor · B</p>'''
+    f = pack["floor"]
+    new_floor = f'''                  <h4 id="floorTitle">{f["title"]}</h4>
+                  <p class="wa-line" id="floorWhy"><b>Why:</b> {f["why"]}</p>
+                  <p class="wa-line" id="floorImpact"><b>Impact:</b> {f["impact"]} <span class="tilde">[~]</span></p>
+                  <p class="wa-line" id="floorOwner"><b>Owner:</b> {f["owner"]}</p>'''
+    if old_floor not in html:
+        raise SystemExit("floor bubble not found")
+    html = html.replace(old_floor, new_floor, 1)
+    return html
+
+
+def apply_static_pack_fields(html: str, pack: dict) -> str:
+    t = pack["title"]
+    h = pack["hook"]
+    html = html.replace(
+        "<title>Stamped Energy - Demo Deck</title>",
+        f"<title>{pack['docTitle']}</title>",
+        1,
+    )
+    pairs = {
+        "industryChip": pack["label"],
+        "titleEyebrowD": t["eyebrowD"],
+        "titleEyebrowM": t["eyebrowM"],
+        "titleH1D": t["h1D"],
+        "titleH1M": t["h1M"],
+        "titleLedeD": t["ledeD"],
+        "titleLedeM": t["ledeM"],
+        "hookEyebrow": h["eyebrow"],
+        "hookH2": h["h2"],
+        "hookLedeD": h["ledeD"],
+        "hookLedeM": h["ledeM"],
+        "hookT1s": h["t1s"],
+        "hookT1p": h["t1p"],
+        "hookT2s": h["t2s"],
+        "hookT2p": h["t2p"],
+        "hookT3s": h["t3s"],
+        "hookT3p": h["t3p"],
+        "hookMeterNote": h["meterNote"],
+        "hookStatImpact": h["statImpact"],
+        "gapScadaHas": pack["gapHas"]["scada"],
+        "gapEmsHas": pack["gapHas"]["ems"],
+        "gapMetersHas": pack["gapHas"]["meters"],
+        "gapBillHas": pack["gapHas"]["bill"],
+        "whatLede": pack["whatLede"],
+        "whatStep1": pack["whatStep1"],
+        "techPhysicsBullet": pack["techBullet"],
+        "offerLedeD": pack["offerLedeD"],
+        "offerLedeM": pack["offerLedeM"],
+    }
+    for eid, text in pairs.items():
+        # replace >old</ or content between id="eid">...</
+        pattern = re.compile(
+            rf'(id="{eid}"[^>]*>)(.*?)(</)',
+            re.S,
+        )
+        html, n = pattern.subn(rf"\g<1>{text}\g<3>", html, count=1)
+        if n != 1:
+            raise SystemExit(f"failed to set #{eid} (n={n})")
+
+    # hookStatImpactLabel allows HTML
+    pattern = re.compile(
+        r'(id="hookStatImpactLabel"[^>]*>)(.*?)(</)',
+        re.S,
+    )
+    html, n = pattern.subn(
+        rf'\g<1>{h["statImpactLabel"]}\g<3>', html, count=1
+    )
+    if n != 1:
+        raise SystemExit("hookStatImpactLabel failed")
+
+    # chrome industry via JS still; also set a data attribute on html
+    html = html.replace(
+        "<html lang=\"en\">",
+        f'<html lang="en" data-industry="{pack["label"].lower()}">',
+        1,
+    )
+    return html
+
+
+def inject_boot_script(html: str, industry: str) -> str:
+    boot = f"""
+  <script>
+    /* Industry chrome label — content is baked per file by build-industry-decks.py */
+    (function () {{
+      var el = document.getElementById("chromeIndustry");
+      if (el) el.textContent = {json.dumps(PACKS[industry]["chromeHint"])};
+    }})();
+  </script>
+"""
+    html = html.replace("<script>\n    (function () {\n      const isMobileDeck", boot + "<script>\n    (function () {\n      const isMobileDeck", 1)
+    return html
+
+
+def build_one(base_html: str, industry: str) -> str:
+    pack = PACKS[industry]
+    html = base_html
+    html = inject_css(html)
+    html = inject_chrome_industry(html)
+    html = inject_hero_photo(html)
+    html = inject_ids_and_hooks(html)
+    html = replace_rx_block(html, pack)
+    html = apply_static_pack_fields(html, pack)
+    html = inject_boot_script(html, industry)
+    # desktop: prefer photo over SVG — hide canvas always when photo present
+    html = html.replace(
+        "#scene-title .hero-shell {\n"
+        "      display: grid;\n"
+        "      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);\n"
+        "      gap: clamp(1.75rem, 4.5vw, 3.25rem);\n"
+        "      align-items: center;\n"
+        "    }",
+        "#scene-title .hero-shell {\n"
+        "      display: grid;\n"
+        "      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);\n"
+        "      gap: clamp(1.75rem, 4.5vw, 3.25rem);\n"
+        "      align-items: center;\n"
+        "    }\n"
+        "    #scene-title .hero-canvas[hidden] { display: none !important; }\n"
+        "    #scene-title .hero-photo {\n"
+        "      min-height: 280px;\n"
+        "      align-self: stretch;\n"
+        "    }\n"
+        "    #scene-title .hero-photo img {\n"
+        "      min-height: 280px;\n"
+        "      max-height: min(58vh, 480px);\n"
+        "    }",
+        1,
+    )
+    return html
+
+
+HUB = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Stamped Energy · Industry demo decks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #F75440; --secondary: #051F13; --surface: #f7faf5;
+      --on-surface: #191c1a; --muted: #5a403c; --line: #e3beb8;
+      --font-d: "Plus Jakarta Sans", system-ui, sans-serif;
+      --font-b: Inter, system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100dvh; font-family: var(--font-b);
+      color: var(--on-surface); background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(247,84,64,0.12), transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, rgba(0,102,107,0.08), transparent 50%),
+        var(--surface);
+      padding: max(1.5rem, env(safe-area-inset-top)) 1.25rem max(2rem, env(safe-area-inset-bottom));
+    }
+    main { max-width: 720px; margin: 0 auto; }
+    .logo { height: 36px; width: auto; margin-bottom: 1.25rem; }
+    h1 {
+      font-family: var(--font-d); font-weight: 800; letter-spacing: -0.04em;
+      font-size: clamp(1.8rem, 5vw, 2.4rem); line-height: 1.05; margin: 0 0 0.65rem;
+      color: var(--secondary);
+    }
+    .lede { color: var(--muted); line-height: 1.5; margin: 0 0 1.75rem; max-width: 36em; }
+    .grid { display: grid; gap: 0.85rem; }
+    a.card {
+      display: block; text-decoration: none; color: inherit;
+      background: #fff; border: 1px solid var(--line); border-radius: 14px;
+      padding: 1.15rem 1.25rem; transition: border-color 0.15s, transform 0.15s;
+    }
+    a.card:hover { border-color: var(--primary); transform: translateY(-1px); }
+    a.card strong {
+      display: block; font-family: var(--font-d); font-size: 1.2rem;
+      margin-bottom: 0.35rem; color: var(--secondary);
+    }
+    a.card span { display: block; color: var(--muted); font-size: 0.92rem; line-height: 1.4; }
+    a.card em {
+      display: inline-block; margin-top: 0.75rem; font-style: normal;
+      font-size: 0.8rem; font-weight: 700; color: var(--primary);
+    }
+    footer { margin-top: 2rem; font-size: 0.85rem; color: var(--muted); }
+    footer a { color: var(--secondary); }
+  </style>
+</head>
+<body>
+  <main>
+    <img class="logo" src="https://stamped.work/LogoOrange.png" alt="Stamped Energy" width="140" height="36" />
+    <h1>Pick your industry deck</h1>
+    <p class="lede">Same Proof Run walkthrough — prescriptions, data sources, and optimisation targets tuned for each plant type.</p>
+    <div class="grid">
+      <a class="card" href="./cement.html">
+        <strong>Cement</strong>
+        <span>Kiln, mills, WHR dispatch, and kWh/ton — MD and peak-grid actions.</span>
+        <em>Open cement deck →</em>
+      </a>
+      <a class="card" href="./steel.html">
+        <strong>Steel</strong>
+        <span>Furnace holding, rolling-mill coincidence, and melt-shop utilities.</span>
+        <em>Open steel deck →</em>
+      </a>
+      <a class="card" href="./pharma.html">
+        <strong>Pharma</strong>
+        <span>HVAC, chillers, cleanroom setbacks, and batch-utility peaks.</span>
+        <em>Open pharma deck →</em>
+      </a>
+    </div>
+    <footer>
+      <a href="https://stamped.work">stamped.work</a>
+      · Demo decks for first meetings / Proof Run
+    </footer>
+  </main>
+</body>
+</html>
+"""
+
+
+def main() -> None:
+    # Prefer regenerating from a snapshot if present; else current index if it's still the generic deck
+    snapshot = DECKS_DIR / "_base.snapshot.html"
+    if snapshot.exists():
+        base = snapshot.read_text(encoding="utf-8")
+    else:
+        base = BASE.read_text(encoding="utf-8")
+        # Save snapshot of pre-industry base once
+        if "data-industry=" not in base and "hero-photo" not in base:
+            snapshot.write_text(base, encoding="utf-8")
+        elif "hero-photo" in base:
+            raise SystemExit(
+                "index.html already transformed and no _base.snapshot.html — restore base first"
+            )
+
+    for industry in ("cement", "steel", "pharma"):
+        out = build_one(base, industry)
+        path = DECKS_DIR / f"{industry}.html"
+        path.write_text(out, encoding="utf-8")
+        print(f"wrote {path} ({len(out)} bytes)")
+
+    hub = HUB
+    (DECKS_DIR / "index.html").write_text(hub, encoding="utf-8")
+    (ROOT / "index.html").write_text(
+        hub.replace('href="./cement.html"', 'href="./demo-decks/cement.html"')
+        .replace('href="./steel.html"', 'href="./demo-decks/steel.html"')
+        .replace('href="./pharma.html"', 'href="./demo-decks/pharma.html"'),
+        encoding="utf-8",
+    )
+    print("wrote hubs")
+
+
+if __name__ == "__main__":
+    main()

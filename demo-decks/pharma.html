@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="en" data-industry="pharma">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Stamped Energy · Pharma demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #F75440;
+      --on-primary: #ffffff;
+      --secondary: #051F13;
+      --secondary-deep: #031811;
+      --on-secondary: #ffffff;
+      --surface: #f7faf5;
+      --surface-low: #f1f4f0;
+      --surface-container: #ecefea;
+      --surface-dim: #d8dbd6;
+      --white: #ffffff;
+      --on-surface: #191c1a;
+      --on-surface-variant: #5a403c;
+      --outline: #8f706b;
+      --outline-variant: #e3beb8;
+      --tertiary: #00666b;
+      --inverse-primary: #ffb4a8;
+      --inverse-surface: #2d312e;
+      --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+      --font-body: "Inter", system-ui, sans-serif;
+      --radius-btn: 8px;
+      --radius-card: 12px;
+      --radius-lg: 16px;
+      --chrome-h: 52px;
+      --progress-h: 3px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --grid-line: color-mix(in srgb, var(--primary) 10%, transparent);
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --safe-t: env(safe-area-inset-top, 0px);
+      --safe-b: env(safe-area-inset-bottom, 0px);
+      --safe-l: env(safe-area-inset-left, 0px);
+      --safe-r: env(safe-area-inset-right, 0px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background: var(--surface);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .progress {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--progress-h); z-index: 100;
+      background: rgba(247, 84, 64, 0.15);
+    }
+    .progress__fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--primary), rgba(247, 84, 64, 0.55));
+      transition: width 0.45s var(--ease);
+    }
+
+    .chrome-top {
+      position: fixed; top: calc(var(--progress-h) + var(--safe-t)); left: 0; right: 0;
+      height: var(--chrome-h); z-index: 90;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 max(clamp(1rem, 3vw, 2.25rem), var(--safe-l)) 0 max(clamp(1rem, 3vw, 2.25rem), var(--safe-r));
+      pointer-events: none;
+    }
+    .chrome-logo {
+      display: flex; align-items: center; gap: 0.55rem;
+      pointer-events: auto; text-decoration: none; color: inherit;
+    }
+    .chrome-logo img { height: 26px; width: auto; display: block; }
+    .chrome-logo .wordmark {
+      display: none; font-family: var(--font-display); font-weight: 800;
+      font-size: 0.85rem; letter-spacing: -0.02em;
+    }
+    .chrome-logo.fallback img { display: none; }
+    .chrome-logo.fallback .wordmark { display: block; }
+    .chrome-counter {
+      font-size: 0.72rem; font-weight: 650; letter-spacing: 0.08em;
+      font-variant-numeric: tabular-nums; opacity: 0.72;
+    }
+    .chrome-logo, .chrome-counter { color: var(--on-surface); }
+
+    .stage {
+      position: relative; width: 100%;
+      height: 100%; height: 100dvh;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: center;
+      padding:
+        calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + clamp(0.25rem, 0.8vh, 0.65rem))
+        max(clamp(4.25rem, 7.5vw, 6.5rem), var(--safe-r))
+        max(clamp(3.25rem, 6vh, 4.4rem), calc(var(--safe-b) + 2.5rem));
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.28s var(--ease), visibility 0.28s;
+      overflow: hidden;
+    }
+    .slide.active {
+      opacity: 1; visibility: visible; pointer-events: auto; z-index: 1;
+    }
+
+    .slide--light {
+      background:
+        linear-gradient(180deg, #ffffff 0%, var(--surface) 55%, #f3f6f2 100%),
+        radial-gradient(ellipse 42% 32% at 94% 6%, rgba(227,190,184,0.22), transparent 60%);
+      color: var(--on-surface);
+    }
+    .slide--light.grid-bg::after {
+      content: "";
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.45;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, #000 20%, transparent 75%);
+    }
+
+    .slide__inner {
+      position: relative; z-index: 1;
+      width: 100%; max-width: min(1280px, 100%);
+      margin: 0 auto;
+      transform: translateY(-2.6vh);
+    }
+    .slide__inner--wide { max-width: min(1400px, 100%); }
+    .slide__inner--media {
+      max-width: min(1180px, 100%);
+      transform: translateY(-1.4vh);
+    }
+
+    .reveal { opacity: 0; transform: translateY(14px); }
+    .slide.active .reveal { animation: fadeUp 0.48s var(--ease) forwards; }
+    .slide.active .reveal:nth-child(1) { animation-delay: 0.04s; }
+    .slide.active .reveal:nth-child(2) { animation-delay: 0.10s; }
+    .slide.active .reveal:nth-child(3) { animation-delay: 0.16s; }
+    .slide.active .reveal:nth-child(4) { animation-delay: 0.22s; }
+    .slide.active .reveal:nth-child(5) { animation-delay: 0.28s; }
+    .slide.active .reveal:nth-child(6) { animation-delay: 0.34s; }
+    .slide.active .reveal:nth-child(7) { animation-delay: 0.40s; }
+    .slide.active .reveal:nth-child(8) { animation-delay: 0.46s; }
+    .slide.active .reveal:nth-child(9) { animation-delay: 0.52s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); filter: blur(2px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+    @keyframes sceneIn {
+      from { opacity: 0; transform: translateY(calc(-2.6vh + 10px)) scale(0.996); }
+      to { opacity: 1; transform: translateY(-2.6vh) scale(1); }
+    }
+    @keyframes itemIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes phoneIn {
+      from { opacity: 0; transform: translateY(18px) rotate(-1.5deg); }
+      to { opacity: 1; transform: translateY(0) rotate(0); }
+    }
+    @keyframes lineSweep {
+      from { background-position: 180% 0; }
+      to { background-position: -80% 0; }
+    }
+    @keyframes drawLine {
+      from { stroke-dashoffset: 120; }
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.7; }
+    }
+    @keyframes barGrow {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    .slide.active > .slide__inner {
+      animation: sceneIn 0.52s var(--ease) both;
+    }
+    .slide.active > .slide__inner--media {
+      animation-name: sceneInMedia;
+    }
+    @keyframes sceneInMedia {
+      from { opacity: 0; transform: translateY(calc(-1.4vh + 10px)) scale(0.997); }
+      to { opacity: 1; transform: translateY(-1.4vh) scale(1); }
+    }
+
+    .tl-item,
+    .silo-card,
+    .do-step,
+    .loop-nav-item,
+    .rx-row,
+    .status-item,
+    .waste-card,
+    .ba-list li,
+    .bound-list li,
+    .ledger-table tbody tr,
+    .phase-table tbody tr {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    .slide.active .tl-item,
+    .slide.active .silo-card,
+    .slide.active .do-step,
+    .slide.active .loop-nav-item,
+    .slide.active .rx-row,
+    .slide.active .status-item,
+    .slide.active .waste-card,
+    .slide.active .ba-list li,
+    .slide.active .bound-list li,
+    .slide.active .ledger-table tbody tr,
+    .slide.active .phase-table tbody tr {
+      animation: itemIn 0.46s var(--ease) forwards;
+    }
+    .slide.active :is(.tl-item,.silo-card,.do-step,.loop-nav-item,.rx-row,.status-item,.waste-card,.ba-list li,.bound-list li,.ledger-table tbody tr,.phase-table tbody tr):nth-child(1) { animation-delay: 0.16s; }
+    .slide.active :is(.tl-item,.silo-card,.do-step,.loop-nav-item,.rx-row,.status-item,.waste-card,.ba-list li,.bound-list li,.ledger-table tbody tr,.phase-table tbody tr):nth-child(2) { animation-delay: 0.23s; }
+    .slide.active :is(.tl-item,.silo-card,.do-step,.loop-nav-item,.rx-row,.status-item,.waste-card,.ba-list li,.bound-list li,.ledger-table tbody tr,.phase-table tbody tr):nth-child(3) { animation-delay: 0.30s; }
+    .slide.active :is(.tl-item,.silo-card,.do-step,.loop-nav-item,.rx-row,.status-item,.waste-card,.ba-list li,.bound-list li,.ledger-table tbody tr,.phase-table tbody tr):nth-child(4) { animation-delay: 0.37s; }
+    .slide.active :is(.tl-item,.silo-card,.do-step,.loop-nav-item,.rx-row,.status-item,.waste-card,.ba-list li,.bound-list li,.ledger-table tbody tr,.phase-table tbody tr):nth-child(5) { animation-delay: 0.44s; }
+    .slide.active :is(.rx-row,.bound-list li):nth-child(6) { animation-delay: 0.51s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; }
+      .slide.active .reveal { animation: none; }
+      .slide.active > .slide__inner { animation: none; }
+      .tl-item, .silo-card, .do-step, .loop-nav-item, .rx-row, .status-item,
+      .waste-card, .ba-list li, .bound-list li, .ledger-table tbody tr,
+      .phase-table tbody tr { opacity: 1; transform: none; animation: none !important; }
+      .progress__fill, .nav-btn, .dots__dot { transition: none; }
+      .draw-on-active, .grow-on-active, .pulse-on-active { animation: none !important; }
+    }
+
+    .eyebrow {
+      font-size: clamp(0.68rem, 1vw, 0.78rem);
+      font-weight: 650; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--primary); margin-bottom: 0.55rem;
+    }
+    h1, h2 {
+      font-family: var(--font-display); font-weight: 800;
+      letter-spacing: -0.025em; line-height: 1.12;
+    }
+    h1 { font-size: clamp(2rem, 4.6vw, 3.4rem); margin-bottom: 0.7rem; }
+    h2 { font-size: clamp(1.55rem, 3.2vw, 2.45rem); margin-bottom: 0.55rem; }
+    .lede {
+      font-size: clamp(0.92rem, 1.4vw, 1.08rem);
+      line-height: 1.55; max-width: 46em;
+      color: var(--on-surface-variant);
+    }
+    .meta { font-size: 0.78rem; opacity: 0.55; margin-top: 1rem; letter-spacing: 0.02em; }
+    .tilde { font-size: 0.72em; opacity: 0.65; font-weight: 500; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      height: 48px; padding: 0 1.35rem; border-radius: var(--radius-btn);
+      font-size: 0.95rem; font-weight: 650; border: 1px solid transparent;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn--primary { background: var(--primary); color: var(--on-primary); }
+    .btn--primary:hover { background: #e04634; }
+    .btn--ghost-dark {
+      background: transparent; color: rgba(255,255,255,0.9);
+      border-color: rgba(227,190,184,0.45);
+    }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.4rem; }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-lg);
+      padding: clamp(1rem, 1.8vw, 1.35rem);
+    }
+    .panel--inset {
+      background: var(--white);
+      border: 1px solid rgba(227,190,184,0.55);
+      border-radius: var(--radius-card);
+    }
+    .chip {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.72rem; font-weight: 650; letter-spacing: 0.03em;
+      padding: 0.35rem 0.7rem; border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+      background: color-mix(in srgb, var(--primary) 8%, transparent);
+      color: var(--primary);
+    }
+
+    .nav-btn {
+      position: fixed; top: 50%; transform: translateY(-50%); z-index: 95;
+      width: clamp(42px, 4.6vw, 52px); height: clamp(42px, 4.6vw, 52px);
+      border-radius: 50%; border: 1px solid var(--outline-variant);
+      background: rgba(255,255,255,0.9); color: var(--on-surface);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+    }
+    .nav-btn--prev { left: clamp(0.55rem, 1.4vw, 1.15rem); }
+    .nav-btn--next { right: clamp(0.55rem, 1.4vw, 1.15rem); }
+    .nav-btn svg { width: 18px; height: 18px; }
+    .nav-btn:hover {
+      background: var(--white); border-color: var(--primary); color: var(--primary);
+    }
+    .nav-btn:disabled { opacity: 0.22; cursor: default; pointer-events: none; }
+
+    .dots {
+      position: fixed; bottom: clamp(0.85rem, 2.2vh, 1.5rem);
+      left: 50%; transform: translateX(-50%); z-index: 95;
+      display: flex; align-items: center; gap: 0.35rem;
+      padding: 0.32rem 0.5rem; border-radius: 999px;
+      background: rgba(25,28,26,0.08); backdrop-filter: blur(6px);
+    }
+    .dots__dot {
+      width: 6px; height: 6px; border-radius: 999px; border: none; padding: 0;
+      background: rgba(25,28,26,0.28); cursor: pointer;
+      transition: width 0.3s var(--ease), background 0.25s;
+    }
+    .dots__dot.active { width: 20px; background: var(--primary); }
+
+    /* Scene layouts */
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr);
+      gap: clamp(1.25rem, 3vw, 2.5rem);
+      align-items: center;
+      margin-top: 1.1rem;
+    }
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(0.75rem, 1.6vw, 1.15rem);
+      margin-top: 1.25rem;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    .stat-card {
+      border-radius: var(--radius-card);
+      border: 1px solid var(--outline-variant);
+      background: var(--white);
+      padding: 0.95rem 1rem;
+    }
+    .stat-card strong {
+      display: block; font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(1.2rem, 2vw, 1.55rem); letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums; color: var(--primary);
+    }
+    .stat-card span {
+      display: block; margin-top: 0.25rem; font-size: 0.78rem;
+      color: var(--on-surface-variant); line-height: 1.35;
+    }
+
+    /* 1 Title */
+    #scene-title .hero-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: clamp(1.75rem, 4.5vw, 3.25rem);
+      align-items: center;
+    }
+    #scene-title .hero-canvas[hidden] { display: none !important; }
+    #scene-title .hero-photo {
+      min-height: 280px;
+      align-self: stretch;
+    }
+    #scene-title .hero-photo img {
+      min-height: 280px;
+      max-height: min(58vh, 480px);
+    }
+    #scene-title .hero-copy {
+      display: flex; flex-direction: column; align-items: flex-start;
+      gap: 0;
+    }
+    #scene-title .hero-logo {
+      height: clamp(36px, 4.2vw, 48px); width: auto;
+      margin-bottom: var(--space-5);
+    }
+    #scene-title .eyebrow {
+      margin-bottom: var(--space-3);
+    }
+    #scene-title .brand-name {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(2.8rem, 6vw, 4.4rem);
+      letter-spacing: -0.045em; line-height: 0.95; color: var(--secondary);
+      margin: 0 0 var(--space-4);
+    }
+    #scene-title h1 {
+      font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      max-width: 18em;
+      margin: 0 0 var(--space-4);
+      color: var(--on-surface);
+    }
+    #scene-title .lede {
+      margin: 0 0 var(--space-5);
+      max-width: 38em;
+    }
+    #scene-title .flow-tags { margin-top: 0; margin-bottom: var(--space-2); }
+    #scene-title .btn-row { margin-top: var(--space-5); }
+    #scene-title .meta { margin-top: var(--space-4); }
+    #scene-title .wordmark-fallback {
+      display: none; font-family: var(--font-display); font-weight: 800;
+      font-size: 1.75rem; color: var(--secondary); margin-bottom: var(--space-5);
+    }
+    #scene-title.logo-failed .hero-logo { display: none; }
+    #scene-title.logo-failed .wordmark-fallback { display: block; }
+    .hero-canvas {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--outline-variant);
+      background:
+        linear-gradient(160deg, rgba(247,84,64,0.06), transparent 45%),
+        var(--white);
+      padding: clamp(0.85rem, 1.5vw, 1.15rem);
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 18px 40px -28px rgba(5,31,19,0.18);
+    }
+    .hero-canvas svg { width: 100%; height: auto; aspect-ratio: 420 / 280; display: block; }
+
+    .hero-photo {
+      margin: 0;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--outline-variant);
+      overflow: hidden;
+      background: var(--surface-low);
+      box-shadow: 0 18px 40px -28px rgba(5,31,19,0.18);
+      position: relative;
+    }
+    .hero-photo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      max-height: min(52vh, 420px);
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero-photo__scrim {
+      position: absolute; inset: auto 0 0 0; height: 42%;
+      background: linear-gradient(180deg, transparent, rgba(5,31,19,0.45));
+      pointer-events: none;
+    }
+    .industry-chip {
+      display: inline-flex; align-items: center;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--tertiary);
+      background: color-mix(in srgb, var(--tertiary) 10%, var(--white));
+      border: 1px solid color-mix(in srgb, var(--tertiary) 28%, transparent);
+      padding: 0.28rem 0.55rem; border-radius: 999px;
+      margin-bottom: var(--space-3);
+    }
+    #chromeIndustry {
+      font-size: 0.72rem; font-weight: 650; letter-spacing: 0.04em;
+      color: var(--on-surface-variant); margin-left: 0.55rem;
+      padding-left: 0.55rem; border-left: 1px solid var(--outline-variant);
+      text-transform: uppercase;
+    }
+
+    .flow-tags {
+      display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem;
+    }
+
+    /* 2 Incident */
+    .timeline {
+      display: grid; gap: 0.7rem; margin-top: 1.2rem;
+    }
+    .tl-item {
+      display: grid; grid-template-columns: 72px 1fr; gap: 0.85rem;
+      align-items: stretch;
+    }
+    .tl-time {
+      font-family: var(--font-display); font-weight: 800; font-size: 0.92rem;
+      color: var(--primary); padding-top: 0.95rem; font-variant-numeric: tabular-nums;
+    }
+    .tl-card {
+      border: 1px solid var(--outline-variant); border-radius: var(--radius-card);
+      background: var(--white); padding: 0.85rem 1rem;
+    }
+    .tl-card strong { display: block; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .tl-card p { font-size: 0.82rem; color: var(--on-surface-variant); line-height: 1.4; }
+    .tl-card--break {
+      border-color: color-mix(in srgb, var(--primary) 45%, var(--outline-variant));
+      background: #fff8f6;
+    }
+    .incident-meter {
+      border-radius: var(--radius-lg); border: 1px solid var(--outline-variant);
+      background: var(--white); padding: 1.1rem; min-height: 100%;
+    }
+    .meter-label {
+      font-size: 0.7rem; font-weight: 650; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--on-surface-variant);
+    }
+    .meter-value {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(2.2rem, 4vw, 3rem); letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums; margin: 0.35rem 0;
+    }
+    .meter-bar {
+      height: 10px; border-radius: 999px; background: var(--surface-low); overflow: hidden; margin: 0.85rem 0;
+    }
+    .meter-bar > i {
+      display: block; height: 100%; width: 78%;
+      background: linear-gradient(90deg, var(--tertiary), var(--primary));
+      transform-origin: left center;
+    }
+    .slide.active .grow-on-active { animation: barGrow 0.9s var(--ease) 0.25s both; }
+    .meter-note { font-size: 0.8rem; color: var(--on-surface-variant); line-height: 1.45; }
+
+    /* 3 Silos */
+    .silo-board {
+      display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 0.75rem; margin-top: 1.2rem; position: relative;
+    }
+    .silo-card {
+      background: var(--white); border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-card); padding: 1rem 0.95rem; text-align: left;
+      min-height: 190px;
+      box-shadow: 0 10px 26px -22px rgba(5,31,19,0.18);
+    }
+    .silo-card h3 {
+      font-family: var(--font-display); font-size: 1rem; font-weight: 750; margin-bottom: 0.35rem;
+    }
+    .silo-card p { font-size: 0.78rem; color: var(--on-surface-variant); line-height: 1.4; }
+    .silo-dead {
+      margin-top: 0.85rem; height: 2px;
+      background: linear-gradient(90deg, var(--outline-variant), transparent);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+    .slide.active .silo-dead {
+      animation: barGrow 0.65s var(--ease) 0.42s forwards;
+    }
+    .gap-break {
+      margin-top: 1rem;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+      gap: 0.45rem 0.65rem;
+      border: 1px solid color-mix(in srgb, var(--primary) 22%, var(--outline-variant));
+      background: color-mix(in srgb, var(--primary) 5%, var(--white));
+      border-radius: var(--radius-card);
+      padding: 0.85rem 1rem;
+      font-size: 0.84rem; font-weight: 650; color: var(--on-surface);
+    }
+    .gap-break span { color: var(--primary); font-weight: 800; }
+    .gap-outcomes {
+      display: grid; grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 0.7rem; margin-top: 0.9rem;
+    }
+    .gap-outcome {
+      background: var(--white); border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-card); padding: 0.85rem 0.9rem;
+    }
+    .gap-outcome strong {
+      display: block; font-family: var(--font-display); font-size: 0.9rem;
+      margin-bottom: 0.3rem; color: var(--on-surface);
+    }
+    .gap-outcome p { font-size: 0.76rem; line-height: 1.4; color: var(--on-surface-variant); }
+    .silo-meta {
+      margin-top: 0.7rem; display: grid; gap: 0.35rem;
+      font-size: 0.74rem; line-height: 1.35;
+    }
+    .silo-meta .has { color: var(--tertiary); font-weight: 650; }
+    .silo-meta .miss { color: var(--on-surface-variant); }
+
+    /* 4 What we do */
+    .do-chain {
+      display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 0.65rem; margin-top: 1.25rem; position: relative;
+    }
+    .do-step {
+      background: var(--white);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-card); padding: 1.05rem 0.95rem;
+      position: relative;
+      min-height: 168px;
+      box-shadow: 0 10px 28px -22px rgba(5,31,19,0.2);
+    }
+    .do-step__num {
+      font-family: var(--font-display); font-weight: 800; color: var(--primary);
+      font-size: 1.35rem; margin-bottom: 0.4rem;
+    }
+    .do-step h3 { font-family: var(--font-display); font-size: 0.98rem; margin-bottom: 0.35rem; color: var(--on-surface); }
+    .do-step p { font-size: 0.8rem; line-height: 1.45; color: var(--on-surface-variant); }
+    .do-arrow {
+      position: absolute; top: 50%; right: -0.55rem; transform: translateY(-50%);
+      color: var(--primary); font-size: 1rem; opacity: 0.55; z-index: 2;
+    }
+    .slide.active .do-arrow {
+      animation: arrowNudge 1.8s ease-in-out 0.65s infinite;
+    }
+    .do-step:last-child .do-arrow { display: none; }
+    @keyframes arrowNudge {
+      0%, 100% { transform: translate(-2px, -50%); opacity: 0.45; }
+      50% { transform: translate(2px, -50%); opacity: 0.9; }
+    }
+
+    /* 5 Loop */
+    .loop-grid {
+      display: grid; grid-template-columns: 280px 1fr;
+      gap: 1.25rem; margin-top: 1.15rem; align-items: stretch;
+    }
+    .loop-nav { display: grid; gap: 0.55rem; }
+    .loop-nav-item {
+      border: 1px solid rgba(227,190,184,0.28);
+      background: rgba(255,255,255,0.03);
+      border-radius: var(--radius-card); padding: 0.75rem 0.9rem;
+      display: grid; grid-template-columns: 28px 1fr; gap: 0.7rem; align-items: center;
+    }
+    .loop-nav-item.active {
+      border-color: rgba(247,84,64,0.55);
+      background: rgba(247,84,64,0.1);
+    }
+    .loop-nav-item span {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1px solid rgba(227,190,184,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-weight: 800; font-size: 0.78rem;
+      color: var(--inverse-primary);
+    }
+    .loop-nav-item strong { display: block; font-size: 0.88rem; }
+    .loop-nav-item small { display: block; font-size: 0.7rem; opacity: 0.65; margin-top: 0.1rem; }
+    .loop-stage {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(227,190,184,0.35);
+      background: var(--white); color: var(--on-surface);
+      padding: 1.15rem 1.25rem; min-height: 320px;
+    }
+    .loop-stage__label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--primary); margin-bottom: 0.65rem;
+    }
+    .loop-stage h3 {
+      font-family: var(--font-display); font-size: clamp(1.2rem, 2vw, 1.5rem);
+      margin-bottom: 0.45rem;
+    }
+    .loop-stage p { font-size: 0.9rem; color: var(--on-surface-variant); line-height: 1.5; max-width: 42em; }
+    .node-row {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;
+    }
+    .node-pill {
+      border: 1px solid var(--outline-variant); background: var(--surface-low);
+      border-radius: 8px; padding: 0.45rem 0.7rem; font-size: 0.75rem; font-weight: 600;
+    }
+    .svg-connect { width: 100%; height: 120px; margin-top: 0.85rem; }
+
+    /* 6 Prescription flip cards */
+    .rx-layout {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.15rem; margin-top: 1.1rem; align-items: stretch;
+      perspective: 1400px;
+    }
+    .rx-flip {
+      position: relative;
+      min-height: 420px;
+      border: none; background: transparent; padding: 0;
+      cursor: pointer; text-align: left; color: inherit;
+      font: inherit; width: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .rx-flip:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 3px;
+      border-radius: var(--radius-lg);
+    }
+    .rx-flip__inner {
+      position: relative; width: 100%; height: 100%; min-height: 420px;
+      transition: transform 0.55s var(--ease);
+      transform-style: preserve-3d;
+    }
+    .rx-flip.is-flipped .rx-flip__inner { transform: rotateY(180deg); }
+    .rx-face {
+      position: absolute; inset: 0;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      border: 1px solid color-mix(in srgb, var(--primary) 28%, var(--outline-variant));
+      border-radius: var(--radius-lg); background: var(--white); overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .rx-face--back {
+      transform: rotateY(180deg);
+      border-color: color-mix(in srgb, var(--tertiary) 35%, var(--outline-variant));
+      background: #f7faf8;
+    }
+    .rx-face::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent 0%, var(--primary) 42%, var(--inverse-primary) 55%, transparent 100%);
+      background-size: 220% 100%;
+      opacity: 0;
+      z-index: 2;
+    }
+    .slide.active .rx-flip:not(.is-flipped) .rx-face--front::before {
+      opacity: 1;
+      animation: lineSweep 1.25s var(--ease) 0.35s both;
+    }
+    .rx-hero__head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.75rem 1rem; border-bottom: 1px solid #e0e3df; background: #fafcfa;
+      flex-shrink: 0;
+    }
+    .rx-badge {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--on-surface-variant); border: 1px solid var(--outline-variant);
+      background: var(--surface-low); padding: 0.22rem 0.5rem; border-radius: 6px;
+    }
+    .rx-priority {
+      font-size: 0.68rem; font-weight: 700; color: #fff; background: var(--primary);
+      padding: 0.22rem 0.5rem; border-radius: 6px;
+    }
+    .rx-priority--med { background: var(--tertiary); }
+    .rx-hero__body {
+      padding: 0.95rem 1.05rem 0.85rem;
+      display: flex; flex-direction: column; flex: 1; min-height: 0;
+    }
+    .rx-action {
+      font-family: var(--font-display); font-weight: 750;
+      font-size: clamp(0.95rem, 1.5vw, 1.15rem); line-height: 1.35; margin-bottom: 0.75rem;
+    }
+    .rx-fields { display: grid; gap: 0.4rem; flex: 1; }
+    .rx-row {
+      display: grid; grid-template-columns: 78px 1fr; gap: 0.45rem;
+      font-size: 0.8rem; line-height: 1.35;
+    }
+    .rx-row dt {
+      font-weight: 650; color: var(--on-surface-variant); font-size: 0.66rem;
+      text-transform: uppercase; letter-spacing: 0.04em; padding-top: 0.12rem;
+    }
+    .rx-flip-cue {
+      margin-top: 0.7rem; padding-top: 0.65rem;
+      border-top: 1px dashed var(--outline-variant);
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--primary);
+    }
+    .rx-ev-title {
+      font-size: 0.66rem; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--on-surface-variant); margin-bottom: 0.35rem;
+    }
+    .rx-spark {
+      width: 100%; height: 64px; margin-bottom: 0.55rem;
+      border-radius: 8px; background: var(--white);
+      border: 1px solid #e0e3df;
+    }
+    .rx-ev-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.68rem; font-variant-numeric: tabular-nums;
+      margin-bottom: 0.55rem;
+    }
+    .rx-ev-table th, .rx-ev-table td {
+      padding: 0.28rem 0.35rem; text-align: left;
+      border-bottom: 1px solid #e0e3df;
+    }
+    .rx-ev-table th {
+      font-size: 0.6rem; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--on-surface-variant); font-weight: 700;
+    }
+    .rx-ev-table code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.64rem; color: var(--secondary);
+    }
+    .rx-cite {
+      font-size: 0.68rem; line-height: 1.4; color: var(--on-surface-variant);
+      background: var(--white); border: 1px solid #e0e3df;
+      border-radius: 8px; padding: 0.5rem 0.6rem; margin-bottom: 0.45rem;
+    }
+    .rx-cite strong { color: var(--on-surface); font-weight: 650; }
+    .rx-mv {
+      font-size: 0.72rem; font-weight: 650; color: var(--tertiary);
+      margin-top: auto;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rx-flip__inner { transition: none; }
+    }
+
+    /* Tech stack cards */
+    .tech-grid {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem; margin-top: 1.15rem;
+    }
+    .tech-card {
+      background: var(--white);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-card);
+      padding: 1.1rem 1rem; min-height: 250px;
+      box-shadow: 0 12px 30px -24px rgba(5,31,19,0.22);
+      display: flex; flex-direction: column;
+    }
+    .tech-card__num {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--primary); margin-bottom: 0.45rem;
+    }
+    .tech-card h3 {
+      font-family: var(--font-display); font-size: 1rem; margin-bottom: 0.45rem;
+      letter-spacing: -0.02em; line-height: 1.25; color: var(--on-surface);
+    }
+    .tech-card > p {
+      font-size: 0.78rem; line-height: 1.45; color: var(--on-surface-variant);
+      margin-bottom: 0.65rem;
+    }
+    .tech-card ul {
+      list-style: none; display: grid; gap: 0.4rem; margin-top: auto;
+    }
+    .tech-card li {
+      font-size: 0.74rem; line-height: 1.4; color: var(--on-surface);
+      padding-left: 0.85rem; position: relative;
+    }
+    .tech-card li::before {
+      content: ""; position: absolute; left: 0; top: 0.45em;
+      width: 5px; height: 5px; border-radius: 1px; background: var(--tertiary);
+    }
+
+    /* Audit + sustainability */
+    .audit-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.15rem;
+    }
+    .audit-col {
+      border: 1px solid var(--outline-variant); border-radius: var(--radius-lg);
+      background: var(--white); padding: 1.15rem 1.2rem; min-height: 280px;
+    }
+    .audit-col h3 {
+      font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 0.85rem;
+      letter-spacing: -0.02em;
+    }
+    .audit-col--sus {
+      border-color: color-mix(in srgb, var(--tertiary) 35%, var(--outline-variant));
+      background: linear-gradient(180deg, #f3faf9, var(--white) 40%);
+    }
+    .audit-list { list-style: none; display: grid; gap: 0.65rem; }
+    .audit-list li {
+      display: grid; grid-template-columns: 18px 1fr; gap: 0.55rem;
+      font-size: 0.86rem; line-height: 1.4; color: var(--on-surface);
+    }
+    .audit-list .mark {
+      width: 18px; height: 18px; border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 0.65rem; font-weight: 800; margin-top: 0.1rem;
+    }
+    .audit-list .mark-ok { background: rgba(247,84,64,0.12); color: var(--primary); }
+    .audit-list .mark-te { background: rgba(0,102,107,0.12); color: var(--tertiary); }
+    .audit-note {
+      margin-top: 1rem; font-size: 0.8rem; line-height: 1.45;
+      color: var(--on-surface-variant);
+      border: 1px solid color-mix(in srgb, var(--tertiary) 28%, var(--outline-variant));
+      background: color-mix(in srgb, var(--tertiary) 6%, var(--white));
+      border-radius: var(--radius-card);
+      padding: 0.85rem 1rem;
+    }
+
+    /* 7 Floor / phone */
+    .floor-layout {
+      display: grid; grid-template-columns: minmax(280px, 340px) 1fr;
+      gap: clamp(1.4rem, 3vw, 2.4rem); align-items: center; margin-top: 1rem;
+    }
+    .phone {
+      width: 100%; max-width: 320px; margin: 0 auto;
+      background: linear-gradient(180deg, #2a211e, #1c1513);
+      border: 1px solid #c49a92; border-radius: 34px; padding: 12px;
+      position: relative;
+    }
+    .slide.active .phone {
+      animation: phoneIn 0.62s var(--ease) 0.1s both;
+    }
+    .phone::before {
+      content: ""; position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+      width: 96px; height: 18px; background: #120d0c; border-radius: 12px; z-index: 2;
+    }
+    .phone__screen {
+      background: #f7efeC; border-radius: 24px; overflow: hidden;
+      min-height: 460px; display: flex; flex-direction: column;
+    }
+    .wa-header {
+      background: #c45a4a; color: #fff; padding: 1.55rem 1rem 0.85rem;
+      display: flex; align-items: center; gap: 0.65rem;
+    }
+    .wa-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.22); display: flex; align-items: center;
+      justify-content: center; font-size: 0.72rem; font-weight: 750;
+    }
+    .wa-header strong { display: block; font-size: 0.9rem; }
+    .wa-header span { font-size: 0.68rem; opacity: 0.88; }
+    .wa-body { flex: 1; padding: 0.95rem; display: flex; flex-direction: column; gap: 0.65rem; }
+    .wa-meta {
+      font-size: 0.68rem; color: var(--on-surface-variant); text-align: center;
+      letter-spacing: 0.02em;
+    }
+    .wa-bubble {
+      background: #fff; border: 1px solid #e8d0cb;
+      border-radius: 12px 12px 12px 4px; padding: 0.9rem 0.95rem;
+      font-size: 0.78rem; line-height: 1.45; color: #1a1210;
+    }
+    .wa-bubble .tag {
+      display: inline-block; font-size: 0.65rem; font-weight: 750;
+      letter-spacing: 0.05em; text-transform: uppercase; color: #c45a4a;
+      margin-bottom: 0.4rem;
+    }
+    .wa-bubble h4 {
+      font-family: var(--font-display); font-size: 0.92rem; font-weight: 750;
+      line-height: 1.3; margin-bottom: 0.55rem;
+    }
+    .wa-line { margin-top: 0.35rem; }
+    .wa-line b { font-weight: 700; }
+    .wa-cta {
+      margin-top: 0.7rem; border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+      background: color-mix(in srgb, var(--primary) 9%, transparent);
+      color: var(--primary); border-radius: 8px; padding: 0.55rem 0.7rem;
+      font-size: 0.75rem; font-weight: 700; text-align: center;
+    }
+    .wa-actions {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; margin-top: auto;
+    }
+    .wa-actions button {
+      border: 1px solid #e0c7c1; background: #fff; border-radius: 8px;
+      padding: 0.55rem; font-size: 0.72rem; font-weight: 650; color: var(--on-surface);
+    }
+    .wa-actions button.primary {
+      background: var(--primary); border-color: var(--primary); color: #fff;
+    }
+    .status-rail { display: grid; gap: 0.65rem; }
+    .status-item {
+      display: grid; grid-template-columns: 14px 1fr; gap: 0.75rem;
+      align-items: start; border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-card); background: var(--white); padding: 0.85rem 1rem;
+    }
+    .status-dot {
+      width: 10px; height: 10px; border-radius: 50%; margin-top: 0.35rem;
+      background: var(--outline-variant);
+    }
+    .status-dot.done { background: var(--primary); }
+    .status-dot.active { background: var(--tertiary); }
+    .slide.active .pulse-on-active { animation: pulseDot 1.4s ease-in-out infinite; }
+    .status-item strong { display: block; font-size: 0.9rem; margin-bottom: 0.15rem; }
+    .status-item p { font-size: 0.8rem; color: var(--on-surface-variant); line-height: 1.4; }
+
+    /* 8 Verify ledger */
+    .ledger-wrap {
+      margin-top: 1.1rem; border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-lg); overflow: hidden; background: var(--white);
+      box-shadow: 0 12px 30px -24px rgba(5,31,19,0.18);
+    }
+    .ledger-table {
+      width: 100%; border-collapse: collapse;
+      font-size: clamp(0.8rem, 1.15vw, 0.9rem);
+      font-variant-numeric: tabular-nums;
+    }
+    .ledger-table th, .ledger-table td {
+      padding: 0.8rem 1rem; text-align: left;
+      border-bottom: 1px solid #e0e3df;
+      color: var(--on-surface);
+    }
+    .ledger-table th {
+      font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--on-surface-variant); background: #fafcfa;
+    }
+    .ledger-table tr:last-child td { border-bottom: none; }
+    .kpi-pair {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-top: 1rem;
+      max-width: 520px;
+    }
+    .kpi {
+      border: 1px solid var(--outline-variant); border-radius: var(--radius-card);
+      padding: 1rem 1.1rem; background: var(--white);
+    }
+    .kpi__label {
+      font-size: 0.7rem; font-weight: 650; letter-spacing: 0.08em;
+      text-transform: uppercase; opacity: 0.6; margin-bottom: 0.35rem;
+    }
+    .kpi__value {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(1.6rem, 3vw, 2.2rem); letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+    .kpi--hot {
+      border-color: rgba(247,84,64,0.45); background: rgba(247,84,64,0.1);
+    }
+
+    /* 9 Waste map */
+    .waste-grid {
+      display: grid; grid-template-columns: repeat(5, minmax(0,1fr));
+      gap: 0.65rem; margin-top: 1.15rem;
+    }
+    .waste-card {
+      background: var(--white); border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-card); padding: 0.95rem 0.9rem;       min-height: 200px;
+      display: flex; flex-direction: column;
+      box-shadow: 0 10px 26px -22px rgba(5,31,19,0.18);
+    }
+    .waste-card h3 {
+      font-family: var(--font-display); font-size: 0.95rem; margin-bottom: 0.45rem;
+    }
+    .waste-card ul {
+      list-style: none; display: grid; gap: 0.28rem; margin-bottom: 0.55rem; flex: 1;
+    }
+    .waste-card li {
+      font-size: 0.72rem; line-height: 1.35; color: var(--on-surface);
+      padding-left: 0.75rem; position: relative;
+    }
+    .waste-card li::before {
+      content: ""; position: absolute; left: 0; top: 0.42em;
+      width: 5px; height: 5px; border-radius: 1px; background: var(--primary);
+    }
+    .waste-bill {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.03em;
+      text-transform: uppercase; color: var(--tertiary); margin-bottom: 0.3rem;
+    }
+    .waste-sample {
+      font-size: 0.7rem; line-height: 1.35; color: var(--on-surface-variant);
+      border-top: 1px solid #e0e3df; padding-top: 0.45rem; margin-top: auto;
+    }
+    .bill-table-wrap {
+      margin-top: 1.15rem; border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-card); overflow: hidden; background: var(--white);
+      width: 100%;
+      box-shadow: 0 12px 30px -24px rgba(5,31,19,0.18);
+    }
+    .bill-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.88rem; font-variant-numeric: tabular-nums;
+    }
+    .bill-table th, .bill-table td {
+      padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid #e0e3df;
+    }
+    .bill-table th {
+      font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--on-surface-variant); background: #fafcfa;
+    }
+    .bill-table tr:last-child td { border-bottom: none; }
+    .bill-table td:last-child, .bill-table th:last-child { text-align: right; }
+    .footnote { margin-top: 0.85rem; font-size: 0.72rem; color: var(--outline); }
+
+    /* 10 Before / After */
+    .ba-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.15rem;
+      position: relative;
+    }
+    .ba-card {
+      border-radius: var(--radius-lg); border: 1px solid var(--outline-variant);
+      background: var(--white); overflow: hidden; min-height: 300px;
+    }
+    .ba-card--with {
+      border: 2px solid color-mix(in srgb, var(--primary) 40%, transparent);
+      background: linear-gradient(160deg, color-mix(in srgb, var(--primary) 8%, #fff), #fff);
+    }
+    .ba-head {
+      padding: 0.85rem 1.1rem; border-bottom: 1px solid #e0e3df;
+      background: color-mix(in srgb, var(--surface-dim) 55%, #fff);
+    }
+    .ba-card--with .ba-head {
+      background: color-mix(in srgb, var(--primary) 10%, #fff);
+      border-bottom-color: color-mix(in srgb, var(--primary) 18%, #e0e3df);
+    }
+    .ba-head h3 { font-family: var(--font-display); font-size: 1.05rem; }
+    .ba-head p { font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 0.15rem; }
+    .ba-card--with .ba-head p { color: var(--primary); font-weight: 600; }
+    .ba-list { list-style: none; padding: 0.95rem 1.1rem; display: grid; gap: 0.55rem; }
+    .ba-list li {
+      display: grid; grid-template-columns: 22px 1fr; gap: 0.55rem;
+      font-size: 0.86rem; line-height: 1.4; align-items: start;
+      background: color-mix(in srgb, var(--surface-dim) 35%, #fff);
+      border-radius: 8px; padding: 0.6rem 0.7rem;
+    }
+    .ba-card--with .ba-list li {
+      background: color-mix(in srgb, var(--primary) 8%, #fff);
+    }
+    .mark {
+      width: 18px; height: 18px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800;
+      margin-top: 0.05rem;
+    }
+    .mark-x { color: var(--outline); border: 1px solid var(--outline-variant); }
+    .mark-ok { background: var(--primary); color: #fff; }
+
+    /* 11 Boundaries */
+    .bound-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.15rem;
+    }
+    .bound-col {
+      background: var(--white); border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-lg); padding: 1.15rem 1.25rem;
+    }
+    .bound-col h3 {
+      font-family: var(--font-display); font-size: 1.05rem; margin-bottom: 0.85rem;
+      padding-bottom: 0.65rem; border-bottom: 1px solid #e0e3df;
+    }
+    .bound-col--ot h3 { color: var(--tertiary); }
+    .bound-list { list-style: none; display: grid; gap: 0.55rem; }
+    .bound-list li {
+      font-size: 0.9rem; line-height: 1.4; padding-left: 1.1rem; position: relative;
+    }
+    .bound-col--not .bound-list li::before {
+      content: ""; position: absolute; left: 0; top: 0.55em;
+      width: 8px; height: 1.5px; background: var(--outline);
+    }
+    .bound-col--ot .bound-list li::before {
+      content: ""; position: absolute; left: 0; top: 0.45em;
+      width: 6px; height: 6px; border-radius: 1px; background: var(--tertiary);
+    }
+    .protocol-row {
+      display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem;
+    }
+
+    /* 12 Video */
+    .video-frame {
+      margin-top: 0.85rem;
+      border-radius: var(--radius-lg);
+      border: 2px solid color-mix(in srgb, var(--primary) 22%, rgba(227,190,184,0.4));
+      overflow: hidden; background: #0a140f;
+      box-shadow: 0 24px 60px -28px rgba(247,84,64,0.35);
+      aspect-ratio: 16 / 9;
+      max-height: min(62vh, 560px);
+      width: min(100%, 980px);
+    }
+    .video-frame video {
+      width: 100%; height: 100%; display: block; object-fit: cover; background: #0a140f;
+    }
+    .video-caption {
+      margin-top: 0.85rem; font-size: 0.85rem; opacity: 0.72; max-width: 52em;
+    }
+
+    /* 13 Dashboard */
+    .dash-shell {
+      margin-top: 0.35rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--outline-variant);
+      overflow: hidden; background: #0a140f;
+      height: clamp(420px, 68vh, 720px);
+      position: relative;
+      box-shadow: 0 18px 40px -28px rgba(5,31,19,0.22);
+    }
+    .dash-shell iframe { width: 100%; height: 100%; border: 0; display: block; background: #0a140f; }
+    .slide.active .dash-shell {
+      animation: mediaSettle 0.6s var(--ease) 0.12s both;
+    }
+    .slide.active .video-frame {
+      animation: mediaSettle 0.6s var(--ease) 0.12s both;
+    }
+    @keyframes mediaSettle {
+      from { opacity: 0; transform: scale(0.992); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .dash-badge {
+      position: absolute; top: 12px; left: 12px; z-index: 2;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      color: #fff; background: rgba(5,31,19,0.82); border: 1px solid rgba(247,84,64,0.45);
+      padding: 0.35rem 0.65rem; border-radius: 999px; backdrop-filter: blur(6px);
+    }
+    .dash-title-row {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 1rem; margin-bottom: 0.35rem;
+    }
+    .dash-title-row h2 { margin-bottom: 0; }
+    .dash-title-row p { font-size: 0.8rem; opacity: 0.65; }
+
+    /* 14 Offer */
+    .phase-table {
+      width: 100%; max-width: 720px; margin-top: 1rem; border-collapse: collapse;
+      font-size: 0.9rem; border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-card); overflow: hidden; background: var(--white);
+    }
+    .phase-table th, .phase-table td {
+      padding: 0.8rem 1rem; text-align: left;
+      border-bottom: 1px solid #e0e3df; color: var(--on-surface);
+    }
+    .phase-table th {
+      font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--on-surface-variant); background: #fafcfa;
+    }
+    .phase-table tr:last-child td { border-bottom: none; }
+    .phase-table td:first-child {
+      font-family: var(--font-display); font-weight: 750; white-space: nowrap; width: 26%;
+    }
+    .commercial {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;
+    }
+    .ask-box {
+      margin-top: 1.2rem; padding: 1rem 1.2rem; border-radius: var(--radius-card);
+      border: 1px solid color-mix(in srgb, var(--primary) 30%, var(--outline-variant));
+      background: color-mix(in srgb, var(--primary) 6%, var(--white));
+      max-width: 560px;
+    }
+    .ask-box strong {
+      display: block; font-family: var(--font-display); color: var(--primary);
+      margin-bottom: 0.3rem;
+    }
+    .ask-box p { color: var(--on-surface); font-size: 0.88rem; line-height: 1.45; }
+    .contact-line { margin-top: 1.15rem; font-size: 0.92rem; color: var(--on-surface-variant); }
+    .contact-line a { color: var(--primary); text-decoration: none; font-weight: 650; }
+    .contact-line a:hover { text-decoration: underline; }
+    .cred-quiet { margin-top: 0.7rem; font-size: 0.72rem; color: var(--outline); }
+
+
+    .show-mobile { display: none !important; }
+    .hide-mobile { display: revert; }
+
+    .bill-table-wrap, .ledger-wrap, .phase-table { max-width: 100%; }
+    .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    @media (max-width: 1100px) {
+      .waste-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .tech-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .do-chain { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .do-arrow { display: none; }
+    }
+
+    @media (max-width: 980px) {
+      .hero-shell, .two-col, .rx-layout, .floor-layout, .loop-grid, .ba-grid, .bound-grid, .audit-grid, .gap-outcomes { grid-template-columns: 1fr; }
+      .rx-flip, .rx-flip__inner { min-height: 360px; }
+      .tech-card, .waste-card, .do-step, .silo-card { min-height: 0; }
+      .silo-board, .stat-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .phone { max-width: 300px; }
+      .phone__screen { min-height: 400px; }
+      .dash-shell { height: clamp(320px, 58vh, 520px); }
+      #scene-title .hero-shell { gap: var(--space-6); }
+    }
+
+    @media (max-width: 720px) {
+      :root { --chrome-h: 48px; }
+
+      .slide {
+        justify-content: flex-start;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        padding:
+          calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + 0.75rem)
+          max(1.1rem, var(--safe-r))
+          max(4.5rem, calc(var(--safe-b) + 4.25rem));
+      }
+      .slide__inner,
+      .slide__inner--media {
+        transform: none;
+        max-width: 100%;
+        padding-bottom: 0.5rem;
+      }
+      .slide.active > .slide__inner,
+      .slide.active > .slide__inner--media {
+        animation: fadeUp 0.4s var(--ease) both;
+      }
+
+      h1 { font-size: clamp(1.55rem, 7vw, 2.1rem); margin-bottom: 0.55rem; }
+      h2 { font-size: clamp(1.35rem, 6vw, 1.75rem); margin-bottom: 0.45rem; }
+      .lede { font-size: 0.95rem; line-height: 1.5; max-width: none; }
+      .eyebrow { margin-bottom: 0.4rem; letter-spacing: 0.1em; }
+
+      .hide-mobile { display: none !important; }
+      .show-mobile { display: block !important; }
+      .show-mobile.btn-row,
+      .show-mobile.flow-tags { display: flex !important; }
+
+      /* Overflow safety */
+      .slide, .slide__inner, .hero-copy, .brand-name, h1, h2, .lede,
+      .rx-action, .wa-bubble, .wa-bubble h4, .tech-card, .waste-card,
+      .silo-card, .audit-col, .bound-list li, .chip, .ask-box, .contact-line,
+      .tl-item, .commercial, .cred-quiet, .video-caption, p, td, th {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      img, svg, video, iframe, canvas {
+        max-width: 100%;
+      }
+      .rx-ev-table, .bill-table-wrap, .ledger-wrap, .phase-table,
+      .table-scroll, .rx-layout {
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .phase-table {
+        display: block;
+        width: 100%;
+      }
+
+      
+      /* Title: text → Begin → photo, fills the first screen */
+      #scene-title.slide {
+        justify-content: flex-start;
+        overflow: hidden;
+        padding-top: calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + 1.1rem);
+        padding-bottom: max(4.75rem, calc(var(--safe-b) + 4.25rem));
+      }
+      #scene-title .slide__inner {
+        width: 100%;
+        min-height: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transform: none !important;
+        animation: none !important;
+      }
+      #scene-title .hero-shell {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+        align-items: stretch;
+        justify-content: flex-start;
+      }
+      #scene-title .hero-copy {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        flex: 0 0 auto;
+      }
+      #scene-title .hero-canvas { display: none !important; }
+      #scene-title .hero-photo {
+        flex: 1 1 auto;
+        min-height: 140px;
+        margin-top: 0.15rem;
+        display: flex;
+        flex-direction: column;
+      }
+      #scene-title .hero-photo img {
+        flex: 1 1 auto;
+        min-height: 140px;
+        height: 100%;
+        max-height: none;
+        aspect-ratio: auto;
+      }
+      #scene-title .brand-name {
+        font-size: clamp(2.15rem, 9.5vw, 2.75rem);
+        margin-bottom: 0.45rem;
+        line-height: 0.95;
+      }
+      #scene-title h1 {
+        font-size: clamp(1.05rem, 4.4vw, 1.25rem);
+        font-weight: 650;
+        max-width: 18em;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+      }
+      #scene-title .lede {
+        font-size: 0.88rem;
+        line-height: 1.35;
+        margin-bottom: 0.85rem;
+        max-width: 32em;
+        color: var(--on-surface-variant);
+      }
+      #scene-title .btn-row {
+        margin-top: 0;
+        margin-bottom: 0.15rem;
+        width: 100%;
+        max-width: 20rem;
+      }
+      #scene-title .btn {
+        width: 100%;
+        height: 48px;
+        font-size: 1rem;
+      }
+      #scene-title .industry-chip { margin-bottom: 0.45rem; }
+      #scene-title .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+      }
+
+      /* Floor: proper phone, no nested-phone clutter */
+      #scene-floor.slide {
+        justify-content: flex-start;
+        overflow: hidden;
+        padding-top: calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + 0.55rem);
+        padding-bottom: max(4.75rem, calc(var(--safe-b) + 4.25rem));
+      }
+      #scene-floor .slide__inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+      #scene-floor .floor-layout {
+        margin-top: 0.45rem;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      #scene-floor .phone {
+        width: min(100%, 340px);
+        max-width: 100%;
+        margin: 0 auto;
+        border-radius: 30px;
+        padding: 9px;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        max-height: calc(100dvh - var(--chrome-h) - var(--progress-h) - var(--safe-t) - 7.5rem);
+      }
+      #scene-floor .phone::before {
+        width: 72px;
+        height: 14px;
+        top: 12px;
+      }
+      #scene-floor .phone__screen {
+        flex: 1;
+        min-height: 0;
+        border-radius: 22px;
+        display: flex;
+        flex-direction: column;
+      }
+      #scene-floor .wa-header {
+        padding: 1.35rem 0.9rem 0.75rem;
+        flex-shrink: 0;
+      }
+      #scene-floor .wa-body {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+        padding: 0.8rem;
+      }
+      #scene-floor .wa-bubble {
+        font-size: 0.86rem;
+        line-height: 1.4;
+      }
+      #scene-floor .wa-bubble h4 {
+        font-size: 1rem;
+        line-height: 1.25;
+      }
+      #scene-floor .wa-actions {
+        flex-shrink: 0;
+        margin-top: 0.55rem;
+      }
+      #scene-floor .wa-actions button {
+        min-height: 44px;
+        font-size: 0.8rem;
+      }
+
+      /* ponytail: desktop-only simulated workspace — unusable on phone */
+      #scene-live { display: none !important; }
+
+      .nav-btn {
+        top: auto; bottom: max(0.85rem, calc(var(--safe-b) + 0.55rem));
+        transform: none; width: 44px; height: 44px;
+        background: rgba(255,255,255,0.95);
+        box-shadow: 0 8px 20px -12px rgba(5,31,19,0.35);
+      }
+      .nav-btn--prev { left: max(0.65rem, var(--safe-l)); }
+      .nav-btn--next { right: max(0.65rem, var(--safe-r)); }
+
+      .dots {
+        bottom: max(0.95rem, calc(var(--safe-b) + 0.65rem));
+        padding: 0.4rem 0.65rem;
+      }
+      .dots__dot { width: 8px; height: 8px; min-width: 8px; min-height: 8px; }
+      .dots__dot.active { width: 22px; }
+
+      .silo-board, .do-chain, .tech-grid, .stat-row, .kpi-pair {
+        grid-template-columns: 1fr;
+      }
+      .waste-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.55rem;
+      }
+      .waste-card:last-child { grid-column: 1 / -1; }
+      .waste-card ul li:nth-child(n+3) { display: none; }
+      .tech-card ul { display: none; }
+      .tech-card > p { margin-bottom: 0; }
+      .rx-layout { gap: 0.85rem; }
+      .rx-flip, .rx-flip__inner { min-height: min(58vh, 380px); }
+      .floor-layout { gap: 0.75rem; }
+      .video-frame {
+        width: 100%;
+        max-height: none;
+        aspect-ratio: 16 / 9;
+      }
+      .phase-table { font-size: 0.84rem; }
+      .phase-table th, .phase-table td { padding: 0.65rem 0.75rem; }
+      .ask-box { max-width: none; }
+      .commercial { gap: 0.4rem; }
+      .chip { font-size: 0.7rem; }
+      .btn { min-height: 44px; }
+    }
+
+    @media (max-width: 420px) {
+      .slide {
+        padding-left: max(0.9rem, var(--safe-l));
+        padding-right: max(0.9rem, var(--safe-r));
+      }
+      #scene-title .brand-name { font-size: clamp(2.35rem, 10.5vw, 2.9rem); }
+      #scene-title h1 { max-width: 100%; }
+      .tl-item { grid-template-columns: 56px 1fr; gap: 0.55rem; }
+      .tl-time { font-size: 0.8rem; }
+      .rx-flip, .rx-flip__inner { min-height: 320px; }
+      .rx-row { grid-template-columns: 68px 1fr; font-size: 0.76rem; }
+      .waste-card, .tech-card, .silo-card, .audit-col { padding: 0.85rem; }
+    }
+
+    @media (max-height: 760px) and (min-width: 721px) {
+      .phone__screen { min-height: 360px; }
+      .dash-shell { height: clamp(280px, 56vh, 460px); }
+      .video-frame { max-height: min(50vh, 400px); }
+      h1 { font-size: clamp(1.7rem, 3.8vw, 2.5rem); }
+      h2 { font-size: clamp(1.35rem, 2.8vw, 1.9rem); }
+      #scene-title .brand-name { font-size: clamp(2.2rem, 4.5vw, 3.4rem); }
+      #scene-title h1 { font-size: clamp(1.2rem, 2.2vw, 1.55rem); }
+      .slide__inner { transform: translateY(-1vh); }
+    }
+
+    @media (pointer: coarse) {
+      .nav-btn { width: 48px; height: 48px; }
+      .dots__dot { width: 10px; height: 10px; }
+      .dots__dot.active { width: 24px; }
+      .btn { min-height: 48px; }
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+  <div class="progress" aria-hidden="true"><div class="progress__fill" id="progressFill"></div></div>
+
+  <header class="chrome-top">
+    <a class="chrome-logo" id="chromeLogo" href="https://stamped.work" target="_blank" rel="noopener noreferrer" aria-label="Stamped Energy">
+      <img src="https://stamped.work/LogoOrange.png" alt="Stamped Energy" id="chromeLogoImg" />
+      <span class="wordmark">Stamped Energy</span>
+    </a>
+    <div class="chrome-counter" id="sceneCounter" aria-live="polite">01 / 14</div>
+  </header>
+
+  <main class="stage" id="stage" aria-label="Stamped Energy demo presentation">
+
+    <!-- 1 Title -->
+    <section class="slide slide--light grid-bg active" id="scene-title" data-theme="light" aria-label="Title">
+      <div class="slide__inner slide__inner--wide">
+        <div class="hero-shell">
+          <div class="hero-copy">
+            <div class="reveal hide-mobile">
+              <img class="hero-logo" src="https://stamped.work/LogoOrange.png" alt="Stamped Energy logo" id="heroLogo" />
+              <span class="wordmark-fallback">Stamped Energy</span>
+            </div>
+            <p class="industry-chip reveal" id="industryChip">Pharma</p>
+            <p class="eyebrow reveal hide-mobile" id="titleEyebrowD">Pharma · HVAC, cleanroom, and utility decisions verified on the bill</p>
+            <p class="eyebrow reveal show-mobile" id="titleEyebrowM">Pharma · bill-verified decisions</p>
+            <p class="brand-name reveal">Stamped Energy</p>
+            <h1 class="reveal hide-mobile" id="titleH1D">From HVAC and batch utilities to owned actions on the invoice.</h1>
+            <h1 class="reveal show-mobile" id="titleH1M">HVAC & utility ₹ actions on the bill.</h1>
+            <p class="lede reveal hide-mobile" id="titleLedeD">You already run HVAC, chillers, cleanroom, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.</p>
+            <p class="lede reveal show-mobile" id="titleLedeM">Ranked HVAC and utility actions from meters you already run. Verified on the DISCOM bill.</p>
+            <div class="flow-tags reveal hide-mobile">
+              <span class="chip">Physics &amp; rules</span>
+              <span class="chip">Foundation models</span>
+              <span class="chip">Agentic prescriptions</span>
+              <span class="chip">Bill verification</span>
+            </div>
+            <div class="btn-row reveal">
+              <button type="button" class="btn btn--primary" id="btnBegin">Begin</button>
+            </div>
+            <p class="meta reveal hide-mobile">stamped.work</p>
+          </div>
+          
+          <figure class="hero-photo reveal" id="heroPhoto">
+            <img
+              id="heroPhotoImg"
+              src="https://res.cloudinary.com/ddpyjpt4v/image/upload/c_fill,g_auto,w_1400,h_900,q_auto,f_auto/v1782400113/copy_of_rahim-saikat-mwwl6l0kfpw-unsplash_1_slqcqd.jpg"
+              alt="Industrial plant operations"
+              width="1400"
+              height="900"
+              loading="eager"
+              decoding="async"
+              onerror="this.onerror=null;this.src='https://stamped.work/video/how-it-works-poster.png'"
+            />
+            <span class="hero-photo__scrim" aria-hidden="true"></span>
+          </figure>
+          <div class="hero-canvas reveal hide-mobile" aria-hidden="true" hidden>
+            <svg viewBox="0 0 420 280" fill="none">
+              <defs>
+                <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M20 0H0V20" stroke="rgba(247,84,64,0.12)" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect width="420" height="280" fill="url(#g)"/>
+              <rect x="28" y="36" width="92" height="42" rx="8" stroke="#e3beb8" fill="#fafcfa"/>
+              <text x="74" y="62" text-anchor="middle" fill="#8f706b" font-size="11" font-family="Inter">SCADA</text>
+              <rect x="28" y="96" width="92" height="42" rx="8" stroke="#e3beb8" fill="#fafcfa"/>
+              <text x="74" y="122" text-anchor="middle" fill="#8f706b" font-size="11" font-family="Inter">Meters</text>
+              <rect x="28" y="156" width="92" height="42" rx="8" stroke="#e3beb8" fill="#fafcfa"/>
+              <text x="74" y="182" text-anchor="middle" fill="#8f706b" font-size="11" font-family="Inter">Bills</text>
+              <path class="draw-on-active" d="M120 57H168 M120 117H168 M120 177H168" stroke="#F75440" stroke-opacity="0.55" stroke-dasharray="6 4" stroke-linecap="round"/>
+              <circle cx="196" cy="117" r="34" fill="rgba(247,84,64,0.12)" stroke="#F75440" stroke-width="2"/>
+              <text x="196" y="113" text-anchor="middle" fill="#051F13" font-size="12" font-family="Plus Jakarta Sans" font-weight="700">Stamped</text>
+              <text x="196" y="130" text-anchor="middle" fill="#8f706b" font-size="9" font-family="Inter">graph</text>
+              <path class="draw-on-active" d="M230 117H278" stroke="#F75440" stroke-opacity="0.55" stroke-dasharray="6 4"/>
+              <rect x="278" y="48" width="114" height="54" rx="8" stroke="#F75440" fill="rgba(247,84,64,0.08)"/>
+              <text x="335" y="70" text-anchor="middle" fill="#051F13" font-size="11" font-family="Inter" font-weight="700">₹ prescription</text>
+              <text x="335" y="88" text-anchor="middle" fill="#8f706b" font-size="10" font-family="Inter">Owner + due</text>
+              <rect x="278" y="122" width="114" height="54" rx="8" stroke="#e3beb8" fill="#fafcfa"/>
+              <text x="335" y="144" text-anchor="middle" fill="#051F13" font-size="11" font-family="Inter" font-weight="700">Floor handoff</text>
+              <text x="335" y="162" text-anchor="middle" fill="#8f706b" font-size="10" font-family="Inter">WhatsApp</text>
+              <rect x="278" y="196" width="114" height="42" rx="8" stroke="#00666b" fill="rgba(0,102,107,0.1)"/>
+              <text x="335" y="222" text-anchor="middle" fill="#051F13" font-size="11" font-family="Inter" font-weight="700">Verified on bill</text>
+              <style>
+                .slide.active .draw-on-active { stroke-dasharray: 120; animation: drawLine 1.1s ease forwards; }
+              </style>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 Hook / incident -->
+    <section class="slide slide--light" id="scene-hook" data-theme="light" aria-label="Incident hook">
+      <div class="slide__inner slide__inner--wide">
+        <p class="eyebrow reveal" id="hookEyebrow">Monday 07:05 · Batch / utilities handover</p>
+        <h2 class="reveal" id="hookH2">Your pharma plant already has the data.</h2>
+        <p class="lede reveal hide-mobile" id="hookLedeD">The incomer saw the MD spike when chiller bank B overlapped autoclave heat-up. The EMS logged it. Nobody got a work order with a rupee figure.</p>
+        <p class="lede reveal show-mobile" id="hookLedeM">Chiller + autoclave overlapped. EMS logged it. Nobody got a ₹ work order.</p>
+        <div class="two-col">
+          <div class="timeline reveal">
+            <div class="tl-item">
+              <div class="tl-time">07:12</div>
+              <div class="tl-card">
+                <strong id="hookT1s">Chiller bank B + autoclave heat-up together</strong>
+                <p id="hookT1p">Shift B brings chillers and batch utilities online in a short overlap.</p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">07:15</div>
+              <div class="tl-card tl-card--break">
+                <strong id="hookT2s">MD spike hits the incomer</strong>
+                <p id="hookT2p">EMS threshold crossed. Alert created. Still no assigned owner.</p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">07:40</div>
+              <div class="tl-card">
+                <strong id="hookT3s">Batch schedule continues as usual</strong>
+                <p id="hookT3p">The bill will price this later. The floor never saw the fix.</p>
+              </div>
+            </div>
+          </div>
+          <div class="incident-meter reveal">
+            <div class="meter-label">Sample demand window</div>
+            <div class="meter-value">1,180 <span style="font-size:0.45em;color:var(--on-surface-variant)">kVA</span></div>
+            <div class="meter-bar"><i class="grow-on-active"></i></div>
+            <p class="meter-note hide-mobile" id="hookMeterNote">The EMS recorded the spike, but nobody was assigned to change the next chiller–autoclave sequence.</p>
+            <div class="stat-row" style="grid-template-columns:1fr 1fr;margin-top:1rem;">
+              <div class="stat-card">
+                <strong id="hookStatImpact">~₹36k</strong>
+                <span id="hookStatImpactLabel">Monthly demand impact <span class="tilde">[~]</span></span></span>
+              </div>
+              <div class="stat-card">
+                <strong>0</strong>
+                <span>Work orders issued</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 Gap -->
+    <section class="slide slide--light grid-bg" id="scene-gap" data-theme="light" aria-label="Data gap">
+      <div class="slide__inner slide__inner--wide">
+        <p class="eyebrow reveal">Why savings get missed</p>
+        <h2 class="reveal">The systems are there. The handoff is not.</h2>
+        <p class="lede reveal hide-mobile">Most plants already meter and log. What breaks is the step between an alert and an owned action that finance can later see on the bill.</p>
+        <p class="lede reveal show-mobile">Meters and EMS exist. The owned action that hits the bill does not.</p>
+        <div class="silo-board reveal" aria-label="Fragmented plant systems">
+          <article class="silo-card">
+            <h3>SCADA</h3>
+            <p class="hide-mobile">Live process signals and historian tags.</p>
+            <div class="silo-meta">
+              <div class="has" id="gapScadaHas">Has: AHU, chiller, batch utility states</div>
+              <div class="miss">Missing: owner, due date, ₹ impact</div>
+            </div>
+          </article>
+          <article class="silo-card">
+            <h3>EMS</h3>
+            <p class="hide-mobile">Trends, thresholds, and unread alerts.</p>
+            <div class="silo-meta">
+              <div class="has" id="gapEmsHas">Has: spike logged at 07:05</div>
+              <div class="miss">Missing: who acts before next shift</div>
+            </div>
+          </article>
+          <article class="silo-card">
+            <h3>Meters</h3>
+            <p class="hide-mobile">Interval kWh and demand windows.</p>
+            <div class="silo-meta">
+              <div class="has" id="gapMetersHas">Has: MD window and HVAC load profile</div>
+              <div class="miss">Missing: link to a floor sequence change</div>
+            </div>
+          </article>
+          <article class="silo-card">
+            <h3>DISCOM bill</h3>
+            <p class="hide-mobile">The scoreboard finance already reviews.</p>
+            <div class="silo-meta">
+              <div class="has" id="gapBillHas">Has: MD, energy, PF line items</div>
+              <div class="miss">Missing: ops trail that explains the ₹</div>
+            </div>
+          </article>
+        </div>
+        <div class="gap-break reveal">No assignment <span>→</span> no floor action <span>→</span> bill settles unchanged</div>
+        <div class="gap-outcomes reveal hide-mobile">
+          <article class="gap-outcome">
+            <strong>MD locked for the month</strong>
+            <p>Once the demand window prints, the coincidence cost is already on the invoice.</p>
+          </article>
+          <article class="gap-outcome">
+            <strong>Review arrives too late</strong>
+            <p>Weekly energy meetings discuss last week. The shift that caused it has already moved on.</p>
+          </article>
+          <article class="gap-outcome">
+            <strong>Finance sees ₹ without a trail</strong>
+            <p>The bill moves, but nobody can show which owned action closed which line item.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 What Stamped does -->
+    <section class="slide slide--light" id="scene-what" data-theme="light" aria-label="What Stamped does">
+      <div class="slide__inner slide__inner--wide">
+        <p class="eyebrow reveal">What Stamped does</p>
+        <h2 class="reveal">From a plant signal to an assigned job.</h2>
+        <p class="lede reveal" id="whatLede">Stamped sits on top of the EMS and EnMS you already run. It reads HVAC, chiller, cleanroom, and incomer data, issues a ranked action in rupees, sends it to the floor, and closes the result on the next bill.</p>
+        <div class="do-chain reveal">
+          <article class="do-step">
+            <div class="do-step__num">01</div>
+            <h3>Read existing signals</h3>
+            <p id="whatStep1">HVAC / chiller / batch utility meters, BMS and PLC states, and utility line items. Read-only. No control writes to the plant.</p>
+            <span class="do-arrow" aria-hidden="true">&rarr;</span>
+          </article>
+          <article class="do-step">
+            <div class="do-step__num">02</div>
+            <h3>Rank fixes in ₹</h3>
+            <p>Rules, models, and agents turn findings into prescriptions with why, owner, effort, and expected bill impact.</p>
+            <span class="do-arrow" aria-hidden="true">&rarr;</span>
+          </article>
+          <article class="do-step">
+            <div class="do-step__num">03</div>
+            <h3>Reach the floor</h3>
+            <p>The shift supervisor gets the task where they already work, with a due time and a clear action.</p>
+            <span class="do-arrow" aria-hidden="true">&rarr;</span>
+          </article>
+          <article class="do-step">
+            <div class="do-step__num">04</div>
+            <h3>Verify on DISCOM</h3>
+            <p>Potential and realised savings are checked against the same bill lines finance already reviews each month.</p>
+          </article>
+        </div>
+        <div class="flow-tags reveal hide-mobile" style="margin-top:1.25rem;">
+          <span class="chip">Software-only</span>
+          <span class="chip">Read-only OT</span>
+          <span class="chip">Pilot first</span>
+          <span class="chip">Proof before subscription</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 Prescription flip cards -->
+    <section class="slide slide--light" id="scene-prescription" data-theme="light" aria-label="Prescription">
+      <div class="slide__inner slide__inner--wide">
+        <p class="eyebrow reveal">Sample prescriptions</p>
+        <h2 class="reveal">A clear action, priced on a bill line.</h2>
+        <p class="lede reveal hide-mobile">Each card is an owned work order: what to change, who does it, when it is due, and the expected ₹ impact. Click to flip and see the backing evidence <span class="tilde">[~]</span>.</p>
+        <p class="lede reveal show-mobile">Tap a card to flip from the decision to the evidence <span class="tilde">[~]</span>.</p>
+        <div class="rx-layout">
+          <button type="button" class="rx-flip reveal" data-rx-flip aria-pressed="false" aria-label="MD stagger prescription for chillers vs autoclave. Show evidence.">
+            <div class="rx-flip__inner">
+              <div class="rx-face rx-face--front">
+                <div class="rx-hero__head">
+                  <span class="rx-badge" id="rx1Badge">Rx · MD coincidence</span>
+                  <span class="rx-priority">Priority · High</span>
+                </div>
+                <div class="rx-hero__body">
+                  <p class="rx-action" id="rx1Action">Stagger chiller bank B vs autoclave heat-up by ≥10 min at Shift B handover</p>
+                  <dl class="rx-fields">
+                    <div class="rx-row"><dt>Why</dt><dd id="rx1Why">Mon 07:02-07:12 overlap drove the incomer MD window</dd></div>
+                    <div class="rx-row"><dt>Bill line</dt><dd id="rx1Bill">MD (kVA) · billing demand</dd></div>
+                    <div class="rx-row"><dt>Owner</dt><dd id="rx1Owner">Utilities / engineering supervisor · Shift B</dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong id="rx1Impact">₹1.8-3.2L / month</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Effort</dt><dd id="rx1Effort">Sequence only · no capex · no PLC write</dd></div>
+                    <div class="rx-row"><dt>Rule</dt><dd id="rx1Rule">md_overlap@v2.4 · Confidence High</dd></div>
+                    <div class="rx-row"><dt>Due</dt><dd id="rx1Due">This week · verify on next MD line</dd></div>
+                  </dl>
+                  <p class="rx-flip-cue">Flip for evidence →</p>
+                </div>
+              </div>
+              <div class="rx-face rx-face--back">
+                <div class="rx-hero__head">
+                  <span class="rx-badge">Evidence · sample</span>
+                  <span class="rx-priority">MD window</span>
+                </div>
+                <div class="rx-hero__body">
+                  <p class="rx-ev-title" id="rx1EvTitle">Signal window · Mon 07:00-07:15</p>
+                  <svg class="rx-spark" viewBox="0 0 320 64" aria-hidden="true">
+                    <text x="8" y="12" fill="#8f706b" font-size="8" font-family="Inter">kVA</text>
+                    <polyline fill="none" stroke="#F75440" stroke-width="2" points="8,48 40,46 72,44 104,40 136,22 168,18 200,28 232,42 264,44 304,46"/>
+                    <rect x="128" y="8" width="48" height="48" fill="rgba(247,84,64,0.12)" stroke="none"/>
+                    <text x="152" y="58" text-anchor="middle" fill="#F75440" font-size="7" font-family="Inter" font-weight="700">overlap</text>
+                    <line x1="8" y1="8" x2="8" y2="56" stroke="#e0e3df"/>
+                    <line x1="8" y1="56" x2="304" y2="56" stroke="#e0e3df"/>
+                  </svg>
+                  <table class="rx-ev-table">
+                    <thead><tr><th>Tag</th><th>Value</th><th>Window</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>HT_INCOMER.MD</code></td><td>920 kVA</td><td>07:06-07:10</td></tr>
+                      <tr><td><code>CHILLER_B.START</code></td><td>TRUE</td><td>07:02</td></tr>
+                      <tr><td><code>AUTOCLAVE.HEAT</code></td><td>ON</td><td>07:05+</td></tr>
+                      <tr><td><code>AHU_SUITE3.RUN</code></td><td>ON</td><td>07:04+</td></tr>
+                    </tbody>
+                  </table>
+                  <p class="rx-cite" id="rx1Cite">physics/md_overlap@v2.4 · model conf 0.90 · tariff MD slab · baseline Apr peak week</p>
+                  <p class="rx-mv">M&amp;V · verify on next DISCOM MD line · plan locked at issue</p>
+                  <p class="rx-flip-cue">← Back to decision</p>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          <button type="button" class="rx-flip reveal hide-mobile" data-rx-flip aria-pressed="false" aria-label="AHU setback prescription. Show evidence.">
+            <div class="rx-flip__inner">
+              <div class="rx-face rx-face--front">
+                <div class="rx-hero__head">
+                  <span class="rx-badge" id="rx2Badge">Rx · HVAC idle</span>
+                  <span class="rx-priority rx-priority--med">Priority · Med</span>
+                </div>
+                <div class="rx-hero__body">
+                  <p class="rx-action" id="rx2Action">Setback non-critical AHU Suite 3 during validated idle batch windows</p>
+                  <dl class="rx-fields">
+                    <div class="rx-row"><dt>Why</dt><dd id="rx2Why">Full AHU duty with no batch occupancy tag on 4 of last 6 idle windows</dd></div>
+                    <div class="rx-row"><dt>Bill line</dt><dd id="rx2Bill">Energy (kWh) · ToD shoulder</dd></div>
+                    <div class="rx-row"><dt>Owner</dt><dd id="rx2Owner">HVAC / engineering · Suite 3</dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong id="rx2Impact">₹70k-1.1L / month</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Effort</dt><dd id="rx2Effort">Validated setback SOP · no capex · no PLC write</dd></div>
+                    <div class="rx-row"><dt>Rule</dt><dd id="rx2Rule">hvac_idle@v1.5 · Confidence High</dd></div>
+                    <div class="rx-row"><dt>Due</dt><dd id="rx2Due">Next idle window · verify on energy line</dd></div>
+                  </dl>
+                  <p class="rx-flip-cue">Flip for evidence →</p>
+                </div>
+              </div>
+              <div class="rx-face rx-face--back">
+                <div class="rx-hero__head">
+                  <span class="rx-badge">Evidence · sample</span>
+                  <span class="rx-priority rx-priority--med">Idle kWh</span>
+                </div>
+                <div class="rx-hero__body">
+                  <p class="rx-ev-title" id="rx2EvTitle">Idle suite windows · last 6 events</p>
+                  <svg class="rx-spark" viewBox="0 0 320 64" aria-hidden="true">
+                    <text x="8" y="12" fill="#8f706b" font-size="8" font-family="Inter">kWh unload</text>
+                    <rect x="24" y="28" width="36" height="28" fill="rgba(0,102,107,0.55)"/>
+                    <rect x="76" y="36" width="36" height="20" fill="rgba(0,102,107,0.35)"/>
+                    <rect x="128" y="22" width="36" height="34" fill="rgba(0,102,107,0.7)"/>
+                    <rect x="180" y="40" width="36" height="16" fill="rgba(0,102,107,0.3)"/>
+                    <rect x="232" y="20" width="36" height="36" fill="rgba(0,102,107,0.75)"/>
+                    <text x="160" y="14" text-anchor="middle" fill="#00666b" font-size="7" font-family="Inter" font-weight="700">3 / 5 waste events</text>
+                    <line x1="8" y1="56" x2="304" y2="56" stroke="#e0e3df"/>
+                  </svg>
+                  <table class="rx-ev-table">
+                    <thead><tr><th>Tag</th><th>Value</th><th>Window</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>AHU_S3.RUN</code></td><td>Full duty</td><td>40 min avg</td></tr>
+                      <tr><td><code>BATCH.OCCUPANCY</code></td><td>0</td><td>same window</td></tr>
+                      <tr><td><code>AHU_S3.kWh</code></td><td>~95 kWh</td><td>per event <span class="tilde">[~]</span></td></tr>
+                      <tr><td><code>IDLE_WINDOW.FLAG</code></td><td>TRUE</td><td>validated</td></tr>
+                    </tbody>
+                  </table>
+                  <p class="rx-cite" id="rx2Cite">physics/hvac_idle@v1.5 · model conf 0.86 · ToD energy line · baseline last 6 idle windows</p>
+                  <p class="rx-mv">M&amp;V · verify on next energy line · plan locked at issue</p>
+                  <p class="rx-flip-cue">← Back to decision</p>
+                </div>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 Floor -->
+    <section class="slide slide--light" id="scene-floor" data-theme="light" aria-label="Floor delivery">
+      <div class="slide__inner slide__inner--wide">
+        <p class="eyebrow reveal hide-mobile">Execution channel</p>
+        <h2 class="reveal hide-mobile">The action reaches the floor.</h2>
+        <p class="eyebrow reveal show-mobile">On the floor</p>
+        <div class="floor-layout">
+          <div class="phone reveal" aria-hidden="true">
+            <div class="phone__screen">
+              <div class="wa-header">
+                <div class="wa-avatar">SE</div>
+                <div>
+                  <strong>Stamped Energy</strong>
+                  <span>online · plant prescriptions</span>
+                </div>
+              </div>
+              <div class="wa-body">
+                <p class="wa-meta">Today · Shift B · 07:18</p>
+                <div class="wa-bubble">
+                  <span class="tag">New prescription · High</span>
+                  <h4 id="floorTitle">Stagger chiller B vs autoclave heat-up ≥10 min</h4>
+                  <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak Mon 07:02-07:12 overlap</p>
+                  <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹1.8-3.2L/mo on MD line <span class="tilde">[~]</span></p>
+                  <p class="wa-line" id="floorOwner"><b>Owner:</b> Utilities / engineering supervisor · B</p>
+                  <p class="wa-line"><b>Due:</b> This week · before next peak</p>
+                  <div class="wa-cta">Tap to acknowledge &rarr;</div>
+                </div>
+                <div class="wa-actions">
+                  <button type="button">Snooze</button>
+                  <button type="button" class="primary">Acknowledge</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="status-rail reveal hide-mobile">
+            <p class="lede" style="margin-bottom:0.35rem;">The prescription arrives as assigned work. Its status changes when the supervisor acts, not when the next review meeting happens.</p>
+            <div class="status-item">
+              <span class="status-dot done"></span>
+              <div>
+                <strong>Open</strong>
+                <p>Prescription issued with owner, due time, and ₹ impact.</p>
+              </div>
+            </div>
+            <div class="status-item">
+              <span class="status-dot active pulse-on-active"></span>
+              <div>
+                <strong>In progress</strong>
+                <p>Supervisor acknowledges and sequences the startup stagger.</p>
+              </div>
+            </div>
+            <div class="status-item">
+              <span class="status-dot"></span>
+              <div>
+                <strong>Completed, ready to verify</strong>
+                <p>Tracked against the next billing cycle MD / energy lines.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 Verify -->
+    <section class="slide slide--light" id="scene-verify" data-theme="light" aria-label="Bill verification">
+      <div class="slide__inner slide__inner--wide">
+        <p class="eyebrow reveal">Measurement and verification</p>
+        <h2 class="reveal">Verified on the bill.</h2>
+        <p class="lede reveal hide-mobile">A saving counts only when operating data and the matching DISCOM bill line both move. Finance and plant review the same numbers.</p>
+        <p class="lede reveal show-mobile">Savings count only when the DISCOM bill line moves.</p>
+        <div class="kpi-pair reveal">
+          <div class="kpi">
+            <div class="kpi__label">Potential</div>
+            <div class="kpi__value">₹4.0L <span class="tilde">[~]</span></div>
+          </div>
+          <div class="kpi kpi--hot">
+            <div class="kpi__label">Realised</div>
+            <div class="kpi__value">₹3.4L <span class="tilde">[~]</span></div>
+          </div>
+        </div>
+        <div class="ledger-wrap reveal">
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>Ledger line</th>
+                <th>Baseline</th>
+                <th>Action</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>MD stagger · chiller vs autoclave</td>
+                <td>Apr MD peak</td>
+                <td>10-min chiller lag</td>
+                <td>VERIFIED</td>
+              </tr>
+              <tr>
+                <td>AHU Suite 3 setback</td>
+                <td>Idle suite hours</td>
+                <td>Validated setback SOP</td>
+                <td>PENDING</td>
+              </tr>
+              <tr>
+                <td>Tariff window import</td>
+                <td>Peak grid draw</td>
+                <td>Dispatch nudge</td>
+                <td>IN REVIEW</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="meta reveal hide-mobile">Sample ledger for walkthrough · labelled <span class="tilde">[~]</span> · not a customer guarantee</p>
+      </div>
+    </section>
+
+    <!-- Tech stack -->
+    <section class="slide slide--light grid-bg" id="scene-tech" data-theme="light" aria-label="Technology stack">
+      <div class="slide__inner slide__inner--wide">
+        <p class="eyebrow reveal">Technology</p>
+        <h2 class="reveal">The stack behind every prescription</h2>
+        <p class="lede reveal hide-mobile">Each recommendation is produced by industrial rules, domain foundation models, and an agentic layer that turns findings into owned floor work, then closes the result on the bill.</p>
+        <p class="lede reveal show-mobile">Rules, foundation models, and agents turn findings into owned floor work closed on the bill.</p>
+        <div class="tech-grid reveal">
+          <article class="tech-card">
+            <div class="tech-card__num">01 · Physics</div>
+            <h3>Industrial physics and rules engines</h3>
+            <p>Versioned rule packs for plant energy behaviour, built from published research in energy management, power systems, and equipment efficiency.</p>
+            <ul>
+              <li id="techPhysicsBullet">MD coincidence, HVAC idle, chiller staging, batch-gap utilities, tariff dispatch</li>
+              <li>PF and tariff arithmetic tied to utility line items</li>
+              <li>Every finding cites a rule version a plant EE can review</li>
+            </ul>
+          </article>
+          <article class="tech-card">
+            <div class="tech-card__num">02 · Models</div>
+            <h3>Domain foundation models</h3>
+            <p>A set of models trained for industrial energy work, not a single generic chatbot on top of meter data.</p>
+            <ul>
+              <li>Load and demand forecasting models</li>
+              <li>Pattern and anomaly models for waste detection</li>
+              <li>Equipment efficiency and tariff-aware dispatch models</li>
+            </ul>
+          </article>
+          <article class="tech-card">
+            <div class="tech-card__num">03 · Agents</div>
+            <h3>Agentic AI for prescriptions</h3>
+            <p>Agents read structured findings and draft the floor action: what changes, why it matters, who owns it, effort, ₹ impact, and due time.</p>
+            <ul>
+              <li>Ranks the queue so high-₹, low-effort work surfaces first</li>
+              <li>Keeps numbers tied to the finding and tariff line</li>
+              <li>Produces text supervisors can act on without a new dashboard habit</li>
+            </ul>
+          </article>
+          <article class="tech-card">
+            <div class="tech-card__num">04 · Closure</div>
+            <h3>Bill-linked verification</h3>
+            <p>Prescriptions are priced onto DISCOM line items and closed with an M&amp;V plan locked at issue time.</p>
+            <ul>
+              <li>Potential vs realised tracked per action</li>
+              <li>Evidence exportable for plant, finance, and assurance</li>
+              <li>Same ledger feeds intensity and sustainability workpapers</li>
+            </ul>
+          </article>
+        </div>
+        <div class="flow-tags reveal hide-mobile" style="margin-top:1rem;">
+          <span class="chip">Read-only OT</span>
+          <span class="chip">No PLC writes</span>
+          <span class="chip">Multi-plant ready</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Auditability & sustainability -->
+    <section class="slide slide--light" id="scene-audit" data-theme="light" aria-label="Auditability and sustainability">
+      <div class="slide__inner slide__inner--wide">
+        <p class="eyebrow reveal">Auditability and sustainability</p>
+        <h2 class="reveal">A full trail from action to bill to evidence pack.</h2>
+        <p class="lede reveal hide-mobile">Closed prescriptions leave a record plant, finance, and assurance partners can reuse. Sustainability numbers come from the same actions, not a second system.</p>
+        <p class="lede reveal show-mobile">Full trail from action to bill. Sustainability evidence from the same closures.</p>
+        <div class="audit-grid">
+          <div class="audit-col reveal">
+            <h3>Auditability</h3>
+            <ul class="audit-list">
+              <li><span class="mark mark-ok">1</span><span>Immutable trail: issued → viewed → acted → verified</span></li>
+              <li><span class="mark mark-ok">2</span><span>Potential vs realised ledger tied to DISCOM bill lines</span></li>
+              <li><span class="mark mark-ok">3</span><span>IPMVP-style M&amp;V plan locked when each prescription is issued</span></li>
+              <li><span class="mark mark-ok">4</span><span>Exportable workpapers for plant EE, finance, and assurance partners</span></li>
+            </ul>
+          </div>
+          <div class="audit-col audit-col--sus reveal">
+            <h3>Sustainability</h3>
+            <ul class="audit-list">
+              <li><span class="mark mark-te">1</span><span>Verified kWh, intensity, and tCO₂e with factor disclosure from the same actions</span></li>
+              <li><span class="mark mark-te">2</span><span>Evidence adjuncts for ISO 50001 opportunity closure</span></li>
+              <li><span class="mark mark-te">3</span><span>BRSR / PAT workpaper inputs. We do not file ESG returns for you</span></li>
+              <li><span class="mark mark-te">4</span><span>We do not replace EnMS or certify the plant. We close ops into proof those systems need</span></li>
+            </ul>
+          </div>
+        </div>
+        <p class="audit-note reveal hide-mobile">For teams that already run EnMS, renewables, and intensity programmes, and still need day-to-day actions that show up on the invoice.</p>
+      </div>
+    </section>
+
+    <!-- 9 Savings map -->
+    <section class="slide slide--light" id="scene-math" data-theme="light" aria-label="Savings map">
+      <div class="slide__inner slide__inner--wide">
+        <p class="eyebrow reveal" id="mathEyebrow">Where pharma electricity cost usually hides</p>
+        <h2 class="reveal" id="mathH2">Five areas we check first in pharma</h2>
+        <p class="lede reveal hide-mobile" id="mathLedeD">First places we look when a pharma plant already meters HVAC and utilities — and still sees avoidable ₹ on the HT bill.</p>
+        <p class="lede reveal show-mobile" id="mathLedeM">First places we look for avoidable ₹ on a pharma HT bill.</p>
+        <div class="waste-grid reveal">
+          <article class="waste-card">
+            <h3>MD / demand</h3>
+            <ul>
+              <li>Chiller + autoclave overlap</li>
+              <li>AHU bank coincidence</li>
+              <li>Contract demand headroom</li>
+            </ul>
+            <div class="waste-bill">Bill line · MD (kVA)</div>
+            <p class="waste-sample hide-mobile">Sample: chiller bank B and autoclave heat-up at 07:05</p>
+          </article>
+          <article class="waste-card">
+            <h3>HVAC / cleanroom</h3>
+            <ul>
+              <li>Overcool in idle suites</li>
+              <li>AHU full duty off-batch</li>
+              <li>Simultaneous bank starts</li>
+            </ul>
+            <div class="waste-bill">Bill line · Energy (kWh)</div>
+            <p class="waste-sample hide-mobile">Sample: Suite 3 AHU at full duty with no occupancy tag</p>
+          </article>
+          <article class="waste-card">
+            <h3>Chillers & utilities</h3>
+            <ul>
+              <li>Staging discipline</li>
+              <li>Unload / bypass hours</li>
+              <li>Purified-water run-on</li>
+            </ul>
+            <div class="waste-bill">Bill line · Energy + MD</div>
+            <p class="waste-sample hide-mobile">Sample: second chiller online into the same demand window</p>
+          </article>
+          <article class="waste-card">
+            <h3>Batch gaps</h3>
+            <ul>
+              <li>Utilities across changeovers</li>
+              <li>Idle CIP / WIP holding</li>
+              <li>Non-critical loads left on</li>
+            </ul>
+            <div class="waste-bill">Bill line · Energy (kWh)</div>
+            <p class="waste-sample hide-mobile">Sample: utility island left running across a validated idle window</p>
+          </article>
+          <article class="waste-card">
+            <h3>Tariff / intensity</h3>
+            <ul>
+              <li>Peak import timing</li>
+              <li>kWh per batch drift</li>
+              <li>TOU mistiming</li>
+            </ul>
+            <div class="waste-bill">Bill + batch tag</div>
+            <p class="waste-sample hide-mobile">Sample: peak grid draw during a non-critical utility window</p>
+          </article>
+        </div>
+        <div class="bill-table-wrap reveal">
+          <table class="bill-table">
+            <thead>
+              <tr>
+                <th>Monthly HT bill</th>
+                <th>About 15% often addressable <span class="tilde">[~]</span></th>
+                <th>Cost of waiting 90 days</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>₹30L</td><td>₹4.5L / month</td><td>₹13.5L</td></tr>
+              <tr><td>₹60L</td><td>₹9L / month</td><td>₹27L</td></tr>
+              <tr><td>₹1Cr</td><td>₹15L / month</td><td>₹45L</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="footnote reveal hide-mobile">Indicative ranges from comparable plants <span class="tilde">[~]</span>. A 90-day proof run replaces estimates with figures from your DISCOM bills.</p>
+      </div>
+    </section>
+
+    <!-- 11 Boundaries -->
+    <section class="slide slide--light" id="scene-boundaries" data-theme="light" aria-label="Boundaries">
+      <div class="slide__inner slide__inner--wide">
+        <p class="eyebrow reveal">How we engage OT</p>
+        <h2 class="reveal">Read-only first. Clear boundaries.</h2>
+        <div class="bound-grid">
+          <div class="bound-col bound-col--not reveal hide-mobile">
+            <h3>What we are not</h3>
+            <ul class="bound-list">
+              <li>EMS / SCADA replacement</li>
+              <li>ESG-first carbon platform</li>
+              <li>Hardware or metering vendor</li>
+              <li>PLC / DCS control writes</li>
+              <li>Another monitoring dashboard</li>
+            </ul>
+          </div>
+          <div class="bound-col bound-col--ot reveal">
+            <h3>How we engage OT</h3>
+            <ul class="bound-list">
+              <li>Read-only data access only</li>
+              <li>No new hardware in Phase 1</li>
+              <li>NDA before plant data leaves the site</li>
+              <li>Data returned on exit, with no lock-in</li>
+              <li>Single-site proof before multi-plant rollout</li>
+            </ul>
+            <div class="protocol-row">
+              <span class="chip">Modbus · OPC-UA · MQTT</span>
+              <span class="chip">Incomer + bills first</span>
+              <span class="chip">Group-ready after proof</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 Video -->
+    <section class="slide slide--light" id="scene-video" data-theme="light" aria-label="How it works video">
+      <div class="slide__inner slide__inner--media">
+        <p class="eyebrow reveal">2-minute walkthrough</p>
+        <h2 class="reveal">How Stamped works, end to end</h2>
+        <p class="lede reveal hide-mobile">Connect plant data, issue a prescription in rupees, hand it to the floor, and verify on the bill.</p>
+        <p class="lede reveal show-mobile">Connect, prescribe, hand off, verify.</p>
+        <div class="video-frame reveal">
+          <video
+            controls
+            playsinline
+            preload="metadata"
+            poster="https://stamped.work/video/how-it-works-poster.png"
+            aria-label="How Stamped Energy works video"
+          >
+            <source src="https://stamped.work/video/how-it-works-cinematic.webm" type="video/webm" />
+          </video>
+        </div>
+        <p class="video-caption reveal hide-mobile">The video follows the same sequence shown here. Pause whenever a point needs discussion.</p>
+      </div>
+    </section>
+
+    <!-- 13 Dashboard -->
+    <section class="slide slide--light" id="scene-live" data-theme="light" aria-label="Simulated dashboard">
+      <div class="slide__inner slide__inner--wide">
+        <div class="dash-title-row reveal">
+          <h2>Sample workspace</h2>
+          <p>Simulated data, not your plant</p>
+        </div>
+        <div class="dash-shell reveal">
+          <div class="dash-badge hide-mobile">Simulated sample</div>
+          <iframe
+            id="dashFrame"
+            data-src="https://stamped-energy.vercel.app/"
+            title="Stamped Energy simulated dashboard"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 Offer -->
+    <section class="slide slide--light" id="scene-offer" data-theme="light" aria-label="Offer and ask">
+      <div class="slide__inner">
+        <p class="eyebrow reveal">90-day bill verification</p>
+        <h2 class="reveal">Proof Run</h2>
+        <p class="lede reveal hide-mobile" id="offerLedeD">Start with one HVAC / utilities island or production block. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90.</p>
+        <p class="lede reveal show-mobile" id="offerLedeM">One utilities island. Joint M&amp;V memo. Go or no-go at Day 90.</p>
+        <table class="phase-table reveal">
+          <thead>
+            <tr>
+              <th>Phase</th>
+              <th>What happens</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Weeks 1-2</td>
+              <td>Read-only connect · baseline in writing · first ranked prescriptions</td>
+            </tr>
+            <tr>
+              <td>Weeks 3-8</td>
+              <td>Floor executes · weekly EnMS-style review · WhatsApp ownership</td>
+            </tr>
+            <tr>
+              <td>Day 90</td>
+              <td>Joint plant/finance M&amp;V memo · go / no-go with signed numbers</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="commercial reveal">
+          <span class="chip">Fixed pilot ₹2-5L <span class="tilde">[~]</span></span>
+          <span class="chip">Subscribe only after verified savings</span>
+          <span class="chip">Stop at Day 90 · no lock-in</span>
+        </div>
+        <div class="ask-box reveal">
+          <strong>The ask</strong>
+          <p>A scoping conversation + your last 2-3 DISCOM bills. No purchase decision required on the call.</p>
+        </div>
+        <p class="contact-line reveal">
+          <a href="mailto:contact@stamped.work">contact@stamped.work</a>
+          ·
+          <a href="https://stamped.work" target="_blank" rel="noopener noreferrer">stamped.work</a>
+        </p>
+        <p class="cred-quiet reveal hide-mobile">Built on energy systems research at IIT Roorkee.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <button type="button" class="nav-btn nav-btn--prev" id="btnPrev" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button type="button" class="nav-btn nav-btn--next" id="btnNext" aria-label="Next slide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <nav class="dots" id="dots" aria-label="Slide navigation"></nav>
+
+  
+  <script>
+    /* Industry chrome label — content is baked per file by build-industry-decks.py */
+    (function () {
+      var el = document.getElementById("chromeIndustry");
+      if (el) el.textContent = "Pharma";
+    })();
+  </script>
+<script>
+    (function () {
+      const isMobileDeck = window.matchMedia("(max-width: 720px)").matches;
+      // ponytail: skip simulated dashboard on phone — desktop iframe only
+      const slides = Array.from(document.querySelectorAll(".slide")).filter(function (s) {
+        return !(isMobileDeck && s.id === "scene-live");
+      });
+      const total = slides.length;
+      const progressFill = document.getElementById("progressFill");
+      const counter = document.getElementById("sceneCounter");
+      const btnPrev = document.getElementById("btnPrev");
+      const btnNext = document.getElementById("btnNext");
+      const btnBegin = document.getElementById("btnBegin");
+      const dotsNav = document.getElementById("dots");
+      const chromeLogo = document.getElementById("chromeLogo");
+      const titleSlide = document.getElementById("scene-title");
+      const videoEl = document.querySelector("#scene-video video");
+
+      let index = 0;
+      let touchX = null;
+      let touchY = null;
+
+      function onLogoFail(img) {
+        chromeLogo.classList.add("fallback");
+        if (titleSlide) titleSlide.classList.add("logo-failed");
+        if (img) img.style.display = "none";
+      }
+      ["chromeLogoImg", "heroLogo"].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("error", function () { onLogoFail(el); });
+        if (el.complete && el.naturalWidth === 0) onLogoFail(el);
+      });
+
+      slides.forEach(function (_, i) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "dots__dot" + (i === 0 ? " active" : "");
+        b.setAttribute("aria-label", "Go to slide " + (i + 1));
+        b.addEventListener("click", function () { goTo(i); });
+        dotsNav.appendChild(b);
+      });
+      const dots = Array.from(dotsNav.querySelectorAll(".dots__dot"));
+
+      function pad(n) { return String(n).padStart(2, "0"); }
+
+      function pauseVideoIfLeaving(nextIndex) {
+        if (!videoEl) return;
+        const videoIndex = slides.findIndex(function (s) { return s.id === "scene-video"; });
+        if (videoIndex === -1) return;
+        if (index === videoIndex && nextIndex !== videoIndex && !videoEl.paused) {
+          videoEl.pause();
+        }
+      }
+
+      function resetRxFlips(root) {
+        if (!root) return;
+        root.querySelectorAll("[data-rx-flip].is-flipped").forEach(function (card) {
+          card.classList.remove("is-flipped");
+          card.setAttribute("aria-pressed", "false");
+          var label = card.getAttribute("aria-label") || "";
+          card.setAttribute("aria-label", label.replace("Hide evidence.", "Show evidence."));
+        });
+      }
+
+      function goTo(i, force) {
+        if (i < 0 || i >= total) return;
+        if (i === index && !force) return;
+
+        pauseVideoIfLeaving(i);
+
+        const prev = slides[index];
+        if (prev !== slides[i]) {
+          resetRxFlips(prev);
+          prev.classList.remove("active");
+          prev.querySelectorAll(".reveal").forEach(function (el) {
+            el.style.animation = "none";
+            void el.offsetWidth;
+            el.style.animation = "";
+          });
+        }
+
+        index = i;
+        const slide = slides[index];
+        slide.classList.add("active");
+        slide.scrollTop = 0;
+        document.body.setAttribute("data-theme", "light");
+
+        progressFill.style.width = ((index + 1) / total * 100) + "%";
+        counter.textContent = pad(index + 1) + " / " + pad(total);
+
+        dots.forEach(function (d, di) {
+          d.classList.toggle("active", di === index);
+          d.setAttribute("aria-current", di === index ? "true" : "false");
+        });
+
+        btnPrev.disabled = index === 0;
+        btnNext.disabled = index === total - 1;
+
+        var dash = document.getElementById("dashFrame");
+        if (dash && slide.id === "scene-live" && !dash.getAttribute("src")) {
+          dash.setAttribute("src", dash.getAttribute("data-src"));
+        }
+      }
+
+      document.querySelectorAll("[data-rx-flip]").forEach(function (card) {
+        card.addEventListener("click", function () {
+          var flipped = card.classList.toggle("is-flipped");
+          card.setAttribute("aria-pressed", flipped ? "true" : "false");
+          var base = (card.getAttribute("aria-label") || "").replace(/\s*(Show|Hide) evidence\./, "");
+          card.setAttribute("aria-label", base + (flipped ? " Hide evidence." : " Show evidence."));
+        });
+      });
+
+      function next() { goTo(Math.min(index + 1, total - 1)); }
+      function prev() { goTo(Math.max(index - 1, 0)); }
+
+      btnPrev.addEventListener("click", prev);
+      btnNext.addEventListener("click", next);
+      if (btnBegin) btnBegin.addEventListener("click", next);
+
+      document.addEventListener("keydown", function (e) {
+        const tag = (e.target && e.target.tagName) || "";
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || tag === "VIDEO") return;
+        if (e.target && e.target.isContentEditable) return;
+
+        switch (e.key) {
+          case "ArrowRight":
+          case " ":
+          case "PageDown":
+            e.preventDefault();
+            next();
+            break;
+          case "ArrowLeft":
+          case "PageUp":
+            e.preventDefault();
+            prev();
+            break;
+          case "Home":
+            e.preventDefault();
+            goTo(0);
+            break;
+          case "End":
+            e.preventDefault();
+            goTo(total - 1);
+            break;
+          default:
+            if (e.key >= "1" && e.key <= "9") {
+              const n = parseInt(e.key, 10) - 1;
+              if (n < total) { e.preventDefault(); goTo(n); }
+            }
+        }
+      });
+
+      const stage = document.getElementById("stage");
+      stage.addEventListener("touchstart", function (e) {
+        if (!e.changedTouches || !e.changedTouches[0]) return;
+        touchX = e.changedTouches[0].clientX;
+        touchY = e.changedTouches[0].clientY;
+      }, { passive: true });
+      stage.addEventListener("touchend", function (e) {
+        if (touchX == null || touchY == null || !e.changedTouches || !e.changedTouches[0]) return;
+        const dx = e.changedTouches[0].clientX - touchX;
+        const dy = e.changedTouches[0].clientY - touchY;
+        touchX = null;
+        touchY = null;
+        if (Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy)) return;
+        if (dx < 0) next(); else prev();
+      }, { passive: true });
+
+      goTo(0, true);
+    })();
+  </script>
+</body>
+</html>
