@@ -8,6 +8,7 @@ Client-facing HTML presentation decks for Stamped Energy — one walkthrough per
 | [cement.html](./cement.html) | Cement — kiln, mills, WHR |
 | [steel.html](./steel.html) | Steel — furnace, rolling mill |
 | [pharma.html](./pharma.html) | Pharma — load management, HVAC, chillers |
+| [pharma/](./pharma/) | Pharma Vercel deploy root (`index.html`; `vercel --prod`) |
 | [assets/](./assets/) | Industry hero photos |
 | [/index.html](../index.html) | Same hub at repo root for GitHub Pages |
 
@@ -27,3 +28,9 @@ python3 scripts/build-industry-decks.py
 ```
 
 **GitHub Pages:** enable Pages from the repo root so `/` serves the hub and `/demo-decks/*.html` serves each deck.
+
+**Vercel (pharma only):** deploy the standalone folder:
+
+```bash
+cd demo-decks/pharma && vercel --prod
+```
