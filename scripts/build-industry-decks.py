@@ -1281,6 +1281,13 @@ def main() -> None:
         path = DECKS_DIR / f"{industry}.html"
         path.write_text(out, encoding="utf-8")
         print(f"wrote {path} ({len(out)} bytes)")
+        # Standalone Vercel root: demo-decks/<industry>/index.html
+        if industry == "pharma":
+            deploy_dir = DECKS_DIR / "pharma"
+            deploy_dir.mkdir(parents=True, exist_ok=True)
+            deploy_index = deploy_dir / "index.html"
+            deploy_index.write_text(out, encoding="utf-8")
+            print(f"wrote {deploy_index} ({len(out)} bytes)")
 
     hub = HUB
     (DECKS_DIR / "index.html").write_text(hub, encoding="utf-8")
