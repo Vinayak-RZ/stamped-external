@@ -34,4 +34,4 @@ When `LedgerEntry.entry_type = opportunity_cost`:
 }
 ```
 
-L6 queries L2 ledger append API — does not compute counterfactual locally.
+L6 **reads** ledger via L2 query API (`GET /v1/ledger/entries…`) — never the L5-only append endpoint. L6 does not compute counterfactual locally.

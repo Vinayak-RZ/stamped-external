@@ -12,6 +12,21 @@
 | ADR-015 | L3 dual-lane lab detections | **Accepted** |
 | ADR-016 | Attribution shadow challengers | **Accepted** |
 | ADR-017 | L4 adaptive retrieval + web trust tiers | **Accepted** |
+| ADR-019 | L5 runtime charter and consistency | **Accepted** |
+| ADR-020 | L5 M&V claim governance | **Accepted** |
+| ADR-021 | L5 notification and evidence policy | **Accepted** |
+
+## L5 architecture (2026-07-20)
+
+| Topic | Choice |
+|-------|--------|
+| Repo | Separate `stamped-l5` modular monolith (ADR-008/019) |
+| Workflow | Postgres state machine + durable timers through P0–P2 — Temporal deferred |
+| Ledger | L5 policy + append intent; L2 `ledger.mv_ledger` SoR (ADR-013/019) |
+| Claims | Analyst gate P0; Option C account truth; A/B attribution capped (ADR-020) |
+| Notify | Meta Cloud API direct; shared WA number; DLT P0 / SMS P1 (ADR-021) |
+| Contracts | 0.7.0 — `workflow-event.json` + ledger supersession fields |
+| Handoff | [handoff/stamped-l5-architecture-handoff.md](handoff/stamped-l5-architecture-handoff.md) · [build plan](handoff/stamped-l5-build-plan.md) |
 
 ## L4 architecture (2026-07-17)
 

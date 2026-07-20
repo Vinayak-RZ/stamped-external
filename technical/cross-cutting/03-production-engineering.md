@@ -309,7 +309,7 @@ Every current decision framework lands the same way: for teams under ~8–15 eng
 
 | Component | Why it's separate | Runtime |
 |---|---|---|
-| **Core monolith** — API (FastAPI), workflow/state machines, tariff engine, rules engine, ranker, M&V, dashboard backend, notification router | The domain logic; single deploy, single DB, single debugger | ECS Fargate service |
+| **Per-layer modular monoliths** (ADR-008) — e.g. L3 core, L4, **L5 workflow/M&V/notification** ([ADR-019](../../decisions/ADR-019-l5-runtime-and-consistency.md)), L6 | Domain logic per repo; each owns its DB; no cross-repo SQL | ECS Fargate per service |
 | **Edge agent** | Runs on customer premises — separate by physics | Gateway (Docker/systemd) |
 | **Ingest service** | Availability isolation: must keep accepting telemetry during monolith deploys; different load profile (steady stream vs request/response) | ECS Fargate service |
 | **ML batch workers** | Different resource shape (CPU/memory burst), different cadence (scheduled), crash-isolation from API | ECS Fargate tasks (scheduled/queued) |
@@ -323,9 +323,9 @@ Inside the monolith: module boundaries by domain (`ingest_contracts`, `intellige
 |---|---|---|
 | **Postgres-backed job queue** (Procrastinate/pgmq-class, `SKIP LOCKED`) | **P0 default** | Same durability/backup story as the outbox; zero new infra; ideal for short idempotent jobs (rollups, notifications, bill OCR) [1][2] |
 | **Celery/Dramatiq + Redis** | Acceptable alternative | Adds Redis as a dependency; fine, but buys little over the Postgres queue at our job rates [23] |
-| **Temporal** | **Adopt at P1–P2 for two workflows only** | Durable execution earns its keep on long-running, stateful, high-cost-of-failure workflows [23][24]: (a) the **M&V verification window** — a workflow that spans *weeks* (lock baseline → wait for window → compute → reconcile bill → write ledger) and must survive every deploy in between; (b) the **prescription delivery/escalation** flow (send → wait for ack → remind → escalate). Hand-rolling these as cron + status-column state machines is exactly the fragile pattern the literature warns about [24]. Use **Temporal Cloud** rather than self-hosting the cluster `[~]` |
+| **Temporal** | **Deferred — upgrade trigger only** | L5 owns M&V window + delivery/escalation as a **Postgres state machine + durable `scheduled_actions`** through P0–P2 ([ADR-019](../../decisions/ADR-019-l5-runtime-and-consistency.md); [L5 SSOT](../layers/L5-closure-and-verification.md)). Temporal Cloud is reconsidered only if timer/outbox correctness cost exceeds vendor cost after measured failures. |
 
-**Recommendation:** Postgres queue at P0 (accepting that the M&V window is initially a scheduled-job state machine — it works, it's just more code to test); introduce Temporal when M&V workflow bugs or deploy-safety pain appear, which the research suggests they will [23][24] `[!]`.
+**Recommendation (binding for L5):** Postgres queue + durable timers at P0–P2. Do **not** schedule Temporal as a default P1 milestone — that earlier draft is superseded by ADR-019.
 
 #### 3.6.3 API layer and deployment platform
 
@@ -466,7 +466,7 @@ flowchart TB
 | Time-series + OLTP | **One RDS Postgres + TimescaleDB** (multi-AZ) | ClickHouse for fleet analytics at 100+ plants `[!]` |
 | Event backbone | Postgres outbox + SKIP LOCKED workers | Redpanda/MSK at sustained >5k msg/s or real replay needs |
 | Stream processing | In-memory hot path + continuous aggregates | Flink: never at this scale |
-| Jobs/workflows | Postgres job queue → **Temporal Cloud** for M&V window + delivery/escalation (P1–P2) | — |
+| Jobs/workflows | Postgres job queue + durable timers (**L5 ADR-019**); Temporal only on upgrade trigger | Temporal Cloud if L5 timer debt proves chronic |
 | App architecture | Modular monolith (FastAPI) + ingest, ML workers, agent runtime, edge satellites | Extract more services only on concrete pain |
 | Deployment | ECS Fargate, `ap-south-1`, Terraform, GitHub Actions, rolling deploys | EKS only with >15 services + platform hire |
 | Tenancy | Pooled Postgres + RLS backstop, per-plant flags | Siloed DB per contract demand |
@@ -485,8 +485,8 @@ Rough monthly run-rate for the reference architecture (ap-south-1, on-demand pri
 | EMQX node (t4g.medium) + ALB + NAT + misc networking | $80–120 |
 | S3, backups, cross-region snapshot copies | $30–60 |
 | Grafana Cloud (free → first paid tier) + Sentry | $0–80 |
-| Temporal Cloud (from P1–P2) | $0–100 |
-| **Cloud total** | **~$650–1,050/mo** (~₹55–90k) |
+| Temporal Cloud | **$0** until ADR-019 upgrade trigger |
+| **Cloud total** | **~$650–950/mo** (~₹55–80k) without Temporal |
 | Edge gateway hardware (one-time, per plant) | $300–600 capex |
 
 At 100 plants the dominant growth terms are RDS storage/instance size and Fargate task count — plausibly $2.5–4k/mo `[~]`, still far below the cost of the premature-scale alternatives in §5 (a modest MSK + EKS + self-hosted observability stack starts around $1–1.5k/mo before any engineering time [2][36][37]).
@@ -537,7 +537,7 @@ Aligned to the product build phases ([technical architecture](../02-technical-ar
 |---|---|---|
 | **P0 (weeks 1–8)** — pilot wedge | Terraform baseline (`ap-south-1`, multi-AZ RDS+Timescale, ECS Fargate); edge image v1 (adapters, Mosquitto, buffer, uplink, signed-manifest updater); EMQX + mTLS provisioning; ingest + hot-path MD detector; outbox + job queue + DLQ; monolith skeleton with module boundaries + RLS; append-only ledger with hash chain; OTel + Grafana Cloud + Sentry + 6 paging alerts; PITR + restore runbook (rehearsed once); rule-pack versioning v1 | 2 pilot plants live; fast-tier freshness p95 < 60 s measured; a full plant-dark → backfill cycle executed successfully; restore drill done |
 | **P1 (months 3–6)** — Path A richness | SCADA/PLC adapter expansion; per-plant feature flags for engine rollout; LLM circuit breaker + rule-only degraded mode + second provider; WhatsApp delivery SLO instrumentation; buffer-depth fleet dashboard; ISO 27001 controls in daily practice (not certification); load test at 10× current fleet | New engine shipped to 2 canary plants then fleet without incident; degraded-mode drill (kill LLM key in staging, confirm rule-only Rx flows) |
-| **P2 (months 6–12)** — fleet | Temporal Cloud for M&V window + delivery/escalation workflows; Mender (or equivalent) OTA as fleet passes ~20 gateways; warm-standby DR in `ap-south-2` (RTO ≤1 h) if contracts demand; ISO 27001 certification when a deal requires; anonymized fleet-aggregation module with audit trail | M&V workflows survive deploys with zero manual repair; DR failover rehearsed; first compliance certificate if triggered |
+| **P2 (months 6–12)** — fleet | L5 auto-verify band + disputes (ADR-020) still on Postgres timers unless upgrade trigger fired; Mender (or equivalent) OTA as fleet passes ~20 gateways; warm-standby DR in `ap-south-2` (RTO ≤1 h) if contracts demand; ISO 27001 certification when a deal requires; anonymized fleet-aggregation module with audit trail | M&V workflows survive deploys with zero manual repair; DR failover rehearsed; first compliance certificate if triggered |
 | **P3** — depth | Revisit-trigger review (Kafka? ClickHouse for fleet analytics? SOC 2?); cost/perf tuning (Timescale compression policies, Fargate → partial EC2 if steady-state economics say so); public evidence API hardening `[!]` | Decisions re-made *with production data*, not projections |
 
 ---

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://stamped.energy/schemas/stamped-record-envelope.v1.json",
   "title": "StampedRecordEnvelope",
-  "description": "Cross-layer envelope. Wraps L1 payloads (L1→L2) and L3–L5 intelligence payloads (Finding, Prescription, LedgerEntry, CapexProposal). See architecture/layer-interfaces-l2.md.",
+  "description": "Cross-layer envelope. Wraps L1 payloads (L1→L2) and L3–L5 intelligence payloads (Finding, Prescription, LedgerEntry, CapexProposal, WorkflowEvent). See architecture/layer-interfaces-l2.md · ADR-019.",
   "type": "object",
   "required": [
     "schema_version",
@@ -37,7 +37,8 @@
         "finding",
         "prescription",
         "ledger_entry",
-        "capex_proposal"
+        "capex_proposal",
+        "workflow_event"
       ]
     },
     "org_id": { "type": "string", "minLength": 1 },

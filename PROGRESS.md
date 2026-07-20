@@ -49,9 +49,20 @@
 | ADR-017 adaptive retrieval + web T4 | done |
 | handoff/stamped-l4-architecture-handoff.md | done (supersedes build-order) |
 
+## L5 architecture overhaul (2026-07-20)
+
+| Item | Status |
+|------|--------|
+| L5 SSOT rewrite (authority, runtime, M&V, P0–P3 cost) | done |
+| ADR-019 / ADR-020 / ADR-021 | done |
+| Contracts 0.7.0 (`workflow-event`, ledger supersession fields) | done |
+| handoff/stamped-l5-architecture-handoff.md + build-plan | done |
+| Cross-doc contradiction sync (arch §5.4/§11, prod-eng Temporal, L2 DDL) | done |
+
 ## Next (P1 — out of P0 scope)
 
-- Live L2 query API integration
+- Create `stamped-l5` consumer repo per [handoff/stamped-l5-build-plan.md](handoff/stamped-l5-build-plan.md)
+- Live L2 query API + ledger append endpoint
 - LangGraph full agent lane (per L4 handoff)
 - Forging/auto rulepacks
 - TimesFM promotion re-eval with pilot data
