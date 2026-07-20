@@ -12,12 +12,14 @@ Consumer repos mount this platform pack as a git submodule at `external/`.
 | intelligence-rulepacks | `Vinayak-RZ/intelligence-rulepacks` | L3 artifacts (stamped-l3-rulepacks) | `external/` | — | [consumers/readmes/intelligence-rulepacks.md](consumers/readmes/intelligence-rulepacks.md) |
 | intelligence-evals | `Vinayak-RZ/intelligence-evals` | L3 eval (stamped-l3-eval) | `external/` | — | [consumers/readmes/intelligence-evals.md](consumers/readmes/intelligence-evals.md) |
 | knowledge-reasoning | `Vinayak-RZ/knowledge-reasoning` | L4 (stamped-l4) | `external/` | — | [consumers/readmes/knowledge-reasoning.md](consumers/readmes/knowledge-reasoning.md) |
-| stamped-l5 | `Vinayak-RZ/stamped-l5` (planned) | L5 | `external/` | — | — |
+| stamped-l5 | `Vinayak-RZ/stamped-l5` (planned) | L5 | `external/` | — | [handoff/stamped-l5-architecture-handoff.md](handoff/stamped-l5-architecture-handoff.md) |
 | stamped-l6 | `Vinayak-RZ/stamped-l6` (planned) | L6 | `external/` | — | — |
 
 **README snapshots index:** [consumers/readmes/README.md](consumers/readmes/README.md)
 
 **L4 handoff:** [handoff/stamped-l4-architecture-handoff.md](handoff/stamped-l4-architecture-handoff.md) · [ADR-017](decisions/ADR-017-l4-adaptive-retrieval-and-web-trust.md)
+
+**L5 handoff:** [handoff/stamped-l5-architecture-handoff.md](handoff/stamped-l5-architecture-handoff.md) · [build plan](handoff/stamped-l5-build-plan.md) · [ADR-019](decisions/ADR-019-l5-runtime-and-consistency.md) · [ADR-020](decisions/ADR-020-l5-mv-claim-governance.md) · [ADR-021](decisions/ADR-021-l5-notification-and-evidence.md)
 
 **Platform repo:** `vinayak-rz/stamped-external` — see [SUBMODULE.md](SUBMODULE.md)
 

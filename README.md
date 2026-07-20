@@ -218,7 +218,7 @@ Quality spine: [`technical/cross-cutting/04-evaluation-and-quality.md`](technica
 | intelligence-rulepacks | [Vinayak-RZ/intelligence-rulepacks](https://github.com/Vinayak-RZ/intelligence-rulepacks) | L3 artifacts | `external/` | — |
 | intelligence-evals | [Vinayak-RZ/intelligence-evals](https://github.com/Vinayak-RZ/intelligence-evals) | L3 eval | `external/` | — |
 | knowledge-reasoning | [Vinayak-RZ/knowledge-reasoning](https://github.com/Vinayak-RZ/knowledge-reasoning) | L4 | `external/` | — |
-| stamped-l5 | planned | L5 | `external/` | — |
+| stamped-l5 | planned | L5 | `external/` | [handoff](handoff/stamped-l5-architecture-handoff.md) |
 | stamped-l6 | planned | L6 | `external/` | — |
 
 Full table: [REPOS.md](REPOS.md). Mirrored root READMEs: [`consumers/readmes/`](consumers/readmes/README.md). Pin each consumer to a **semver tag** of this repo. Do not float on `main` in production branches.
