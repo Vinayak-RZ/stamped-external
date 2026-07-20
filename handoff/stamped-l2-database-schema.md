@@ -314,6 +314,8 @@ CREATE TABLE ledger.mv_ledger (
   entry_id            uuid NOT NULL DEFAULT gen_random_uuid(),
   seq                 bigint NOT NULL,
   prescription_id     text NOT NULL,
+  entry_type          text NOT NULL DEFAULT 'realised_savings'
+    CHECK (entry_type IN ('realised_savings','potential_savings','opportunity_cost')),
   period_start        timestamptz NOT NULL,
   period_end          timestamptz NOT NULL,
   mv_method           text NOT NULL,
@@ -324,8 +326,14 @@ CREATE TABLE ledger.mv_ledger (
   realised_inr        numeric,
   avoided_tco2e       numeric,
   verification_status text NOT NULL DEFAULT 'pending'
-    CHECK (verification_status IN ('pending','verified','disputed','superseded')),
-  superseded_by       uuid,
+    CHECK (verification_status IN ('pending','verified','disputed','modeled')),
+  -- Corrections are new rows; do not mutate prior verification_status to 'superseded'
+  supersedes_entry_id uuid,
+  emission_factor_ref text,
+  modeled_reason      text,
+  delay_days          integer,
+  bill_line_refs      text[],
+  dedupe_key          text NOT NULL UNIQUE,
   reason_code         text,
   created_at          timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (org_id, entry_id)

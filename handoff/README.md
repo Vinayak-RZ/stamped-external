@@ -111,6 +111,26 @@ Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · 
 
 ---
 
+## stamped-l5 — architecture ready (repo planned)
+
+| # | Document | Purpose |
+|---|----------|---------|
+| 1 | [stamped-l5-architecture-handoff.md](./stamped-l5-architecture-handoff.md) | **Primary handoff** — runtime, modules, consistency, P0 band |
+| 2 | [stamped-l5-build-plan.md](./stamped-l5-build-plan.md) | Starter commit matrix for next agents |
+| 3 | [../technical/layers/L5-closure-and-verification.md](../technical/layers/L5-closure-and-verification.md) | Architecture SSOT |
+| 4 | [../decisions/ADR-019-l5-runtime-and-consistency.md](../decisions/ADR-019-l5-runtime-and-consistency.md) | Runtime + L2 append protocol |
+| 5 | [../decisions/ADR-020-l5-mv-claim-governance.md](../decisions/ADR-020-l5-mv-claim-governance.md) | M&V claim gates |
+| 6 | [../decisions/ADR-021-l5-notification-and-evidence.md](../decisions/ADR-021-l5-notification-and-evidence.md) | WhatsApp + evidence |
+| 7 | [l6-counterfactual-display-stub.md](./l6-counterfactual-display-stub.md) | Modeled delay-cost display |
+
+### stamped-l5 one-line mission
+
+**stamped-l5** is **Closure & Verification** — workflow, WhatsApp-first notification, IPMVP M&V, bill reconciliation, and ledger append policy (L2 stores financial truth).
+
+L6 consumer handoff remains empty until `stamped-l6` is planned beyond display stubs.
+
+---
+
 ## Consumer README snapshots (L1–L4)
 
 Mirrored root READMEs from live consumer repos (context only — canonical docs stay in each repo):
@@ -119,7 +139,7 @@ Mirrored root READMEs from live consumer repos (context only — canonical docs 
 |-------|----------------|
 | L1–L4 | [../consumers/readmes/README.md](../consumers/readmes/README.md) |
 
-L5 / L6 slots are empty until those repos exist.
+L5 consumer README snapshot: empty until `stamped-l5` repo exists (architecture handoff above is authoritative).
 
 ---
 
@@ -140,6 +160,7 @@ L5 / L6 slots are empty until those repos exist.
 
 | Layer | Document |
 |-------|----------|
+| L5 depth | [../technical/layers/L5-closure-and-verification.md](../technical/layers/L5-closure-and-verification.md) |
 | L4 depth | [../technical/layers/L4-knowledge-and-reasoning.md](../technical/layers/L4-knowledge-and-reasoning.md) |
 | L3 depth | [../technical/layers/L3-intelligence-core.md](../technical/layers/L3-intelligence-core.md) |
 | L2 depth | [../technical/layers/L2-universal-repository.md](../technical/layers/L2-universal-repository.md) |
@@ -158,3 +179,4 @@ L5 / L6 slots are empty until those repos exist.
 | 2026-07-12 | Submodule distribution (ADR-011); playbooks + deployment-profiles |
 | 2026-07-17 | L4 architecture handoff + ADR-017; build-order superseded |
 | 2026-07-19 | Link consumer README snapshots under `consumers/readmes/` |
+| 2026-07-20 | L5 architecture handoff + build plan; ADR-019/020/021; contracts 0.7.0 |

@@ -1,7 +1,7 @@
-# stamped-l2 — Query API sketch (L3/L4/L6)
+# stamped-l2 — Query API sketch (L3/L4/L5/L6)
 
-> **Audience:** Agents building `stamped-l3` and implementing `packages/query-api` in stamped-l2.  
-> **Rule:** L3+ **never** receive `L2_DATABASE_URL`. All reads go through this API.  
+> **Audience:** Agents building `stamped-l3` / `stamped-l5` and implementing `packages/query-api` in stamped-l2.  
+> **Rule:** L3+ **never** receive `L2_DATABASE_URL`. All reads go through this API. L5 ledger **appends** via dedicated endpoint (ADR-019).  
 > **P0 scope:** Thin read surface — expand in P1 when first L3 engine ships.
 
 ---
@@ -130,7 +130,10 @@ GET /v1/plants/{plant_id}/assets
 | `GET /v1/baselines/{baseline_id}` | L3, L5 | < 500 ms |
 | `GET /v1/tariffs/active?plant_id=...` | L4 impact calc | < 500 ms |
 | `GET /v1/features/sec?plant_id=...&window=...` | L3 SEC engine | < 500 ms |
-| `POST /v1/ledger/entries` | L5 append | transactional |
+| `POST /v1/ledger/entries` | L5 append (idempotent `dedupe_key`) | transactional **within L2 only** — see ADR-019 |
+| `POST /v1/baselines/{baseline_id}/lock` | L5 confirm lock at verification window open | transactional |
+| `GET /v1/plants/{plant_id}/role-map` | L5 owner resolution | < 200 ms |
+| `GET /v1/ledger/entries?plant_id=&prescription_id=` | L6 **read** (not append) | < 500 ms |
 
 ---
 
