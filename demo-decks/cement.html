@@ -1372,6 +1372,63 @@
         animation: none !important;
       }
 
+      /* Prescriptions: breathing room + readable action titles */
+      #scene-prescription.slide {
+        padding-left: max(1.55rem, calc(var(--safe-l) + 0.35rem));
+        padding-right: max(1.55rem, calc(var(--safe-r) + 0.35rem));
+      }
+      #scene-prescription .eyebrow {
+        color: var(--primary);
+        opacity: 1;
+      }
+      #scene-prescription .lede {
+        margin-bottom: 0.85rem;
+      }
+      #scene-prescription .rx-layout {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      #scene-prescription .rx-flip {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      #scene-prescription .rx-flip__inner,
+      #scene-prescription .rx-face {
+        box-sizing: border-box;
+        max-width: 100%;
+      }
+      #scene-prescription .rx-hero__head {
+        padding: 0.75rem 1.1rem;
+      }
+      #scene-prescription .rx-hero__body {
+        padding: 1rem 1.15rem 1.15rem;
+      }
+      #scene-prescription .rx-action {
+        font-size: 1.08rem;
+        line-height: 1.32;
+        margin: 0 0 0.85rem;
+        padding: 0;
+      }
+      #scene-prescription .rx-row {
+        grid-template-columns: 72px 1fr;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+      }
+      #scene-prescription .rx-row:nth-child(n+6) { display: none; }
+      #scene-prescription .rx-flip-cue {
+        margin-top: 0.85rem;
+        font-weight: 650;
+      }
+      #scene-prescription h2 {
+        font-size: clamp(1.25rem, 5.5vw, 1.55rem);
+        max-width: 14em;
+      }
+
       /* Floor: proper phone, no nested-phone clutter */
       #scene-floor.slide {
         justify-content: flex-start;
@@ -1554,7 +1611,7 @@
             <h1 class="reveal hide-mobile" id="titleH1D">From kiln and mill signals to owned actions on the invoice.</h1>
             <h1 class="reveal show-mobile" id="titleH1M">Kiln & mill ₹ actions on the bill.</h1>
             <p class="lede reveal hide-mobile" id="titleLedeD">You already run kiln, mill, WHR, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.</p>
-            <p class="lede reveal show-mobile" id="titleLedeM">Ranked kiln, mill, and WHR actions from meters you already run. Verified on the DISCOM bill.</p>
+            <p class="lede reveal show-mobile" id="titleLedeM">Ranked kiln, mill, and WHR actions. Verified on the DISCOM bill.</p>
             <div class="flow-tags reveal hide-mobile">
               <span class="chip">Physics &amp; rules</span>
               <span class="chip">Foundation models</span>
@@ -1570,8 +1627,8 @@
           <figure class="hero-photo reveal" id="heroPhoto">
             <img
               id="heroPhotoImg"
-              src="https://res.cloudinary.com/ddpyjpt4v/image/upload/c_fill,g_auto,w_1400,h_900,q_auto,f_auto/v1782400113/copy_of_rahim-saikat-mwwl6l0kfpw-unsplash_1_slqcqd.jpg"
-              alt="Industrial plant operations"
+              src="./assets/cement-hero.jpg"
+              alt="Cement plant operations"
               width="1400"
               height="900"
               loading="eager"
@@ -1622,14 +1679,14 @@
         <p class="eyebrow reveal" id="hookEyebrow">Monday 06:40 · Kiln / mill handover</p>
         <h2 class="reveal" id="hookH2">Your cement plant already has the data.</h2>
         <p class="lede reveal hide-mobile" id="hookLedeD">The incomer saw the MD spike when the cement mill and kiln auxiliaries overlapped. The EMS logged it. Nobody got a work order with a rupee figure.</p>
-        <p class="lede reveal show-mobile" id="hookLedeM">Mill + kiln aux overlapped. EMS logged it. Nobody got a ₹ work order.</p>
+        <p class="lede reveal show-mobile" id="hookLedeM">Mill and kiln fans overlapped. EMS logged it. Nobody got a ₹ work order.</p>
         <div class="two-col">
           <div class="timeline reveal">
             <div class="tl-item">
               <div class="tl-time">07:12</div>
               <div class="tl-card">
-                <strong id="hookT1s">Cement mill + kiln ID-fan ramp together</strong>
-                <p id="hookT1p">Shift B brings mill and kiln auxiliaries online in a short overlap.</p>
+                <strong id="hookT1s">Mill start and kiln fans overlap</strong>
+                <p id="hookT1p">Shift B brings mill and kiln auxiliaries online together.</p>
               </div>
             </div>
             <div class="tl-item">
@@ -1774,7 +1831,7 @@
         <p class="lede reveal hide-mobile">Each card is an owned work order: what to change, who does it, when it is due, and the expected ₹ impact. Click to flip and see the backing evidence <span class="tilde">[~]</span>.</p>
         <p class="lede reveal show-mobile">Tap a card to flip from the decision to the evidence <span class="tilde">[~]</span>.</p>
         <div class="rx-layout">
-          <button type="button" class="rx-flip reveal" data-rx-flip aria-pressed="false" aria-label="MD stagger prescription for cement mill vs kiln auxiliaries. Show evidence.">
+          <button type="button" class="rx-flip reveal" data-rx-flip aria-pressed="false" aria-label="Stagger mill and kiln fans. Show evidence.">
             <div class="rx-flip__inner">
               <div class="rx-face rx-face--front">
                 <div class="rx-hero__head">
@@ -1782,15 +1839,15 @@
                   <span class="rx-priority">Priority · High</span>
                 </div>
                 <div class="rx-hero__body">
-                  <p class="rx-action" id="rx1Action">Stagger cement-mill start vs kiln ID-fan ramp by ≥10 min at Shift B handover</p>
+                  <p class="rx-action" id="rx1Action">Stagger mill start and kiln fans by 10 minutes</p>
                   <dl class="rx-fields">
-                    <div class="rx-row"><dt>Why</dt><dd id="rx1Why">Mon 06:38-06:48 overlap drove the incomer MD window</dd></div>
-                    <div class="rx-row"><dt>Bill line</dt><dd id="rx1Bill">MD (kVA) · billing demand</dd></div>
-                    <div class="rx-row"><dt>Owner</dt><dd id="rx1Owner">Electrical / grinding supervisor · Shift B</dd></div>
+                    <div class="rx-row"><dt>Why</dt><dd id="rx1Why">They started together and pushed MD over the limit</dd></div>
+                    <div class="rx-row"><dt>Bill line</dt><dd id="rx1Bill">MD (kVA)</dd></div>
+                    <div class="rx-row"><dt>Owner</dt><dd id="rx1Owner">Grinding supervisor · Shift B</dd></div>
                     <div class="rx-row"><dt>Impact</dt><dd><strong id="rx1Impact">₹3-5L / month</strong> <span class="tilde">[~]</span></dd></div>
-                    <div class="rx-row"><dt>Effort</dt><dd id="rx1Effort">Sequence only · no capex · no PLC write</dd></div>
-                    <div class="rx-row"><dt>Rule</dt><dd id="rx1Rule">md_overlap@v2.4 · Confidence High</dd></div>
-                    <div class="rx-row"><dt>Due</dt><dd id="rx1Due">This week · verify on next MD line</dd></div>
+                    <div class="rx-row"><dt>Effort</dt><dd id="rx1Effort">Sequence change · no new equipment</dd></div>
+                    <div class="rx-row"><dt>Rule</dt><dd id="rx1Rule">md_overlap@v2.4 · High</dd></div>
+                    <div class="rx-row"><dt>Due</dt><dd id="rx1Due">This week</dd></div>
                   </dl>
                   <p class="rx-flip-cue">Flip for evidence →</p>
                 </div>
@@ -1827,7 +1884,7 @@
             </div>
           </button>
 
-          <button type="button" class="rx-flip reveal hide-mobile" data-rx-flip aria-pressed="false" aria-label="WHR peak dispatch prescription. Show evidence.">
+          <button type="button" class="rx-flip reveal hide-mobile" data-rx-flip aria-pressed="false" aria-label="Use more WHR in the evening peak. Show evidence.">
             <div class="rx-flip__inner">
               <div class="rx-face rx-face--front">
                 <div class="rx-hero__head">
@@ -1835,15 +1892,15 @@
                   <span class="rx-priority rx-priority--med">Priority · Med</span>
                 </div>
                 <div class="rx-hero__body">
-                  <p class="rx-action" id="rx2Action">Raise WHR draw 18:00-22:00; cut peak grid import while WHR output is available</p>
+                  <p class="rx-action" id="rx2Action">Use more WHR in the evening peak; cut grid import</p>
                   <dl class="rx-fields">
-                    <div class="rx-row"><dt>Why</dt><dd id="rx2Why">Peak ToD window still imported grid while WHR sat under-utilised</dd></div>
-                    <div class="rx-row"><dt>Bill line</dt><dd id="rx2Bill">Energy (kWh) · ToD peak</dd></div>
-                    <div class="rx-row"><dt>Owner</dt><dd id="rx2Owner">Power / WHR desk · evening block</dd></div>
+                    <div class="rx-row"><dt>Why</dt><dd id="rx2Why">WHR was available while the plant still bought peak power</dd></div>
+                    <div class="rx-row"><dt>Bill line</dt><dd id="rx2Bill">Energy (kWh) · peak</dd></div>
+                    <div class="rx-row"><dt>Owner</dt><dd id="rx2Owner">Power desk · evening block</dd></div>
                     <div class="rx-row"><dt>Impact</dt><dd><strong id="rx2Impact">₹2-4L / month</strong> <span class="tilde">[~]</span></dd></div>
-                    <div class="rx-row"><dt>Effort</dt><dd id="rx2Effort">Dispatch schedule · no capex · no PLC write</dd></div>
-                    <div class="rx-row"><dt>Rule</dt><dd id="rx2Rule">whr_peak@v1.3 · Confidence High</dd></div>
-                    <div class="rx-row"><dt>Due</dt><dd id="rx2Due">Next peak block · verify on ToD energy line</dd></div>
+                    <div class="rx-row"><dt>Effort</dt><dd id="rx2Effort">Dispatch schedule · no new equipment</dd></div>
+                    <div class="rx-row"><dt>Rule</dt><dd id="rx2Rule">whr_peak@v1.3 · High</dd></div>
+                    <div class="rx-row"><dt>Due</dt><dd id="rx2Due">Next peak block</dd></div>
                   </dl>
                   <p class="rx-flip-cue">Flip for evidence →</p>
                 </div>
@@ -1905,10 +1962,10 @@
                 <p class="wa-meta">Today · Shift B · 07:18</p>
                 <div class="wa-bubble">
                   <span class="tag">New prescription · High</span>
-                  <h4 id="floorTitle">Stagger cement mill vs kiln ID-fan ≥10 min</h4>
-                  <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak Mon 06:38-06:48 overlap</p>
+                  <h4 id="floorTitle">Stagger mill start and kiln fans by 10 min</h4>
+                  <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak from Monday overlap</p>
                   <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹3-5L/mo on MD line <span class="tilde">[~]</span></p>
-                  <p class="wa-line" id="floorOwner"><b>Owner:</b> Grinding / electrical supervisor · B</p>
+                  <p class="wa-line" id="floorOwner"><b>Owner:</b> Grinding supervisor · B</p>
                   <p class="wa-line"><b>Due:</b> This week · before next peak</p>
                   <div class="wa-cta">Tap to acknowledge &rarr;</div>
                 </div>

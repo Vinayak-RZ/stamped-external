@@ -1372,6 +1372,63 @@
         animation: none !important;
       }
 
+      /* Prescriptions: breathing room + readable action titles */
+      #scene-prescription.slide {
+        padding-left: max(1.55rem, calc(var(--safe-l) + 0.35rem));
+        padding-right: max(1.55rem, calc(var(--safe-r) + 0.35rem));
+      }
+      #scene-prescription .eyebrow {
+        color: var(--primary);
+        opacity: 1;
+      }
+      #scene-prescription .lede {
+        margin-bottom: 0.85rem;
+      }
+      #scene-prescription .rx-layout {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      #scene-prescription .rx-flip {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      #scene-prescription .rx-flip__inner,
+      #scene-prescription .rx-face {
+        box-sizing: border-box;
+        max-width: 100%;
+      }
+      #scene-prescription .rx-hero__head {
+        padding: 0.75rem 1.1rem;
+      }
+      #scene-prescription .rx-hero__body {
+        padding: 1rem 1.15rem 1.15rem;
+      }
+      #scene-prescription .rx-action {
+        font-size: 1.08rem;
+        line-height: 1.32;
+        margin: 0 0 0.85rem;
+        padding: 0;
+      }
+      #scene-prescription .rx-row {
+        grid-template-columns: 72px 1fr;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+      }
+      #scene-prescription .rx-row:nth-child(n+6) { display: none; }
+      #scene-prescription .rx-flip-cue {
+        margin-top: 0.85rem;
+        font-weight: 650;
+      }
+      #scene-prescription h2 {
+        font-size: clamp(1.25rem, 5.5vw, 1.55rem);
+        max-width: 14em;
+      }
+
       /* Floor: proper phone, no nested-phone clutter */
       #scene-floor.slide {
         justify-content: flex-start;
@@ -1548,13 +1605,13 @@
               <span class="wordmark-fallback">Stamped Energy</span>
             </div>
             <p class="industry-chip reveal" id="industryChip">Pharma</p>
-            <p class="eyebrow reveal hide-mobile" id="titleEyebrowD">Pharma · HVAC, cleanroom, and utility decisions verified on the bill</p>
-            <p class="eyebrow reveal show-mobile" id="titleEyebrowM">Pharma · bill-verified decisions</p>
+            <p class="eyebrow reveal hide-mobile" id="titleEyebrowD">Pharma · load management and HVAC decisions verified on the bill</p>
+            <p class="eyebrow reveal show-mobile" id="titleEyebrowM">Pharma · load management, verified</p>
             <p class="brand-name reveal">Stamped Energy</p>
-            <h1 class="reveal hide-mobile" id="titleH1D">From HVAC and batch utilities to owned actions on the invoice.</h1>
-            <h1 class="reveal show-mobile" id="titleH1M">HVAC & utility ₹ actions on the bill.</h1>
-            <p class="lede reveal hide-mobile" id="titleLedeD">You already run HVAC, chillers, cleanroom, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.</p>
-            <p class="lede reveal show-mobile" id="titleLedeM">Ranked HVAC and utility actions from meters you already run. Verified on the DISCOM bill.</p>
+            <h1 class="reveal hide-mobile" id="titleH1D">From load spikes and HVAC waste to owned actions on the invoice.</h1>
+            <h1 class="reveal show-mobile" id="titleH1M">Load management ₹ actions on the bill.</h1>
+            <p class="lede reveal hide-mobile" id="titleLedeD">Pharma sites run chillers, HVAC, and batch utilities around the clock. Stamped finds avoidable load coincidence and idle utility waste, ranks the fix in rupees, and verifies it on the next DISCOM bill.</p>
+            <p class="lede reveal show-mobile" id="titleLedeM">Load management for chillers, HVAC, and batch utilities. Verified on the DISCOM bill.</p>
             <div class="flow-tags reveal hide-mobile">
               <span class="chip">Physics &amp; rules</span>
               <span class="chip">Foundation models</span>
@@ -1570,8 +1627,8 @@
           <figure class="hero-photo reveal" id="heroPhoto">
             <img
               id="heroPhotoImg"
-              src="https://res.cloudinary.com/ddpyjpt4v/image/upload/c_fill,g_auto,w_1400,h_900,q_auto,f_auto/v1782400113/copy_of_rahim-saikat-mwwl6l0kfpw-unsplash_1_slqcqd.jpg"
-              alt="Industrial plant operations"
+              src="./assets/pharma-hero.jpg"
+              alt="Pharmaceutical production line"
               width="1400"
               height="900"
               loading="eager"
@@ -1619,17 +1676,17 @@
     <!-- 2 Hook / incident -->
     <section class="slide slide--light" id="scene-hook" data-theme="light" aria-label="Incident hook">
       <div class="slide__inner slide__inner--wide">
-        <p class="eyebrow reveal" id="hookEyebrow">Monday 07:05 · Batch / utilities handover</p>
+        <p class="eyebrow reveal" id="hookEyebrow">Monday 07:05 · Utilities handover</p>
         <h2 class="reveal" id="hookH2">Your pharma plant already has the data.</h2>
-        <p class="lede reveal hide-mobile" id="hookLedeD">The incomer saw the MD spike when chiller bank B overlapped autoclave heat-up. The EMS logged it. Nobody got a work order with a rupee figure.</p>
-        <p class="lede reveal show-mobile" id="hookLedeM">Chiller + autoclave overlapped. EMS logged it. Nobody got a ₹ work order.</p>
+        <p class="lede reveal hide-mobile" id="hookLedeD">The incomer saw the MD spike when chillers and autoclave heat-up overlapped — a classic load-management miss. The EMS logged it. Nobody got a work order with a rupee figure.</p>
+        <p class="lede reveal show-mobile" id="hookLedeM">Chillers and autoclave overlapped. A load spike with no ₹ work order.</p>
         <div class="two-col">
           <div class="timeline reveal">
             <div class="tl-item">
               <div class="tl-time">07:12</div>
               <div class="tl-card">
-                <strong id="hookT1s">Chiller bank B + autoclave heat-up together</strong>
-                <p id="hookT1p">Shift B brings chillers and batch utilities online in a short overlap.</p>
+                <strong id="hookT1s">Chillers and autoclave start together</strong>
+                <p id="hookT1p">Shift B brings heavy utilities online in the same window.</p>
               </div>
             </div>
             <div class="tl-item">
@@ -1651,7 +1708,7 @@
             <div class="meter-label">Sample demand window</div>
             <div class="meter-value">1,180 <span style="font-size:0.45em;color:var(--on-surface-variant)">kVA</span></div>
             <div class="meter-bar"><i class="grow-on-active"></i></div>
-            <p class="meter-note hide-mobile" id="hookMeterNote">The EMS recorded the spike, but nobody was assigned to change the next chiller–autoclave sequence.</p>
+            <p class="meter-note hide-mobile" id="hookMeterNote">The EMS recorded the spike, but nobody was assigned to change the next utility sequence.</p>
             <div class="stat-row" style="grid-template-columns:1fr 1fr;margin-top:1rem;">
               <div class="stat-card">
                 <strong id="hookStatImpact">~₹36k</strong>
@@ -1687,7 +1744,7 @@
             <h3>EMS</h3>
             <p class="hide-mobile">Trends, thresholds, and unread alerts.</p>
             <div class="silo-meta">
-              <div class="has" id="gapEmsHas">Has: spike logged at 07:05</div>
+              <div class="has" id="gapEmsHas">Has: load spike logged at 07:05</div>
               <div class="miss">Missing: who acts before next shift</div>
             </div>
           </article>
@@ -1731,12 +1788,12 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">What Stamped does</p>
         <h2 class="reveal">From a plant signal to an assigned job.</h2>
-        <p class="lede reveal" id="whatLede">Stamped sits on top of the EMS and EnMS you already run. It reads HVAC, chiller, cleanroom, and incomer data, issues a ranked action in rupees, sends it to the floor, and closes the result on the next bill.</p>
+        <p class="lede reveal" id="whatLede">Stamped sits on top of the EMS and EnMS you already run. It reads HVAC, chiller, and batch utility data, finds load-management and idle-waste opportunities, issues a ranked action in rupees, and closes the result on the next bill.</p>
         <div class="do-chain reveal">
           <article class="do-step">
             <div class="do-step__num">01</div>
             <h3>Read existing signals</h3>
-            <p id="whatStep1">HVAC / chiller / batch utility meters, BMS and PLC states, and utility line items. Read-only. No control writes to the plant.</p>
+            <p id="whatStep1">HVAC, chiller, and batch utility meters, BMS and PLC states, and utility line items. Read-only. No control writes to the plant.</p>
             <span class="do-arrow" aria-hidden="true">&rarr;</span>
           </article>
           <article class="do-step">
@@ -1774,23 +1831,23 @@
         <p class="lede reveal hide-mobile">Each card is an owned work order: what to change, who does it, when it is due, and the expected ₹ impact. Click to flip and see the backing evidence <span class="tilde">[~]</span>.</p>
         <p class="lede reveal show-mobile">Tap a card to flip from the decision to the evidence <span class="tilde">[~]</span>.</p>
         <div class="rx-layout">
-          <button type="button" class="rx-flip reveal" data-rx-flip aria-pressed="false" aria-label="MD stagger prescription for chillers vs autoclave. Show evidence.">
+          <button type="button" class="rx-flip reveal" data-rx-flip aria-pressed="false" aria-label="Stagger chillers and autoclave. Show evidence.">
             <div class="rx-flip__inner">
               <div class="rx-face rx-face--front">
                 <div class="rx-hero__head">
-                  <span class="rx-badge" id="rx1Badge">Rx · MD coincidence</span>
+                  <span class="rx-badge" id="rx1Badge">Rx · Load management</span>
                   <span class="rx-priority">Priority · High</span>
                 </div>
                 <div class="rx-hero__body">
-                  <p class="rx-action" id="rx1Action">Stagger chiller bank B vs autoclave heat-up by ≥10 min at Shift B handover</p>
+                  <p class="rx-action" id="rx1Action">Stagger chillers and autoclave by 10 minutes</p>
                   <dl class="rx-fields">
-                    <div class="rx-row"><dt>Why</dt><dd id="rx1Why">Mon 07:02-07:12 overlap drove the incomer MD window</dd></div>
-                    <div class="rx-row"><dt>Bill line</dt><dd id="rx1Bill">MD (kVA) · billing demand</dd></div>
-                    <div class="rx-row"><dt>Owner</dt><dd id="rx1Owner">Utilities / engineering supervisor · Shift B</dd></div>
+                    <div class="rx-row"><dt>Why</dt><dd id="rx1Why">They started together and pushed MD over the limit</dd></div>
+                    <div class="rx-row"><dt>Bill line</dt><dd id="rx1Bill">MD (kVA)</dd></div>
+                    <div class="rx-row"><dt>Owner</dt><dd id="rx1Owner">Utilities supervisor · Shift B</dd></div>
                     <div class="rx-row"><dt>Impact</dt><dd><strong id="rx1Impact">₹1.8-3.2L / month</strong> <span class="tilde">[~]</span></dd></div>
-                    <div class="rx-row"><dt>Effort</dt><dd id="rx1Effort">Sequence only · no capex · no PLC write</dd></div>
-                    <div class="rx-row"><dt>Rule</dt><dd id="rx1Rule">md_overlap@v2.4 · Confidence High</dd></div>
-                    <div class="rx-row"><dt>Due</dt><dd id="rx1Due">This week · verify on next MD line</dd></div>
+                    <div class="rx-row"><dt>Effort</dt><dd id="rx1Effort">Sequence change · no new equipment</dd></div>
+                    <div class="rx-row"><dt>Rule</dt><dd id="rx1Rule">md_overlap@v2.4 · High</dd></div>
+                    <div class="rx-row"><dt>Due</dt><dd id="rx1Due">This week</dd></div>
                   </dl>
                   <p class="rx-flip-cue">Flip for evidence →</p>
                 </div>
@@ -1827,7 +1884,7 @@
             </div>
           </button>
 
-          <button type="button" class="rx-flip reveal hide-mobile" data-rx-flip aria-pressed="false" aria-label="AHU setback prescription. Show evidence.">
+          <button type="button" class="rx-flip reveal hide-mobile" data-rx-flip aria-pressed="false" aria-label="Turn down idle suite HVAC. Show evidence.">
             <div class="rx-flip__inner">
               <div class="rx-face rx-face--front">
                 <div class="rx-hero__head">
@@ -1835,15 +1892,15 @@
                   <span class="rx-priority rx-priority--med">Priority · Med</span>
                 </div>
                 <div class="rx-hero__body">
-                  <p class="rx-action" id="rx2Action">Setback non-critical AHU Suite 3 during validated idle batch windows</p>
+                  <p class="rx-action" id="rx2Action">Turn down Suite 3 HVAC when no batch is running</p>
                   <dl class="rx-fields">
-                    <div class="rx-row"><dt>Why</dt><dd id="rx2Why">Full AHU duty with no batch occupancy tag on 4 of last 6 idle windows</dd></div>
-                    <div class="rx-row"><dt>Bill line</dt><dd id="rx2Bill">Energy (kWh) · ToD shoulder</dd></div>
+                    <div class="rx-row"><dt>Why</dt><dd id="rx2Why">Full HVAC with no batch on 4 of last 6 idle windows</dd></div>
+                    <div class="rx-row"><dt>Bill line</dt><dd id="rx2Bill">Energy (kWh)</dd></div>
                     <div class="rx-row"><dt>Owner</dt><dd id="rx2Owner">HVAC / engineering · Suite 3</dd></div>
                     <div class="rx-row"><dt>Impact</dt><dd><strong id="rx2Impact">₹70k-1.1L / month</strong> <span class="tilde">[~]</span></dd></div>
-                    <div class="rx-row"><dt>Effort</dt><dd id="rx2Effort">Validated setback SOP · no capex · no PLC write</dd></div>
-                    <div class="rx-row"><dt>Rule</dt><dd id="rx2Rule">hvac_idle@v1.5 · Confidence High</dd></div>
-                    <div class="rx-row"><dt>Due</dt><dd id="rx2Due">Next idle window · verify on energy line</dd></div>
+                    <div class="rx-row"><dt>Effort</dt><dd id="rx2Effort">Validated setback · no new equipment</dd></div>
+                    <div class="rx-row"><dt>Rule</dt><dd id="rx2Rule">hvac_idle@v1.5 · High</dd></div>
+                    <div class="rx-row"><dt>Due</dt><dd id="rx2Due">Next idle window</dd></div>
                   </dl>
                   <p class="rx-flip-cue">Flip for evidence →</p>
                 </div>
@@ -1905,10 +1962,10 @@
                 <p class="wa-meta">Today · Shift B · 07:18</p>
                 <div class="wa-bubble">
                   <span class="tag">New prescription · High</span>
-                  <h4 id="floorTitle">Stagger chiller B vs autoclave heat-up ≥10 min</h4>
-                  <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak Mon 07:02-07:12 overlap</p>
+                  <h4 id="floorTitle">Stagger chillers and autoclave by 10 min</h4>
+                  <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak from Monday load overlap</p>
                   <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹1.8-3.2L/mo on MD line <span class="tilde">[~]</span></p>
-                  <p class="wa-line" id="floorOwner"><b>Owner:</b> Utilities / engineering supervisor · B</p>
+                  <p class="wa-line" id="floorOwner"><b>Owner:</b> Utilities supervisor · B</p>
                   <p class="wa-line"><b>Due:</b> This week · before next peak</p>
                   <div class="wa-cta">Tap to acknowledge &rarr;</div>
                 </div>
@@ -2013,7 +2070,7 @@
             <h3>Industrial physics and rules engines</h3>
             <p>Versioned rule packs for plant energy behaviour, built from published research in energy management, power systems, and equipment efficiency.</p>
             <ul>
-              <li id="techPhysicsBullet">MD coincidence, HVAC idle, chiller staging, batch-gap utilities, tariff dispatch</li>
+              <li id="techPhysicsBullet">Load management, HVAC idle, chiller staging, batch-gap utilities, tariff dispatch</li>
               <li>PF and tariff arithmetic tied to utility line items</li>
               <li>Every finding cites a rule version a plant EE can review</li>
             </ul>
@@ -2093,18 +2150,18 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal" id="mathEyebrow">Where pharma electricity cost usually hides</p>
         <h2 class="reveal" id="mathH2">Five areas we check first in pharma</h2>
-        <p class="lede reveal hide-mobile" id="mathLedeD">First places we look when a pharma plant already meters HVAC and utilities — and still sees avoidable ₹ on the HT bill.</p>
-        <p class="lede reveal show-mobile" id="mathLedeM">First places we look for avoidable ₹ on a pharma HT bill.</p>
+        <p class="lede reveal hide-mobile" id="mathLedeD">First places we look when a pharma plant already meters HVAC and utilities — and still sees avoidable ₹ on the HT bill, especially from load management gaps.</p>
+        <p class="lede reveal show-mobile" id="mathLedeM">First places we look — including load management — for avoidable ₹ on a pharma HT bill.</p>
         <div class="waste-grid reveal">
           <article class="waste-card">
-            <h3>MD / demand</h3>
+            <h3>Load management</h3>
             <ul>
               <li>Chiller + autoclave overlap</li>
               <li>AHU bank coincidence</li>
               <li>Contract demand headroom</li>
             </ul>
             <div class="waste-bill">Bill line · MD (kVA)</div>
-            <p class="waste-sample hide-mobile">Sample: chiller bank B and autoclave heat-up at 07:05</p>
+            <p class="waste-sample hide-mobile">Sample: chillers and autoclave heat-up in the same window</p>
           </article>
           <article class="waste-card">
             <h3>HVAC / cleanroom</h3>
@@ -2114,7 +2171,7 @@
               <li>Simultaneous bank starts</li>
             </ul>
             <div class="waste-bill">Bill line · Energy (kWh)</div>
-            <p class="waste-sample hide-mobile">Sample: Suite 3 AHU at full duty with no occupancy tag</p>
+            <p class="waste-sample hide-mobile">Sample: Suite 3 HVAC at full duty with no batch tag</p>
           </article>
           <article class="waste-card">
             <h3>Chillers & utilities</h3>
@@ -2134,7 +2191,7 @@
               <li>Non-critical loads left on</li>
             </ul>
             <div class="waste-bill">Bill line · Energy (kWh)</div>
-            <p class="waste-sample hide-mobile">Sample: utility island left running across a validated idle window</p>
+            <p class="waste-sample hide-mobile">Sample: utility island left running across an idle window</p>
           </article>
           <article class="waste-card">
             <h3>Tariff / intensity</h3>
