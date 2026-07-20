@@ -14,12 +14,17 @@ ROOT = Path("/workspace")
 BASE = ROOT / "demo-decks" / "index.html"
 DECKS_DIR = ROOT / "demo-decks"
 
-# Website plant photo (stamped.work hero) + video poster fallback
-HERO_PHOTO = (
-    "https://res.cloudinary.com/ddpyjpt4v/image/upload/"
-    "c_fill,g_auto,w_1400,h_900,q_auto,f_auto/"
-    "v1782400113/copy_of_rahim-saikat-mwwl6l0kfpw-unsplash_1_slqcqd.jpg"
-)
+# Local industry heroes in demo-decks/assets/ (relative paths for GH Pages)
+HERO_BY_INDUSTRY = {
+    "cement": "./assets/cement-hero.jpg",
+    "steel": "./assets/steel-hero.jpg",
+    "pharma": "./assets/pharma-hero.jpg",
+}
+HERO_ALT = {
+    "cement": "Cement plant operations",
+    "steel": "Steel fabrication and welding",
+    "pharma": "Pharmaceutical production line",
+}
 HERO_PHOTO_FALLBACK = "https://stamped.work/video/how-it-works-poster.png"
 
 PACKS = {
@@ -33,15 +38,15 @@ PACKS = {
             "h1D": "From kiln and mill signals to owned actions on the invoice.",
             "h1M": "Kiln & mill ₹ actions on the bill.",
             "ledeD": "You already run kiln, mill, WHR, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.",
-            "ledeM": "Ranked kiln, mill, and WHR actions from meters you already run. Verified on the DISCOM bill.",
+            "ledeM": "Ranked kiln, mill, and WHR actions. Verified on the DISCOM bill.",
         },
         "hook": {
             "eyebrow": "Monday 06:40 · Kiln / mill handover",
             "h2": "Your cement plant already has the data.",
             "ledeD": "The incomer saw the MD spike when the cement mill and kiln auxiliaries overlapped. The EMS logged it. Nobody got a work order with a rupee figure.",
-            "ledeM": "Mill + kiln aux overlapped. EMS logged it. Nobody got a ₹ work order.",
-            "t1s": "Cement mill + kiln ID-fan ramp together",
-            "t1p": "Shift B brings mill and kiln auxiliaries online in a short overlap.",
+            "ledeM": "Mill and kiln fans overlapped. EMS logged it. Nobody got a ₹ work order.",
+            "t1s": "Mill start and kiln fans overlap",
+            "t1p": "Shift B brings mill and kiln auxiliaries online together.",
             "t2s": "MD spike hits the incomer",
             "t2p": "EMS threshold crossed. Alert created. Still no assigned owner.",
             "t3s": "Clinker and grinding continue as usual",
@@ -60,15 +65,15 @@ PACKS = {
         "whatStep1": "Kiln / mill / WHR meters, SCADA and PLC states, and utility line items. Read-only. No control writes to the plant.",
         "rx1": {
             "badge": "Rx · MD coincidence",
-            "aria": "MD stagger prescription for cement mill vs kiln auxiliaries. Show evidence.",
-            "action": "Stagger cement-mill start vs kiln ID-fan ramp by ≥10 min at Shift B handover",
-            "why": "Mon 06:38-06:48 overlap drove the incomer MD window",
-            "bill": "MD (kVA) · billing demand",
-            "owner": "Electrical / grinding supervisor · Shift B",
+            "aria": "Stagger mill and kiln fans. Show evidence.",
+            "action": "Stagger mill start and kiln fans by 10 minutes",
+            "why": "They started together and pushed MD over the limit",
+            "bill": "MD (kVA)",
+            "owner": "Grinding supervisor · Shift B",
             "impact": "₹3-5L / month",
-            "effort": "Sequence only · no capex · no PLC write",
-            "rule": "md_overlap@v2.4 · Confidence High",
-            "due": "This week · verify on next MD line",
+            "effort": "Sequence change · no new equipment",
+            "rule": "md_overlap@v2.4 · High",
+            "due": "This week",
             "evTitle": "Signal window · Mon 06:35-06:50",
             "tags": [
                 ("HT_INCOMER.MD", "1,240 kVA", "06:42-06:46"),
@@ -80,15 +85,15 @@ PACKS = {
         },
         "rx2": {
             "badge": "Rx · WHR / tariff",
-            "aria": "WHR peak dispatch prescription. Show evidence.",
-            "action": "Raise WHR draw 18:00-22:00; cut peak grid import while WHR output is available",
-            "why": "Peak ToD window still imported grid while WHR sat under-utilised",
-            "bill": "Energy (kWh) · ToD peak",
-            "owner": "Power / WHR desk · evening block",
+            "aria": "Use more WHR in the evening peak. Show evidence.",
+            "action": "Use more WHR in the evening peak; cut grid import",
+            "why": "WHR was available while the plant still bought peak power",
+            "bill": "Energy (kWh) · peak",
+            "owner": "Power desk · evening block",
             "impact": "₹2-4L / month",
-            "effort": "Dispatch schedule · no capex · no PLC write",
-            "rule": "whr_peak@v1.3 · Confidence High",
-            "due": "Next peak block · verify on ToD energy line",
+            "effort": "Dispatch schedule · no new equipment",
+            "rule": "whr_peak@v1.3 · High",
+            "due": "Next peak block",
             "evTitle": "Peak windows · last 5 evenings",
             "tags": [
                 ("WHR.MW", "1.8-2.2 MW avail", "18:00-22:00"),
@@ -99,10 +104,10 @@ PACKS = {
             "cite": "physics/whr_peak@v1.3 · model conf 0.88 · ToD peak line · baseline last 5 evenings",
         },
         "floor": {
-            "title": "Stagger cement mill vs kiln ID-fan ≥10 min",
-            "why": "MD peak Mon 06:38-06:48 overlap",
+            "title": "Stagger mill start and kiln fans by 10 min",
+            "why": "MD peak from Monday overlap",
             "impact": "₹3-5L/mo on MD line",
-            "owner": "Grinding / electrical supervisor · B",
+            "owner": "Grinding supervisor · B",
         },
         "verify": [
             ("MD stagger · mill vs kiln aux", "Apr MD peak", "10-min mill lag", "VERIFIED"),
@@ -161,15 +166,15 @@ PACKS = {
             "h1D": "From furnace and mill signals to owned actions on the invoice.",
             "h1M": "Furnace & mill ₹ actions on the bill.",
             "ledeD": "You already run furnace, rolling, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.",
-            "ledeM": "Ranked furnace and mill actions from meters you already run. Verified on the DISCOM bill.",
+            "ledeM": "Ranked furnace and mill actions. Verified on the DISCOM bill.",
         },
         "hook": {
             "eyebrow": "Monday 07:15 · Melt / roll handover",
             "h2": "Your steel plant already has the data.",
             "ledeD": "The incomer saw the MD spike when the furnace restart overlapped the rolling-mill bite. The EMS logged it. Nobody got a work order with a rupee figure.",
-            "ledeM": "Furnace + mill overlapped. EMS logged it. Nobody got a ₹ work order.",
-            "t1s": "Furnace restart + rolling-mill bite together",
-            "t1p": "Shift B brings melt and roll utilities online in a 4-minute overlap.",
+            "ledeM": "Furnace and mill overlapped. EMS logged it. Nobody got a ₹ work order.",
+            "t1s": "Furnace restart and mill start overlap",
+            "t1p": "Shift B brings melt and roll online together.",
             "t2s": "MD spike hits the incomer",
             "t2p": "EMS threshold crossed. Alert created. Still no assigned owner.",
             "t3s": "Rolling continues as usual",
@@ -188,15 +193,15 @@ PACKS = {
         "whatStep1": "Furnace / mill / utility meters, SCADA and PLC states, and utility line items. Read-only. No control writes to the plant.",
         "rx1": {
             "badge": "Rx · MD coincidence",
-            "aria": "MD stagger prescription for furnace vs rolling mill. Show evidence.",
-            "action": "Stagger furnace restart vs rolling-mill bite by ≥8 min at Shift B handover",
-            "why": "Mon 07:12-07:20 overlap drove the incomer MD window",
-            "bill": "MD (kVA) · billing demand",
-            "owner": "Electrical / melt-shop supervisor · Shift B",
+            "aria": "Stagger furnace and mill start. Show evidence.",
+            "action": "Stagger furnace and mill start by 8 minutes",
+            "why": "They started together and pushed MD over the limit",
+            "bill": "MD (kVA)",
+            "owner": "Melt-shop supervisor · Shift B",
             "impact": "₹2.5-4.5L / month",
-            "effort": "Sequence only · no capex · no PLC write",
-            "rule": "md_overlap@v2.4 · Confidence High",
-            "due": "This week · verify on next MD line",
+            "effort": "Sequence change · no new equipment",
+            "rule": "md_overlap@v2.4 · High",
+            "due": "This week",
             "evTitle": "Signal window · Mon 07:10-07:22",
             "tags": [
                 ("HT_INCOMER.MD", "1,180 kVA", "07:14-07:18"),
@@ -208,15 +213,15 @@ PACKS = {
         },
         "rx2": {
             "badge": "Rx · Idle / holding",
-            "aria": "Furnace holding prescription. Show evidence.",
-            "action": "Cut furnace holding power during planned delays longer than 30 minutes",
-            "why": "Holding kWh with no cast/roll tag on 3 of last 5 delay windows",
-            "bill": "Energy (kWh) · ToD shoulder",
+            "aria": "Cut furnace holding on long delays. Show evidence.",
+            "action": "Cut furnace holding on delays longer than 30 minutes",
+            "why": "Holding power with no cast or roll on 3 of last 5 delays",
+            "bill": "Energy (kWh)",
             "owner": "Melt-shop supervisor · Furnace 2",
             "impact": "₹1-1.8L / month",
-            "effort": "Holding SOP · no capex · no PLC write",
-            "rule": "idle_hold@v1.8 · Confidence High",
-            "due": "Next delay window · verify on energy line",
+            "effort": "Holding SOP · no new equipment",
+            "rule": "idle_hold@v1.8 · High",
+            "due": "Next delay window",
             "evTitle": "Delay / holding windows · last 5 events",
             "tags": [
                 ("FURNACE2.HOLD", "ON", "35 min avg"),
@@ -227,10 +232,10 @@ PACKS = {
             "cite": "physics/idle_hold@v1.8 · model conf 0.87 · ToD energy line · baseline last 5 delays",
         },
         "floor": {
-            "title": "Stagger furnace restart vs mill bite ≥8 min",
-            "why": "MD peak Mon 07:12-07:20 overlap",
+            "title": "Stagger furnace and mill start by 8 min",
+            "why": "MD peak from Monday overlap",
             "impact": "₹2.5-4.5L/mo on MD line",
-            "owner": "Melt-shop / electrical supervisor · B",
+            "owner": "Melt-shop supervisor · B",
         },
         "verify": [
             ("MD stagger · furnace vs mill", "Apr MD peak", "8-min furnace lag", "VERIFIED"),
@@ -284,47 +289,47 @@ PACKS = {
         "docTitle": "Stamped Energy · Pharma demo",
         "chromeHint": "Pharma",
         "title": {
-            "eyebrowD": "Pharma · HVAC, cleanroom, and utility decisions verified on the bill",
-            "eyebrowM": "Pharma · bill-verified decisions",
-            "h1D": "From HVAC and batch utilities to owned actions on the invoice.",
-            "h1M": "HVAC & utility ₹ actions on the bill.",
-            "ledeD": "You already run HVAC, chillers, cleanroom, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.",
-            "ledeM": "Ranked HVAC and utility actions from meters you already run. Verified on the DISCOM bill.",
+            "eyebrowD": "Pharma · load management and HVAC decisions verified on the bill",
+            "eyebrowM": "Pharma · load management, verified",
+            "h1D": "From load spikes and HVAC waste to owned actions on the invoice.",
+            "h1M": "Load management ₹ actions on the bill.",
+            "ledeD": "Pharma sites run chillers, HVAC, and batch utilities around the clock. Stamped finds avoidable load coincidence and idle utility waste, ranks the fix in rupees, and verifies it on the next DISCOM bill.",
+            "ledeM": "Load management for chillers, HVAC, and batch utilities. Verified on the DISCOM bill.",
         },
         "hook": {
-            "eyebrow": "Monday 07:05 · Batch / utilities handover",
+            "eyebrow": "Monday 07:05 · Utilities handover",
             "h2": "Your pharma plant already has the data.",
-            "ledeD": "The incomer saw the MD spike when chiller bank B overlapped autoclave heat-up. The EMS logged it. Nobody got a work order with a rupee figure.",
-            "ledeM": "Chiller + autoclave overlapped. EMS logged it. Nobody got a ₹ work order.",
-            "t1s": "Chiller bank B + autoclave heat-up together",
-            "t1p": "Shift B brings chillers and batch utilities online in a short overlap.",
+            "ledeD": "The incomer saw the MD spike when chillers and autoclave heat-up overlapped — a classic load-management miss. The EMS logged it. Nobody got a work order with a rupee figure.",
+            "ledeM": "Chillers and autoclave overlapped. A load spike with no ₹ work order.",
+            "t1s": "Chillers and autoclave start together",
+            "t1p": "Shift B brings heavy utilities online in the same window.",
             "t2s": "MD spike hits the incomer",
             "t2p": "EMS threshold crossed. Alert created. Still no assigned owner.",
             "t3s": "Batch schedule continues as usual",
             "t3p": "The bill will price this later. The floor never saw the fix.",
-            "meterNote": "The EMS recorded the spike, but nobody was assigned to change the next chiller–autoclave sequence.",
+            "meterNote": "The EMS recorded the spike, but nobody was assigned to change the next utility sequence.",
             "statImpact": "~₹36k",
             "statImpactLabel": "Monthly demand impact <span class=\"tilde\">[~]</span>",
         },
         "gapHas": {
             "scada": "Has: AHU, chiller, batch utility states",
-            "ems": "Has: spike logged at 07:05",
+            "ems": "Has: load spike logged at 07:05",
             "meters": "Has: MD window and HVAC load profile",
             "bill": "Has: MD, energy, PF line items",
         },
-        "whatLede": "Stamped sits on top of the EMS and EnMS you already run. It reads HVAC, chiller, cleanroom, and incomer data, issues a ranked action in rupees, sends it to the floor, and closes the result on the next bill.",
-        "whatStep1": "HVAC / chiller / batch utility meters, BMS and PLC states, and utility line items. Read-only. No control writes to the plant.",
+        "whatLede": "Stamped sits on top of the EMS and EnMS you already run. It reads HVAC, chiller, and batch utility data, finds load-management and idle-waste opportunities, issues a ranked action in rupees, and closes the result on the next bill.",
+        "whatStep1": "HVAC, chiller, and batch utility meters, BMS and PLC states, and utility line items. Read-only. No control writes to the plant.",
         "rx1": {
-            "badge": "Rx · MD coincidence",
-            "aria": "MD stagger prescription for chillers vs autoclave. Show evidence.",
-            "action": "Stagger chiller bank B vs autoclave heat-up by ≥10 min at Shift B handover",
-            "why": "Mon 07:02-07:12 overlap drove the incomer MD window",
-            "bill": "MD (kVA) · billing demand",
-            "owner": "Utilities / engineering supervisor · Shift B",
+            "badge": "Rx · Load management",
+            "aria": "Stagger chillers and autoclave. Show evidence.",
+            "action": "Stagger chillers and autoclave by 10 minutes",
+            "why": "They started together and pushed MD over the limit",
+            "bill": "MD (kVA)",
+            "owner": "Utilities supervisor · Shift B",
             "impact": "₹1.8-3.2L / month",
-            "effort": "Sequence only · no capex · no PLC write",
-            "rule": "md_overlap@v2.4 · Confidence High",
-            "due": "This week · verify on next MD line",
+            "effort": "Sequence change · no new equipment",
+            "rule": "md_overlap@v2.4 · High",
+            "due": "This week",
             "evTitle": "Signal window · Mon 07:00-07:15",
             "tags": [
                 ("HT_INCOMER.MD", "920 kVA", "07:06-07:10"),
@@ -336,15 +341,15 @@ PACKS = {
         },
         "rx2": {
             "badge": "Rx · HVAC idle",
-            "aria": "AHU setback prescription. Show evidence.",
-            "action": "Setback non-critical AHU Suite 3 during validated idle batch windows",
-            "why": "Full AHU duty with no batch occupancy tag on 4 of last 6 idle windows",
-            "bill": "Energy (kWh) · ToD shoulder",
+            "aria": "Turn down idle suite HVAC. Show evidence.",
+            "action": "Turn down Suite 3 HVAC when no batch is running",
+            "why": "Full HVAC with no batch on 4 of last 6 idle windows",
+            "bill": "Energy (kWh)",
             "owner": "HVAC / engineering · Suite 3",
             "impact": "₹70k-1.1L / month",
-            "effort": "Validated setback SOP · no capex · no PLC write",
-            "rule": "hvac_idle@v1.5 · Confidence High",
-            "due": "Next idle window · verify on energy line",
+            "effort": "Validated setback · no new equipment",
+            "rule": "hvac_idle@v1.5 · High",
+            "due": "Next idle window",
             "evTitle": "Idle suite windows · last 6 events",
             "tags": [
                 ("AHU_S3.RUN", "Full duty", "40 min avg"),
@@ -355,10 +360,10 @@ PACKS = {
             "cite": "physics/hvac_idle@v1.5 · model conf 0.86 · ToD energy line · baseline last 6 idle windows",
         },
         "floor": {
-            "title": "Stagger chiller B vs autoclave heat-up ≥10 min",
-            "why": "MD peak Mon 07:02-07:12 overlap",
+            "title": "Stagger chillers and autoclave by 10 min",
+            "why": "MD peak from Monday load overlap",
             "impact": "₹1.8-3.2L/mo on MD line",
-            "owner": "Utilities / engineering supervisor · B",
+            "owner": "Utilities supervisor · B",
         },
         "verify": [
             ("MD stagger · chiller vs autoclave", "Apr MD peak", "10-min chiller lag", "VERIFIED"),
@@ -368,20 +373,20 @@ PACKS = {
         "math": {
             "eyebrow": "Where pharma electricity cost usually hides",
             "h2": "Five areas we check first in pharma",
-            "ledeD": "First places we look when a pharma plant already meters HVAC and utilities — and still sees avoidable ₹ on the HT bill.",
-            "ledeM": "First places we look for avoidable ₹ on a pharma HT bill.",
+            "ledeD": "First places we look when a pharma plant already meters HVAC and utilities — and still sees avoidable ₹ on the HT bill, especially from load management gaps.",
+            "ledeM": "First places we look — including load management — for avoidable ₹ on a pharma HT bill.",
             "cards": [
                 (
-                    "MD / demand",
+                    "Load management",
                     ["Chiller + autoclave overlap", "AHU bank coincidence", "Contract demand headroom"],
                     "Bill line · MD (kVA)",
-                    "Sample: chiller bank B and autoclave heat-up at 07:05",
+                    "Sample: chillers and autoclave heat-up in the same window",
                 ),
                 (
                     "HVAC / cleanroom",
                     ["Overcool in idle suites", "AHU full duty off-batch", "Simultaneous bank starts"],
                     "Bill line · Energy (kWh)",
-                    "Sample: Suite 3 AHU at full duty with no occupancy tag",
+                    "Sample: Suite 3 HVAC at full duty with no batch tag",
                 ),
                 (
                     "Chillers & utilities",
@@ -393,7 +398,7 @@ PACKS = {
                     "Batch gaps",
                     ["Utilities across changeovers", "Idle CIP / WIP holding", "Non-critical loads left on"],
                     "Bill line · Energy (kWh)",
-                    "Sample: utility island left running across a validated idle window",
+                    "Sample: utility island left running across an idle window",
                 ),
                 (
                     "Tariff / intensity",
@@ -403,7 +408,7 @@ PACKS = {
                 ),
             ],
         },
-        "techBullet": "MD coincidence, HVAC idle, chiller staging, batch-gap utilities, tariff dispatch",
+        "techBullet": "Load management, HVAC idle, chiller staging, batch-gap utilities, tariff dispatch",
         "offerLedeD": "Start with one HVAC / utilities island or production block. Plant and finance review the same M&amp;V memo. Go or no-go at Day 90.",
         "offerLedeM": "One utilities island. Joint M&amp;V memo. Go or no-go at Day 90.",
     },
@@ -535,6 +540,63 @@ MOBILE_HERO_CSS = """
         transform: none !important;
         animation: none !important;
       }
+
+      /* Prescriptions: breathing room + readable action titles */
+      #scene-prescription.slide {
+        padding-left: max(1.55rem, calc(var(--safe-l) + 0.35rem));
+        padding-right: max(1.55rem, calc(var(--safe-r) + 0.35rem));
+      }
+      #scene-prescription .eyebrow {
+        color: var(--primary);
+        opacity: 1;
+      }
+      #scene-prescription .lede {
+        margin-bottom: 0.85rem;
+      }
+      #scene-prescription .rx-layout {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      #scene-prescription .rx-flip {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      #scene-prescription .rx-flip__inner,
+      #scene-prescription .rx-face {
+        box-sizing: border-box;
+        max-width: 100%;
+      }
+      #scene-prescription .rx-hero__head {
+        padding: 0.75rem 1.1rem;
+      }
+      #scene-prescription .rx-hero__body {
+        padding: 1rem 1.15rem 1.15rem;
+      }
+      #scene-prescription .rx-action {
+        font-size: 1.08rem;
+        line-height: 1.32;
+        margin: 0 0 0.85rem;
+        padding: 0;
+      }
+      #scene-prescription .rx-row {
+        grid-template-columns: 72px 1fr;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+      }
+      #scene-prescription .rx-row:nth-child(n+6) { display: none; }
+      #scene-prescription .rx-flip-cue {
+        margin-top: 0.85rem;
+        font-weight: 650;
+      }
+      #scene-prescription h2 {
+        font-size: clamp(1.25rem, 5.5vw, 1.55rem);
+        max-width: 14em;
+      }
 """
 
 
@@ -611,7 +673,7 @@ def inject_chrome_industry(html: str) -> str:
     return html
 
 
-def inject_hero_photo(html: str) -> str:
+def inject_hero_photo(html: str, industry: str) -> str:
     # Add industry chip + photo; keep SVG for desktop as secondary (hide via CSS preference: show photo instead)
     # Replace hero-copy opening content to add chip after brand area
     html = html.replace(
@@ -633,12 +695,14 @@ def inject_hero_photo(html: str) -> str:
         1,
     )
 
+    src = HERO_BY_INDUSTRY[industry]
+    alt = HERO_ALT[industry]
     photo_block = f"""
           <figure class="hero-photo reveal" id="heroPhoto">
             <img
               id="heroPhotoImg"
-              src="{HERO_PHOTO}"
-              alt="Industrial plant operations"
+              src="{src}"
+              alt="{alt}"
               width="1400"
               height="900"
               loading="eager"
@@ -1024,7 +1088,7 @@ def build_one(base_html: str, industry: str) -> str:
     html = base_html
     html = inject_css(html)
     html = inject_chrome_industry(html)
-    html = inject_hero_photo(html)
+    html = inject_hero_photo(html, industry)
     html = inject_ids_and_hooks(html)
     html = replace_rx_block(html, pack)
     html = apply_static_pack_fields(html, pack)
@@ -1128,7 +1192,7 @@ HUB = """<!DOCTYPE html>
       </a>
       <a class="card" href="./pharma.html">
         <strong>Pharma</strong>
-        <span>HVAC, chillers, cleanroom setbacks, and batch-utility peaks.</span>
+        <span>Load management, chillers, HVAC setbacks, and batch-utility peaks.</span>
         <em>Open pharma deck →</em>
       </a>
     </div>

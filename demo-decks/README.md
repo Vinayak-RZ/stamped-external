@@ -7,18 +7,20 @@ Client-facing HTML presentation decks for Stamped Energy — one walkthrough per
 | [index.html](./index.html) | Industry picker (hub) |
 | [cement.html](./cement.html) | Cement — kiln, mills, WHR |
 | [steel.html](./steel.html) | Steel — furnace, rolling mill |
-| [pharma.html](./pharma.html) | Pharma — HVAC, chillers, batch utilities |
+| [pharma.html](./pharma.html) | Pharma — load management, HVAC, chillers |
+| [assets/](./assets/) | Industry hero photos |
 | [/index.html](../index.html) | Same hub at repo root for GitHub Pages |
 
 Each industry deck keeps the same Proof Run structure. What changes:
 
-- **Prescriptions** (actions, owners, evidence tags)
+- **Prescriptions** (short, readable actions + evidence tags)
 - **Data sources** called out in the hook / gap / “what we read” slides
 - **Optimisation targets** on the savings map (what we check first)
+- **Hero photo** matched to the industry
 
 Open an industry file in a browser. Arrow keys, space, or on-screen controls navigate. On phones, the title slide is **text → Begin → plant photo**; the simulated Sample workspace slide is skipped.
 
-**Rebuild from base:** edit `demo-decks/_base.snapshot.html` (generic template), then:
+**Rebuild from base:** edit `demo-decks/_base.snapshot.html` (generic template) and/or `scripts/build-industry-decks.py`, then:
 
 ```bash
 python3 scripts/build-industry-decks.py
