@@ -458,9 +458,9 @@
       width: 100%;
       height: 100%;
       min-height: 220px;
-      max-height: min(52vh, 420px);
+      max-height: none;
       object-fit: cover;
-      object-position: center 40%;
+      object-position: center;
     }
     /* ponytail: no bottom scrim — it read as a broken/wrong image block */
     .hero-photo__scrim { display: none !important; }
@@ -1665,15 +1665,13 @@
           <figure class="hero-photo reveal" id="heroPhoto">
             <img
               id="heroPhotoImg"
-              src="./assets/cement-hero.jpg"
+              src="./assets/cement-hero.jpg?v=3"
               alt="Cement plant operations"
-              width="1400"
-              height="900"
+              width="1800"
+              height="1200"
               loading="eager"
               decoding="async"
-              onerror="this.onerror=null;this.src='https://stamped.work/video/how-it-works-poster.png'"
             />
-            <span class="hero-photo__scrim" aria-hidden="true"></span>
           </figure>
           <div class="hero-canvas reveal hide-mobile" aria-hidden="true" hidden>
             <svg viewBox="0 0 420 280" fill="none">

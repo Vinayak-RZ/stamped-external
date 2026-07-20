@@ -25,8 +25,6 @@ HERO_ALT = {
     "steel": "Steel fabrication and welding",
     "pharma": "Pharmaceutical production line",
 }
-HERO_PHOTO_FALLBACK = "https://stamped.work/video/how-it-works-poster.png"
-
 PACKS = {
     "cement": {
         "label": "Cement",
@@ -727,19 +725,18 @@ def inject_hero_photo(html: str, industry: str) -> str:
 
     src = HERO_BY_INDUSTRY[industry]
     alt = HERO_ALT[industry]
+    # ponytail: never fall back to how-it-works-poster (cement dashboard UI)
     photo_block = f"""
           <figure class="hero-photo reveal" id="heroPhoto">
             <img
               id="heroPhotoImg"
-              src="{src}"
+              src="{src}?v=3"
               alt="{alt}"
-              width="1400"
-              height="900"
+              width="1800"
+              height="1200"
               loading="eager"
               decoding="async"
-              onerror="this.onerror=null;this.src='{HERO_PHOTO_FALLBACK}'"
             />
-            <span class="hero-photo__scrim" aria-hidden="true"></span>
           </figure>"""
 
     # Insert photo before hero-canvas; keep canvas for desktop optional — hide canvas with CSS on all sizes in favor of photo
@@ -1100,12 +1097,18 @@ def apply_static_pack_fields(html: str, pack: dict) -> str:
 
 
 def inject_boot_script(html: str, industry: str) -> str:
+    hero_src = HERO_BY_INDUSTRY[industry] + "?v=3"
     boot = f"""
   <script>
-    /* Industry chrome label — content is baked per file by build-industry-decks.py */
+    /* Industry chrome + hard-lock hero photo (never cement dashboard poster) */
     (function () {{
       var el = document.getElementById("chromeIndustry");
       if (el) el.textContent = {json.dumps(PACKS[industry]["chromeHint"])};
+      var img = document.getElementById("heroPhotoImg");
+      if (img) {{
+        var want = {json.dumps(hero_src)};
+        if (img.getAttribute("src") !== want) img.setAttribute("src", want);
+      }}
     }})();
   </script>
 """
