@@ -18,7 +18,7 @@ DECKS_DIR = ROOT / "demo-decks"
 HERO_BY_INDUSTRY = {
     "cement": "assets/cement-hero.jpg",
     "steel": "assets/steel-hero.jpg",
-    "pharma": "assets/pharma-hero.jpg",
+    "pharma": "https://res.cloudinary.com/ddpyjpt4v/image/upload/v1784561673/pharma-hero_blsn7j.jpg",
 }
 HERO_ALT = {
     "cement": "Cement plant operations",
