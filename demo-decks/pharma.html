@@ -463,7 +463,7 @@
       object-fit: cover;
       object-position: center;
     }
-    /* ponytail: no bottom scrim — it read as a broken/wrong image block */
+    /* ponytail: no bottom scrim - it read as a broken/wrong image block */
     .hero-photo__scrim { display: none !important; }
     .industry-chip {
       display: inline-flex; align-items: center;
@@ -1362,7 +1362,7 @@
         overflow-wrap: anywhere;
         word-break: break-word;
       }
-      /* ponytail: ledger cells wrap at spaces only — never mid-word */
+      /* ponytail: ledger cells wrap at spaces only - never mid-word */
       #scene-verify .ledger-table th,
       #scene-verify .ledger-table td {
         max-width: none;
@@ -1603,7 +1603,7 @@
         font-size: 0.8rem;
       }
 
-      /* ponytail: desktop-only simulated workspace — unusable on phone */
+      /* ponytail: desktop-only simulated workspace - unusable on phone */
       #scene-live { display: none !important; }
 
       .nav-btn {
@@ -1631,6 +1631,35 @@
       }
       .waste-card:last-child { grid-column: 1 / -1; }
       .waste-card ul li:nth-child(n+3) { display: none; }
+      .waste-card h3 { font-size: 0.92rem; }
+      .waste-card { padding: 0.75rem 0.8rem; }
+      #scene-math .slide__inner { transform: none; }
+      #scene-math.slide {
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: max(5.25rem, calc(var(--safe-b) + 4.5rem));
+      }
+      #scene-offer.slide {
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: max(5.25rem, calc(var(--safe-b) + 4.5rem));
+      }
+      #scene-offer .slide__inner { transform: none; }
+      #scene-offer .phase-table { font-size: 0.78rem; margin-top: 0.7rem; }
+      #scene-offer .phase-table th, #scene-offer .phase-table td {
+        padding: 0.55rem 0.6rem;
+        word-break: normal;
+        overflow-wrap: normal;
+      }
+      #scene-offer .ask-box { margin-top: 0.85rem; padding: 0.85rem 1rem; }
+      #scene-verify.slide {
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      #scene-verify .slide__inner { transform: none; }
       .tech-card ul { display: none; }
       .tech-card > p { margin-bottom: 0; }
       .rx-layout { gap: 0.85rem; }
@@ -1778,7 +1807,7 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal" id="hookEyebrow">Monday 07:05 · Utilities handover</p>
         <h2 class="reveal" id="hookH2">Your pharma plant already has the data.</h2>
-        <p class="lede reveal hide-mobile" id="hookLedeD">The incomer saw the MD spike when chillers and autoclave heat-up overlapped — a classic load-management miss. The EMS logged it. Nobody got a work order with a rupee figure.</p>
+        <p class="lede reveal hide-mobile" id="hookLedeD">The incomer saw the MD spike when chillers and autoclave heat-up overlapped: a classic load-management miss. The EMS logged it. Nobody got a work order with a rupee figure.</p>
         <p class="lede reveal show-mobile" id="hookLedeM">Chillers and autoclave overlapped. A load spike with no ₹ work order.</p>
         <div class="two-col">
           <div class="timeline reveal">
@@ -2173,7 +2202,7 @@
             <h3>Industrial physics and rules engines</h3>
             <p>Versioned rule packs for plant energy behaviour, built from published research in energy management, power systems, and equipment efficiency.</p>
             <ul>
-              <li id="techPhysicsBullet">Load management, HVAC idle, chiller staging, batch-gap utilities, tariff dispatch</li>
+              <li id="techPhysicsBullet">Load management, HVAC & chillers, idle utilities, tariff intensity, early fault warnings</li>
               <li>PF and tariff arithmetic tied to utility line items</li>
               <li>Every finding cites a rule version a plant EE can review</li>
             </ul>
@@ -2253,8 +2282,8 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal" id="mathEyebrow">Where pharma electricity cost usually hides</p>
         <h2 class="reveal" id="mathH2">Five areas we check first in pharma</h2>
-        <p class="lede reveal hide-mobile" id="mathLedeD">First places we look when a pharma plant already meters HVAC and utilities — and still sees avoidable ₹ on the HT bill, especially from load management gaps.</p>
-        <p class="lede reveal show-mobile" id="mathLedeM">First places we look — including load management — for avoidable ₹ on a pharma HT bill.</p>
+        <p class="lede reveal hide-mobile" id="mathLedeD">First places we look when a pharma plant already meters HVAC and utilities: load management, idle waste, tariff timing, and early signals before equipment fails.</p>
+        <p class="lede reveal show-mobile" id="mathLedeM">Load management, HVAC & chillers, idle utilities, tariff, and early warnings before breakdowns.</p>
         <div class="waste-grid reveal">
           <article class="waste-card">
             <h3>Load management</h3>
@@ -2267,37 +2296,27 @@
             <p class="waste-sample hide-mobile">Sample: chillers and autoclave heat-up in the same window</p>
           </article>
           <article class="waste-card">
-            <h3>HVAC / cleanroom</h3>
+            <h3>HVAC & chillers</h3>
             <ul>
-              <li>Overcool in idle suites</li>
-              <li>AHU full duty off-batch</li>
-              <li>Simultaneous bank starts</li>
-            </ul>
-            <div class="waste-bill">Bill line · Energy (kWh)</div>
-            <p class="waste-sample hide-mobile">Sample: Suite 3 HVAC at full duty with no batch tag</p>
-          </article>
-          <article class="waste-card">
-            <h3>Chillers & utilities</h3>
-            <ul>
-              <li>Staging discipline</li>
+              <li>Idle-suite overcool</li>
+              <li>Chiller staging discipline</li>
               <li>Unload / bypass hours</li>
-              <li>Purified-water run-on</li>
             </ul>
             <div class="waste-bill">Bill line · Energy + MD</div>
-            <p class="waste-sample hide-mobile">Sample: second chiller online into the same demand window</p>
+            <p class="waste-sample hide-mobile">Sample: Suite HVAC at full duty with no batch; second chiller into the same peak</p>
           </article>
           <article class="waste-card">
-            <h3>Batch gaps</h3>
+            <h3>Utilities & idle loads</h3>
             <ul>
-              <li>Utilities across changeovers</li>
-              <li>Idle CIP / WIP holding</li>
               <li>Non-critical loads left on</li>
+              <li>Changeover utility islands</li>
+              <li>Idle CIP / WIP holding</li>
             </ul>
             <div class="waste-bill">Bill line · Energy (kWh)</div>
             <p class="waste-sample hide-mobile">Sample: utility island left running across an idle window</p>
           </article>
           <article class="waste-card">
-            <h3>Tariff / intensity</h3>
+            <h3>Tariff & intensity</h3>
             <ul>
               <li>Peak import timing</li>
               <li>kWh per batch drift</li>
@@ -2306,6 +2325,16 @@
             <div class="waste-bill">Bill + batch tag</div>
             <p class="waste-sample hide-mobile">Sample: peak grid draw during a non-critical utility window</p>
           </article>
+          <article class="waste-card">
+            <h3>Early warnings</h3>
+            <ul>
+              <li>Catch drift before a breakdown</li>
+              <li>Compressed-air / utility leaks</li>
+              <li>Repair signal before the trip</li>
+            </ul>
+            <div class="waste-bill">Ops + bill impact</div>
+            <p class="waste-sample hide-mobile">Sample: rising specific power and leak signature flagged before a chiller trip</p>
+          </article>
         </div>
         <div class="bill-table-wrap reveal">
           <table class="bill-table">
@@ -2313,13 +2342,13 @@
               <tr>
                 <th>Monthly HT bill</th>
                 <th>About 15% often addressable <span class="tilde">[~]</span></th>
-                <th>Cost of waiting 90 days</th>
+                <th>Cost of waiting 60 days</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>₹30L</td><td>₹4.5L / month</td><td>₹13.5L</td></tr>
-              <tr><td>₹60L</td><td>₹9L / month</td><td>₹27L</td></tr>
-              <tr><td>₹1Cr</td><td>₹15L / month</td><td>₹45L</td></tr>
+              <tr><td>₹30L</td><td>₹4.5L / month</td><td>₹9L</td></tr>
+              <tr><td>₹60L</td><td>₹9L / month</td><td>₹18L</td></tr>
+              <tr><td>₹1Cr</td><td>₹15L / month</td><td>₹30L</td></tr>
             </tbody>
           </table>
         </div>
@@ -2409,7 +2438,7 @@
       <div class="slide__inner">
         <p class="eyebrow reveal">60-day proof run</p>
         <h2 class="reveal">Proof Run</h2>
-        <p class="lede reveal hide-mobile" id="offerLedeD">Start with one HVAC / utilities island or production block. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and plant fit.</p>
+        <p class="lede reveal hide-mobile" id="offerLedeD">Start with one HVAC / utilities island or production block. Audit the data, run prescriptions on the floor, then go or no-go at Day 60: on ₹ savings and plant fit.</p>
         <p class="lede reveal show-mobile" id="offerLedeM">One utilities island. Audit → floor → go / no-go at Day 60.</p>
         <table class="phase-table reveal">
           <thead>
@@ -2429,7 +2458,7 @@
             </tr>
             <tr>
               <td>Day 60</td>
-              <td>Go / no-go — on verified ₹ and fit (efficiency, workload, how the floor actually runs)</td>
+              <td>Go / no-go: on verified ₹ and fit (efficiency, workload, how the floor actually runs)</td>
             </tr>
           </tbody>
         </table>
@@ -2476,7 +2505,7 @@
       if (img.src !== resolved) img.src = resolved;
       img.addEventListener("error", function onHeroErr() {
         img.removeEventListener("error", onHeroErr);
-        // one retry with cache-bust — still the local industry photo, never the cement poster
+        // one retry with cache-bust - still the local industry photo, never the cement poster
         img.src = new URL(rel + "?t=" + Date.now(), window.location.href).href;
       });
     })();
@@ -2484,7 +2513,7 @@
 <script>
     (function () {
       const isMobileDeck = window.matchMedia("(max-width: 720px)").matches;
-      // ponytail: skip simulated dashboard on phone — desktop iframe only
+      // ponytail: skip simulated dashboard on phone - desktop iframe only
       const slides = Array.from(document.querySelectorAll(".slide")).filter(function (s) {
         return !(isMobileDeck && s.id === "scene-live");
       });

@@ -1274,7 +1274,7 @@
         overflow-wrap: anywhere;
         word-break: break-word;
       }
-      /* ponytail: ledger cells wrap at spaces only — never mid-word */
+      /* ponytail: ledger cells wrap at spaces only - never mid-word */
       #scene-verify .ledger-table th,
       #scene-verify .ledger-table td {
         max-width: none;
@@ -1432,7 +1432,7 @@
         font-size: 0.8rem;
       }
 
-      /* ponytail: desktop-only simulated workspace — unusable on phone */
+      /* ponytail: desktop-only simulated workspace - unusable on phone */
       #scene-live { display: none !important; }
 
       .nav-btn {
@@ -1460,6 +1460,35 @@
       }
       .waste-card:last-child { grid-column: 1 / -1; }
       .waste-card ul li:nth-child(n+3) { display: none; }
+      .waste-card h3 { font-size: 0.92rem; }
+      .waste-card { padding: 0.75rem 0.8rem; }
+      #scene-math .slide__inner { transform: none; }
+      #scene-math.slide {
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: max(5.25rem, calc(var(--safe-b) + 4.5rem));
+      }
+      #scene-offer.slide {
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: max(5.25rem, calc(var(--safe-b) + 4.5rem));
+      }
+      #scene-offer .slide__inner { transform: none; }
+      #scene-offer .phase-table { font-size: 0.78rem; margin-top: 0.7rem; }
+      #scene-offer .phase-table th, #scene-offer .phase-table td {
+        padding: 0.55rem 0.6rem;
+        word-break: normal;
+        overflow-wrap: normal;
+      }
+      #scene-offer .ask-box { margin-top: 0.85rem; padding: 0.85rem 1rem; }
+      #scene-verify.slide {
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      #scene-verify .slide__inner { transform: none; }
       .tech-card ul { display: none; }
       .tech-card > p { margin-bottom: 0; }
       .rx-layout { gap: 0.85rem; }
@@ -2128,13 +2157,13 @@
               <tr>
                 <th>Monthly HT bill</th>
                 <th>About 15% often addressable <span class="tilde">[~]</span></th>
-                <th>Cost of waiting 90 days</th>
+                <th>Cost of waiting 60 days</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>₹30L</td><td>₹4.5L / month</td><td>₹13.5L</td></tr>
-              <tr><td>₹60L</td><td>₹9L / month</td><td>₹27L</td></tr>
-              <tr><td>₹1Cr</td><td>₹15L / month</td><td>₹45L</td></tr>
+              <tr><td>₹30L</td><td>₹4.5L / month</td><td>₹9L</td></tr>
+              <tr><td>₹60L</td><td>₹9L / month</td><td>₹18L</td></tr>
+              <tr><td>₹1Cr</td><td>₹15L / month</td><td>₹30L</td></tr>
             </tbody>
           </table>
         </div>
@@ -2224,7 +2253,7 @@
       <div class="slide__inner">
         <p class="eyebrow reveal">60-day proof run</p>
         <h2 class="reveal">Proof Run</h2>
-        <p class="lede reveal hide-mobile">Start with one plant. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and whether it actually made the plant easier to run.</p>
+        <p class="lede reveal hide-mobile">Start with one plant. Audit the data, run prescriptions on the floor, then go or no-go at Day 60: on ₹ savings and whether it actually made the plant easier to run.</p>
         <p class="lede reveal show-mobile">Audit → floor execution → go / no-go at Day 60.</p>
         <table class="phase-table reveal">
           <thead>
@@ -2244,7 +2273,7 @@
             </tr>
             <tr>
               <td>Day 60</td>
-              <td>Go / no-go — on verified ₹ and fit (efficiency, workload, how the floor actually runs)</td>
+              <td>Go / no-go: on verified ₹ and fit (efficiency, workload, how the floor actually runs)</td>
             </tr>
           </tbody>
         </table>
@@ -2280,7 +2309,7 @@
   <script>
     (function () {
       const isMobileDeck = window.matchMedia("(max-width: 720px)").matches;
-      // ponytail: skip simulated dashboard on phone — desktop iframe only
+      // ponytail: skip simulated dashboard on phone - desktop iframe only
       const slides = Array.from(document.querySelectorAll(".slide")).filter(function (s) {
         return !(isMobileDeck && s.id === "scene-live");
       });

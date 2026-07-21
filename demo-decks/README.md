@@ -1,13 +1,13 @@
 # Demo decks
 
-Client-facing HTML presentation decks for Stamped Energy — one walkthrough per industry.
+Client-facing HTML presentation decks for Stamped Energy: one walkthrough per industry.
 
 | Path | Use |
 |------|-----|
 | [index.html](./index.html) | Industry picker (hub) |
-| [cement.html](./cement.html) | Cement — kiln, mills, WHR |
-| [steel.html](./steel.html) | Steel — furnace, rolling mill |
-| [pharma.html](./pharma.html) | Pharma — load management, HVAC, chillers |
+| [cement.html](./cement.html) | Cement: kiln, mills, WHR |
+| [steel.html](./steel.html) | Steel: furnace, rolling mill |
+| [pharma.html](./pharma.html) | Pharma: load management, HVAC, chillers |
 | [pharma/](./pharma/) | Pharma Vercel deploy root (`index.html`; `vercel --prod`) |
 | [assets/](./assets/) | Industry hero photos |
 | [/index.html](../index.html) | Same hub at repo root for GitHub Pages |

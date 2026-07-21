@@ -463,7 +463,7 @@
       object-fit: cover;
       object-position: center;
     }
-    /* ponytail: no bottom scrim — it read as a broken/wrong image block */
+    /* ponytail: no bottom scrim - it read as a broken/wrong image block */
     .hero-photo__scrim { display: none !important; }
     .industry-chip {
       display: inline-flex; align-items: center;
@@ -1362,7 +1362,7 @@
         overflow-wrap: anywhere;
         word-break: break-word;
       }
-      /* ponytail: ledger cells wrap at spaces only — never mid-word */
+      /* ponytail: ledger cells wrap at spaces only - never mid-word */
       #scene-verify .ledger-table th,
       #scene-verify .ledger-table td {
         max-width: none;
@@ -1603,7 +1603,7 @@
         font-size: 0.8rem;
       }
 
-      /* ponytail: desktop-only simulated workspace — unusable on phone */
+      /* ponytail: desktop-only simulated workspace - unusable on phone */
       #scene-live { display: none !important; }
 
       .nav-btn {
@@ -1631,6 +1631,35 @@
       }
       .waste-card:last-child { grid-column: 1 / -1; }
       .waste-card ul li:nth-child(n+3) { display: none; }
+      .waste-card h3 { font-size: 0.92rem; }
+      .waste-card { padding: 0.75rem 0.8rem; }
+      #scene-math .slide__inner { transform: none; }
+      #scene-math.slide {
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: max(5.25rem, calc(var(--safe-b) + 4.5rem));
+      }
+      #scene-offer.slide {
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: max(5.25rem, calc(var(--safe-b) + 4.5rem));
+      }
+      #scene-offer .slide__inner { transform: none; }
+      #scene-offer .phase-table { font-size: 0.78rem; margin-top: 0.7rem; }
+      #scene-offer .phase-table th, #scene-offer .phase-table td {
+        padding: 0.55rem 0.6rem;
+        word-break: normal;
+        overflow-wrap: normal;
+      }
+      #scene-offer .ask-box { margin-top: 0.85rem; padding: 0.85rem 1rem; }
+      #scene-verify.slide {
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      #scene-verify .slide__inner { transform: none; }
       .tech-card ul { display: none; }
       .tech-card > p { margin-bottom: 0; }
       .rx-layout { gap: 0.85rem; }
@@ -1711,7 +1740,7 @@
             <p class="brand-name reveal">Stamped Energy</p>
             <h1 class="reveal hide-mobile" id="titleH1D">From furnace and mill signals to owned actions on the invoice.</h1>
             <h1 class="reveal show-mobile" id="titleH1M">Furnace & mill ₹ actions on the bill.</h1>
-            <p class="lede reveal hide-mobile" id="titleLedeD">You already run furnace, rolling, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.</p>
+            <p class="lede reveal hide-mobile" id="titleLedeD">You already run furnace, rolling, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.</p>
             <p class="lede reveal show-mobile" id="titleLedeM">Ranked furnace and mill actions. Verified on the DISCOM bill.</p>
             <div class="flow-tags reveal hide-mobile">
               <span class="chip">Physics &amp; rules</span>
@@ -2253,7 +2282,7 @@
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal" id="mathEyebrow">Where steel electricity cost usually hides</p>
         <h2 class="reveal" id="mathH2">Five areas we check first in steel</h2>
-        <p class="lede reveal hide-mobile" id="mathLedeD">First places we look when a steel plant already meters furnace and mill loads — and still sees avoidable ₹ on the HT bill.</p>
+        <p class="lede reveal hide-mobile" id="mathLedeD">First places we look when a steel plant already meters furnace and mill loads, and still sees avoidable ₹ on the HT bill.</p>
         <p class="lede reveal show-mobile" id="mathLedeM">First places we look for avoidable ₹ on a steel HT bill.</p>
         <div class="waste-grid reveal">
           <article class="waste-card">
@@ -2313,13 +2342,13 @@
               <tr>
                 <th>Monthly HT bill</th>
                 <th>About 15% often addressable <span class="tilde">[~]</span></th>
-                <th>Cost of waiting 90 days</th>
+                <th>Cost of waiting 60 days</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>₹30L</td><td>₹4.5L / month</td><td>₹13.5L</td></tr>
-              <tr><td>₹60L</td><td>₹9L / month</td><td>₹27L</td></tr>
-              <tr><td>₹1Cr</td><td>₹15L / month</td><td>₹45L</td></tr>
+              <tr><td>₹30L</td><td>₹4.5L / month</td><td>₹9L</td></tr>
+              <tr><td>₹60L</td><td>₹9L / month</td><td>₹18L</td></tr>
+              <tr><td>₹1Cr</td><td>₹15L / month</td><td>₹30L</td></tr>
             </tbody>
           </table>
         </div>
@@ -2409,7 +2438,7 @@
       <div class="slide__inner">
         <p class="eyebrow reveal">60-day proof run</p>
         <h2 class="reveal">Proof Run</h2>
-        <p class="lede reveal hide-mobile" id="offerLedeD">Start with one melt shop or rolling line. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and plant fit.</p>
+        <p class="lede reveal hide-mobile" id="offerLedeD">Start with one melt shop or rolling line. Audit the data, run prescriptions on the floor, then go or no-go at Day 60: on ₹ savings and plant fit.</p>
         <p class="lede reveal show-mobile" id="offerLedeM">One melt or roll line. Audit → floor → go / no-go at Day 60.</p>
         <table class="phase-table reveal">
           <thead>
@@ -2429,7 +2458,7 @@
             </tr>
             <tr>
               <td>Day 60</td>
-              <td>Go / no-go — on verified ₹ and fit (efficiency, workload, how the floor actually runs)</td>
+              <td>Go / no-go: on verified ₹ and fit (efficiency, workload, how the floor actually runs)</td>
             </tr>
           </tbody>
         </table>
@@ -2476,7 +2505,7 @@
       if (img.src !== resolved) img.src = resolved;
       img.addEventListener("error", function onHeroErr() {
         img.removeEventListener("error", onHeroErr);
-        // one retry with cache-bust — still the local industry photo, never the cement poster
+        // one retry with cache-bust - still the local industry photo, never the cement poster
         img.src = new URL(rel + "?t=" + Date.now(), window.location.href).href;
       });
     })();
@@ -2484,7 +2513,7 @@
 <script>
     (function () {
       const isMobileDeck = window.matchMedia("(max-width: 720px)").matches;
-      // ponytail: skip simulated dashboard on phone — desktop iframe only
+      // ponytail: skip simulated dashboard on phone - desktop iframe only
       const slides = Array.from(document.querySelectorAll(".slide")).filter(function (s) {
         return !(isMobileDeck && s.id === "scene-live");
       });
