@@ -76,6 +76,7 @@
 | L6 SSOT ops-first + EMS + dual-mode analyst | done |
 | UI charter + architecture/build/onboarding handoffs | done |
 | `consumers/stamped-l6` typed reference seed | done (tests + build green) |
+| Hardening (contract-check + ponytail chip shrink + security checklist) | done |
 | Live `Vinayak-RZ/stamped-l6` consumer repo | **planned** — follow [handoff/stamped-l6-build-plan.md](handoff/stamped-l6-build-plan.md) |
 
 ## Next (P1 — out of P0 scope)
