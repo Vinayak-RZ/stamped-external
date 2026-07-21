@@ -1,0 +1,71 @@
+/* Forge Industrial v2.0 — L6 reference tokens (see external/design/) */
+:root {
+  --forge-primary: #f75440;
+  --forge-primary-dim: rgba(247, 84, 64, 0.08);
+  --forge-secondary: #051f13;
+  --forge-tertiary: #00666b;
+  --forge-surface: #f7faf5;
+  --forge-surface-low: #f1f4f0;
+  --forge-surface-lowest: #ffffff;
+  --forge-on-surface: #191c1a;
+  --forge-on-surface-variant: #5a403c;
+  --forge-outline: #8f706b;
+  --forge-outline-variant: #e3beb8;
+  --forge-error: #ba1a1a;
+  --forge-warning: #c97a00;
+  --forge-font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+  --forge-font-body: Inter, system-ui, sans-serif;
+  --forge-radius-md: 8px;
+  --forge-radius-lg: 16px;
+  --forge-shadow-panel: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: var(--forge-font-body);
+  background: var(--forge-surface);
+  color: var(--forge-on-surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
