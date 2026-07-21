@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from stamped_l3_core.models.finding import Finding
+from stamped_l3_core.models.finding import Finding, default_ops_clearance
 
 
 def detect_md_overlap(
@@ -39,7 +39,7 @@ def detect_md_overlap(
 
     return [
         Finding(
-            schema_version="1.0.0",
+            schema_version="1.1.0",
             finding_id=f"f-md-{peak_ts.replace(':', '').replace('-', '')[:15]}",
             org_id=org_id,
             plant_id=plant_id,
@@ -67,5 +67,14 @@ def detect_md_overlap(
             engine="rules.md_overlap",
             engine_version=engine_version,
             rule_or_model_ref=f"rulepack://incomer/{rulepack_version}#md_overlap",
+            ops_clearance=default_ops_clearance(
+                asset_id=asset_id,
+                metric="apparent_power_kva",
+                tag_id=f"{asset_id}/apparent_power_kva",
+                band=list(baseline_band),
+                comparator="in_band",
+                expected="Incomer kVA within baseline band; no co-start spike",
+            ),
+            alarm_hint={"severity": "error", "category_code": "md.coincidence"},
         )
     ]

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://stamped.energy/schemas/finding.v1.json",
   "title": "Finding",
-  "description": "L3 → L4 structured finding. Numeric intelligence only — no prose. See technical/02-technical-architecture.md §5.2.",
+  "description": "L3 → L4 structured finding. Numeric intelligence only — no prose. v1.1.0 adds ops_clearance + alarm_hint for L5 ops-first verification. See technical/02-technical-architecture.md §5.2 · ADR-020.",
   "type": "object",
   "required": [
     "schema_version",
@@ -20,13 +20,14 @@
     "engine",
     "engine_version",
     "rule_or_model_ref",
+    "ops_clearance",
     "dedupe_key"
   ],
   "properties": {
     "schema_version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$",
-      "const": "1.0.0"
+      "const": "1.1.0"
     },
     "finding_id": { "type": "string", "minLength": 1 },
     "org_id": { "type": "string", "minLength": 1 },
@@ -104,6 +105,114 @@
     "suppressions_checked": {
       "type": "array",
       "items": { "type": "string" }
+    },
+    "ops_clearance": {
+      "type": "object",
+      "description": "Machine-evalable clearance contract for L5 ops-first verification (ADR-020)",
+      "required": [
+        "measurement_boundary",
+        "related_tag_ids",
+        "clearance_predicate",
+        "expected_post_fix_signal",
+        "stabilize_window",
+        "reopen_if_regresses"
+      ],
+      "properties": {
+        "measurement_boundary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Asset/meter scope or L2 graph node id"
+        },
+        "related_tag_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "description": "L2 tag ids L5 polls — not free-text supporting_tags"
+        },
+        "clearance_predicate": {
+          "type": "object",
+          "required": ["metric", "comparator"],
+          "properties": {
+            "metric": { "type": "string" },
+            "comparator": {
+              "type": "string",
+              "enum": ["lt", "lte", "gt", "gte", "eq", "in_band", "out_of_band"]
+            },
+            "threshold": { "type": "number" },
+            "band_ref": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "relative_to": {
+              "type": "string",
+              "enum": ["baseline", "actual_at_detect", "absolute"]
+            }
+          },
+          "additionalProperties": false
+        },
+        "expected_post_fix_signal": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human+machine description e.g. SP within band"
+        },
+        "stabilize_window": {
+          "type": "string",
+          "minLength": 1,
+          "description": "ISO-8601 duration e.g. PT30M"
+        },
+        "reopen_if_regresses": {
+          "type": "object",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "predicate": {
+              "type": "object",
+              "required": ["metric", "comparator"],
+              "properties": {
+                "metric": { "type": "string" },
+                "comparator": {
+                  "type": "string",
+                  "enum": ["lt", "lte", "gt", "gte", "eq", "in_band", "out_of_band"]
+                },
+                "threshold": { "type": "number" },
+                "band_ref": {
+                  "type": "array",
+                  "items": { "type": "number" },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "relative_to": {
+                  "type": "string",
+                  "enum": ["baseline", "actual_at_detect", "absolute"]
+                }
+              },
+              "additionalProperties": false
+            },
+            "grace_window": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "alarm_hint": {
+      "type": "object",
+      "description": "L3 suggestion only — L5 owns routing/ack/escalate",
+      "required": ["severity", "category_code"],
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": ["info", "warning", "error", "critical"]
+        },
+        "category_code": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable EMS console grouping code"
+        }
+      },
+      "additionalProperties": false
     },
     "dedupe_key": {
       "type": "string",

@@ -13,7 +13,7 @@
 | ADR-016 | Attribution shadow challengers | **Accepted** |
 | ADR-017 | L4 adaptive retrieval + web trust tiers | **Accepted** |
 | ADR-019 | L5 runtime charter and consistency | **Accepted** |
-| ADR-020 | L5 M&V claim governance | **Accepted** |
+| ADR-020 | L5 M&V claim governance (ops-first 2026-07-21) | **Accepted** |
 | ADR-021 | L5 notification and evidence policy | **Accepted** |
 
 ## L5 architecture (2026-07-20)
@@ -27,6 +27,18 @@
 | Notify | Meta Cloud API direct; shared WA number; DLT P0 / SMS P1 (ADR-021) |
 | Contracts | 0.7.0 — `workflow-event.json` + ledger supersession fields |
 | Handoff | [handoff/stamped-l5-architecture-handoff.md](handoff/stamped-l5-architecture-handoff.md) · [build plan](handoff/stamped-l5-build-plan.md) |
+
+## Ops-first verification + EMS (2026-07-21) — supersedes bill-first claim language
+
+| Topic | Choice |
+|-------|--------|
+| Verified | Ops-cleared via Finding `ops_clearance` held for `stabilize_window` (ADR-020) |
+| Bill path | Deferred — ledger `verified` reserved; P0 uses `ops_confirmed` |
+| Savings tracking | Calculated potential at issue + ops-realised after clearance |
+| Alarms | L3 detects + `alarm_hint`; L5 routes ack/escalate; L6 EMS console |
+| Finding | **1.1.0** required `ops_clearance` (+ optional `alarm_hint`) |
+| Contracts | **0.8.0** |
+| L3 paste prompt | [handoff/stamped-l3-ops-clearance-consumer-prompt.md](handoff/stamped-l3-ops-clearance-consumer-prompt.md) |
 
 ## L4 architecture (2026-07-17)
 

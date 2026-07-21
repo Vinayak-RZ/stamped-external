@@ -40,7 +40,12 @@
         "reason_coded",
         "verification_decision",
         "ledger_append_acked",
-        "duplicate_intent"
+        "duplicate_intent",
+        "alarm_raised",
+        "alarm_acked",
+        "alarm_cleared",
+        "ops_verified",
+        "ops_regressed"
       ]
     },
     "from_status": {
@@ -72,7 +77,7 @@
     },
     "actor_type": {
       "type": "string",
-      "enum": ["user", "system_timer", "mv_engine", "analyst", "webhook"]
+      "enum": ["user", "system_timer", "clearance_engine", "mv_engine", "analyst", "webhook"]
     },
     "actor_id": { "type": ["string", "null"] },
     "reason_code": {

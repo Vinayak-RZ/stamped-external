@@ -326,8 +326,9 @@ CREATE TABLE ledger.mv_ledger (
   realised_inr        numeric,
   avoided_tco2e       numeric,
   verification_status text NOT NULL DEFAULT 'pending'
-    CHECK (verification_status IN ('pending','verified','disputed','modeled')),
-  -- Corrections are new rows; do not mutate prior verification_status to 'superseded'
+    CHECK (verification_status IN ('pending','ops_confirmed','verified','disputed','modeled')),
+  -- ops_confirmed = telemetry clearance (P0). verified reserved for deferred bill path.
+  -- Corrections are new rows; do not mutate prior verification_status
   supersedes_entry_id uuid,
   emission_factor_ref text,
   modeled_reason      text,

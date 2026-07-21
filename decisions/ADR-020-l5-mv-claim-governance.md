@@ -1,36 +1,34 @@
-# ADR-020: L5 M&V claim governance
+# ADR-020: L5 verification & savings claim governance
 
 | Field | Value |
 | --- | --- |
-| **Status** | Accepted |
-| **Date** | 2026-07-20 |
-| **Deciders** | Engineering (L5 architecture overhaul) |
-| **Related** | [L5 SSOT](../technical/layers/L5-closure-and-verification.md) · [ADR-013](ADR-013-counterfactual-savings-ledger.md) · [ADR-019](ADR-019-l5-runtime-and-consistency.md) · [ledger-entry.json](../contracts/schemas/ledger-entry.json) |
+| **Status** | Accepted (superseded in part 2026-07-21 — ops-first) |
+| **Date** | 2026-07-20 · **Revised** 2026-07-21 |
+| **Deciders** | Engineering (L5 architecture overhaul + ops-first revision) |
+| **Related** | [L5 SSOT](../technical/layers/L5-closure-and-verification.md) · [ADR-013](ADR-013-counterfactual-savings-ledger.md) · [ADR-019](ADR-019-l5-runtime-and-consistency.md) · [finding.json](../contracts/schemas/finding.json) · [ledger-entry.json](../contracts/schemas/ledger-entry.json) |
 
 ---
 
 ## Context
 
-Customer trust rests on “verified on the DISCOM bill.” Over-claiming (noisy Option C, overlapping Rx double-count, FPPCA swings, unlocked baselines) is an existential product risk. L5 research already sketched IPMVP two-tier design; this ADR freezes **claim governance** so implementers cannot silently auto-verify or mutate history.
+Earlier ADR-020 treated “verified” as bill/IPMVP reconciliation. Product clarified (2026-07-21): **verification means the operational fault cleared** (load stabilized, leak fixed, coincidence broken, SEC drift reversed) proven on telemetry. Bill confirmation is deferred. Savings are tracked as **Stamped-calculated** amounts now.
 
 ---
 
-## Decision summary
+## Decision summary (binding)
 
 | # | Topic | Decision |
 | --- | --- | --- |
-| 1 | Account truth | **IPMVP Option C** (production-normalised) + bill reconciliation |
-| 2 | Per-Rx attribution | Option **A/B**; hard cap `Σ Rx ≤ Tier-1` |
-| 3 | Option D | **Not used** |
-| 4 | P0 claim gate | **Human analyst reviews every verification** |
-| 5 | Auto-verify | **P2+** only after empirical band from ≥3 plants and dispute rate &lt;5% |
-| 6 | Baseline history | **12 months preferred**; **9 months provisional** → `low_confidence_mv`, manual-only |
-| 7 | Baseline lock | Confirm lock when verification window opens; no silent retrain of cited baseline |
-| 8 | Bill claim scope | Claim **efficiency effect only**; report rate/volume/FPPCA separately |
-| 9 | Corrections | Append-only via new LedgerEntry + `supersedes_entry_id` |
-| 10 | Counterfactual | `opportunity_cost` always `verification_status=modeled` (ADR-013) |
-| 11 | Overlap | Disjoint → independent; shared boundary → **bundle** (P2); tariff lines deterministic |
-| 12 | Emission factors | Version snapshotted at post; CEA national default |
+| 1 | What “verified” means | **Ops-cleared** via Finding `ops_clearance` held for `stabilize_window` |
+| 2 | Bill path | **Deferred** — not a P0/P1 gate |
+| 3 | Detection vs alarms | **L3 detects**; **L5** routes EMS alarms + evaluates clearance |
+| 4 | P0 savings tracking | `potential_savings` at issue; `realised_savings` with **`ops_confirmed`** after clearance |
+| 5 | Reserved status | `verification_status=verified` reserved for **future bill path** |
+| 6 | Counterfactual | `opportunity_cost` always `modeled` (ADR-013) |
+| 7 | Corrections | Append-only + `supersedes_entry_id` |
+| 8 | Regress | `reopen_if_regresses` → reopen workflow, re-raise alarm, compensating ledger |
+| 9 | IPMVP / Option C | Deferred appendix — re-enable behind product flag later |
+| 10 | Analyst gate | **Not** required for every ops-clear; optional for disputes/overrides |
 
 ---
 
@@ -38,31 +36,29 @@ Customer trust rests on “verified on the DISCOM bill.” Over-claiming (noisy 
 
 | `verification_status` | Meaning |
 | --- | --- |
-| `pending` | Intent/model computed; not customer-verified |
-| `verified` | Passed gates + analyst (P0) or auto-band (P2) + bill reconcile |
-| `disputed` | Customer/analyst challenge open |
-| `modeled` | Counterfactual or non-bill claim — **never** sold as bill-verified |
-
-Dispute resolution outcomes (`resolved_upheld` / `resolved_adjusted` / `resolved_withdrawn`) live on **DisputeCase**, not as LedgerEntry `verification_status` values. Adjustments post compensating ledger rows.
+| `pending` | Potential posted or clearance in flight |
+| `ops_confirmed` | Telemetry clearance held — **P0 customer-facing “verified”** |
+| `modeled` | Counterfactual / non-ops estimate (e.g. opportunity_cost) |
+| `disputed` | Challenge open |
+| `verified` | **Reserved** — bill-reconciled (deferred) |
 
 ---
 
-## Gating checklist before `verified`
+## Gating checklist before `ops_confirmed`
 
-1. Baseline locked and G14 fit gates passed (Option C) or deterministic tariff path validated (A).
-2. Verification window elapsed (or tariff-line immediate path with one billing cycle confirm).
-3. Data-gap policy: windows with insufficient coverage → `data_insufficient`, no verified claim.
-4. Decomposition shows non-zero efficiency effect attributable after rate/volume removal.
-5. Attribution cap applied.
-6. Analyst approval recorded (P0/P1) or auto-band satisfied (P2).
+1. Finding(s) expose `ops_clearance` with `related_tag_ids` + predicate + `stabilize_window`.
+2. Rx reached DONE (or predicate already true with policy allow).
+3. L2 tag coverage sufficient for stabilize window.
+4. Predicate holds continuously for stabilize window.
+5. Ledger append intent written with calculated realised ₹/kWh.
 
 ---
 
 ## Consequences
 
-- L6 must not display `modeled` or `pending` as “verified on bill”.
-- Sales 90-day program language must cite this methodology and name a dispute review process (legal template still open).
-- L2 DDL CHECK for `verification_status` must include `modeled` and must not require mutable `superseded` status.
+- L6 must label ops-confirmed distinctly from any future bill-verified badge.
+- L3 must emit Finding 1.1.0 `ops_clearance` (+ optional `alarm_hint`) — see [stamped-l3-ops-clearance-consumer-prompt.md](../handoff/stamped-l3-ops-clearance-consumer-prompt.md).
+- Prior “analyst reviews every verification” / “Option C account truth as gate” language is **superseded** for P0–P1.
 
 ---
 
@@ -70,7 +66,6 @@ Dispute resolution outcomes (`resolved_upheld` / `resolved_adjusted` / `resolved
 
 | Option | Rejected because |
 | --- | --- |
-| Auto-verify from day one | False-claim risk at pilot volumes |
-| Site-level Option C only, no per-Rx | Weak ops accountability / ranking feedback |
-| Edit ledger rows on dispute | Breaks auditability |
-| Weather-only CalTRACK models | Industrial driver is production, not degree-days |
+| Bill-only verified | Misaligns with plant reality; slow feedback |
+| Ops-only with no ₹ tracking | Loses calculated savings accountability |
+| L5 re-implements detectors | Duplicates L3; use catalog map instead |
