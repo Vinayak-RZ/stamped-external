@@ -1,4 +1,4 @@
-# Pharma demo — Vercel deploy root
+# Pharma demo: Vercel deploy root
 
 This folder is a standalone static site. `index.html` is the pharma deck (same content as [`../pharma.html`](../pharma.html)).
 

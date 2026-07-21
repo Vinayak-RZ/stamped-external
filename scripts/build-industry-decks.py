@@ -35,7 +35,7 @@ PACKS = {
             "eyebrowM": "Cement · bill-verified decisions",
             "h1D": "From kiln and mill signals to owned actions on the invoice.",
             "h1M": "Kiln & mill ₹ actions on the bill.",
-            "ledeD": "You already run kiln, mill, WHR, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.",
+            "ledeD": "You already run kiln, mill, WHR, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.",
             "ledeM": "Ranked kiln, mill, and WHR actions. Verified on the DISCOM bill.",
         },
         "hook": {
@@ -135,7 +135,7 @@ PACKS = {
         "math": {
             "eyebrow": "Where cement electricity cost usually hides",
             "h2": "Five areas we check first in cement",
-            "ledeD": "First places we look when a cement plant already meters kiln, mills, and WHR — and still sees avoidable ₹ on the HT bill.",
+            "ledeD": "First places we look when a cement plant already meters kiln, mills, and WHR, and still sees avoidable ₹ on the HT bill.",
             "ledeM": "First places we look for avoidable ₹ on a cement HT bill.",
             "cards": [
                 (
@@ -171,7 +171,7 @@ PACKS = {
             ],
         },
         "techBullet": "MD coincidence, mill/kiln idle, WHR vs peak grid, fan staging",
-        "offerLedeD": "Start with one cement line or grinding circuit. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and plant fit.",
+        "offerLedeD": "Start with one cement line or grinding circuit. Audit the data, run prescriptions on the floor, then go or no-go at Day 60: on ₹ savings and plant fit.",
         "offerLedeM": "One cement circuit. Audit → floor → go / no-go at Day 60.",
     },
     "steel": {
@@ -183,7 +183,7 @@ PACKS = {
             "eyebrowM": "Steel · bill-verified decisions",
             "h1D": "From furnace and mill signals to owned actions on the invoice.",
             "h1M": "Furnace & mill ₹ actions on the bill.",
-            "ledeD": "You already run furnace, rolling, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value — then checks the result on the next DISCOM bill.",
+            "ledeD": "You already run furnace, rolling, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.",
             "ledeM": "Ranked furnace and mill actions. Verified on the DISCOM bill.",
         },
         "hook": {
@@ -283,7 +283,7 @@ PACKS = {
         "math": {
             "eyebrow": "Where steel electricity cost usually hides",
             "h2": "Five areas we check first in steel",
-            "ledeD": "First places we look when a steel plant already meters furnace and mill loads — and still sees avoidable ₹ on the HT bill.",
+            "ledeD": "First places we look when a steel plant already meters furnace and mill loads, and still sees avoidable ₹ on the HT bill.",
             "ledeM": "First places we look for avoidable ₹ on a steel HT bill.",
             "cards": [
                 (
@@ -319,7 +319,7 @@ PACKS = {
             ],
         },
         "techBullet": "MD coincidence, furnace holding, mill idle, compressed air, tariff dispatch",
-        "offerLedeD": "Start with one melt shop or rolling line. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and plant fit.",
+        "offerLedeD": "Start with one melt shop or rolling line. Audit the data, run prescriptions on the floor, then go or no-go at Day 60: on ₹ savings and plant fit.",
         "offerLedeM": "One melt or roll line. Audit → floor → go / no-go at Day 60.",
     },
     "pharma": {
@@ -337,7 +337,7 @@ PACKS = {
         "hook": {
             "eyebrow": "Monday 07:05 · Utilities handover",
             "h2": "Your pharma plant already has the data.",
-            "ledeD": "The incomer saw the MD spike when chillers and autoclave heat-up overlapped — a classic load-management miss. The EMS logged it. Nobody got a work order with a rupee figure.",
+            "ledeD": "The incomer saw the MD spike when chillers and autoclave heat-up overlapped: a classic load-management miss. The EMS logged it. Nobody got a work order with a rupee figure.",
             "ledeM": "Chillers and autoclave overlapped. A load spike with no ₹ work order.",
             "t1s": "Chillers and autoclave start together",
             "t1p": "Shift B brings heavy utilities online in the same window.",
@@ -431,8 +431,8 @@ PACKS = {
         "math": {
             "eyebrow": "Where pharma electricity cost usually hides",
             "h2": "Five areas we check first in pharma",
-            "ledeD": "First places we look when a pharma plant already meters HVAC and utilities — and still sees avoidable ₹ on the HT bill, especially from load management gaps.",
-            "ledeM": "First places we look — including load management — for avoidable ₹ on a pharma HT bill.",
+            "ledeD": "First places we look when a pharma plant already meters HVAC and utilities: load management, idle waste, tariff timing, and early signals before equipment fails.",
+            "ledeM": "Load management, HVAC & chillers, idle utilities, tariff, and early warnings before breakdowns.",
             "cards": [
                 (
                     "Load management",
@@ -441,33 +441,33 @@ PACKS = {
                     "Sample: chillers and autoclave heat-up in the same window",
                 ),
                 (
-                    "HVAC / cleanroom",
-                    ["Overcool in idle suites", "AHU full duty off-batch", "Simultaneous bank starts"],
-                    "Bill line · Energy (kWh)",
-                    "Sample: Suite 3 HVAC at full duty with no batch tag",
-                ),
-                (
-                    "Chillers & utilities",
-                    ["Staging discipline", "Unload / bypass hours", "Purified-water run-on"],
+                    "HVAC & chillers",
+                    ["Idle-suite overcool", "Chiller staging discipline", "Unload / bypass hours"],
                     "Bill line · Energy + MD",
-                    "Sample: second chiller online into the same demand window",
+                    "Sample: Suite HVAC at full duty with no batch; second chiller into the same peak",
                 ),
                 (
-                    "Batch gaps",
-                    ["Utilities across changeovers", "Idle CIP / WIP holding", "Non-critical loads left on"],
+                    "Utilities & idle loads",
+                    ["Non-critical loads left on", "Changeover utility islands", "Idle CIP / WIP holding"],
                     "Bill line · Energy (kWh)",
                     "Sample: utility island left running across an idle window",
                 ),
                 (
-                    "Tariff / intensity",
+                    "Tariff & intensity",
                     ["Peak import timing", "kWh per batch drift", "TOU mistiming"],
                     "Bill + batch tag",
                     "Sample: peak grid draw during a non-critical utility window",
                 ),
+                (
+                    "Early warnings",
+                    ["Catch drift before a breakdown", "Compressed-air / utility leaks", "Repair signal before the trip"],
+                    "Ops + bill impact",
+                    "Sample: rising specific power and leak signature flagged before a chiller trip",
+                ),
             ],
         },
-        "techBullet": "Load management, HVAC idle, chiller staging, batch-gap utilities, tariff dispatch",
-        "offerLedeD": "Start with one HVAC / utilities island or production block. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and plant fit.",
+        "techBullet": "Load management, HVAC & chillers, idle utilities, tariff intensity, early fault warnings",
+        "offerLedeD": "Start with one HVAC / utilities island or production block. Audit the data, run prescriptions on the floor, then go or no-go at Day 60: on ₹ savings and plant fit.",
         "offerLedeM": "One utilities island. Audit → floor → go / no-go at Day 60.",
     },
 }
@@ -492,7 +492,7 @@ HERO_CSS = """
       object-fit: cover;
       object-position: center;
     }
-    /* ponytail: no bottom scrim — it read as a broken/wrong image block */
+    /* ponytail: no bottom scrim - it read as a broken/wrong image block */
     .hero-photo__scrim { display: none !important; }
     .industry-chip {
       display: inline-flex; align-items: center;
@@ -801,7 +801,7 @@ def inject_hero_photo(html: str, industry: str) -> str:
             />
           </figure>"""
 
-    # Insert photo before hero-canvas; keep canvas for desktop optional — hide canvas with CSS on all sizes in favor of photo
+    # Insert photo before hero-canvas; keep canvas for desktop optional - hide canvas with CSS on all sizes in favor of photo
     html = html.replace(
         '<div class="hero-canvas reveal hide-mobile" aria-hidden="true">',
         photo_block + '\n          <div class="hero-canvas reveal hide-mobile" aria-hidden="true" hidden>',
@@ -882,9 +882,9 @@ def inject_ids_and_hooks(html: str) -> str:
             '<p id="whatStep1">Incomer, sub-meters, SCADA and PLC states, and utility line items. Read-only. No control writes to the plant.</p>',
         ),
         (
-            '<p class="lede reveal hide-mobile">Start with one plant. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and whether it actually made the plant easier to run.</p>\n'
+            '<p class="lede reveal hide-mobile">Start with one plant. Audit the data, run prescriptions on the floor, then go or no-go at Day 60: on ₹ savings and whether it actually made the plant easier to run.</p>\n'
             '        <p class="lede reveal show-mobile">Audit → floor execution → go / no-go at Day 60.</p>',
-            '<p class="lede reveal hide-mobile" id="offerLedeD">Start with one plant. Audit the data, run prescriptions on the floor, then go or no-go at Day 60 — on ₹ savings and whether it actually made the plant easier to run.</p>\n'
+            '<p class="lede reveal hide-mobile" id="offerLedeD">Start with one plant. Audit the data, run prescriptions on the floor, then go or no-go at Day 60: on ₹ savings and whether it actually made the plant easier to run.</p>\n'
             '        <p class="lede reveal show-mobile" id="offerLedeM">Audit → floor execution → go / no-go at Day 60.</p>',
         ),
         (
@@ -901,7 +901,7 @@ def inject_ids_and_hooks(html: str) -> str:
 
 def replace_rx_block(html: str, pack: dict) -> str:
     r1, r2 = pack["rx1"], pack["rx2"]
-    # Replace first rx-action and fields via unique current strings — do after generic IDs
+    # Replace first rx-action and fields via unique current strings - do after generic IDs
     # Wrap rx sections with ids by replacing the whole two buttons' key lines
 
     def patch_rx(html: str, which: str, r: dict, action_old: str) -> str:
@@ -948,7 +948,7 @@ def replace_rx_block(html: str, pack: dict) -> str:
         1,
     )
 
-    # Prescription card 1 — replace whole first button front+back key content by unique block
+    # Prescription card 1 - replace whole first button front+back key content by unique block
     rx1_front = f'''                  <span class="rx-badge" id="rx1Badge">{r1["badge"]}</span>
                   <span class="rx-priority">Priority · High</span>
                 </div>
@@ -1081,7 +1081,7 @@ def replace_rx_block(html: str, pack: dict) -> str:
         1,
     )
 
-    # floor bubble — first of 3 interactive prescriptions (rest via __FLOOR_RX__)
+    # floor bubble - first of 3 interactive prescriptions (rest via __FLOOR_RX__)
     floors = pack["floor"]
     if not isinstance(floors, list) or len(floors) != 3:
         raise SystemExit("pack['floor'] must be a list of 3 prescriptions")
@@ -1189,7 +1189,7 @@ def inject_boot_script(html: str, industry: str) -> str:
       if (img.src !== resolved) img.src = resolved;
       img.addEventListener("error", function onHeroErr() {{
         img.removeEventListener("error", onHeroErr);
-        // one retry with cache-bust — still the local industry photo, never the cement poster
+        // one retry with cache-bust - still the local industry photo, never the cement poster
         img.src = new URL(rel + "?t=" + Date.now(), window.location.href).href;
       }});
     }})();
@@ -1209,7 +1209,7 @@ def build_one(base_html: str, industry: str) -> str:
     html = replace_rx_block(html, pack)
     html = apply_static_pack_fields(html, pack)
     html = inject_boot_script(html, industry)
-    # desktop: prefer photo over SVG — hide canvas always when photo present
+    # desktop: prefer photo over SVG - hide canvas always when photo present
     html = html.replace(
         "#scene-title .hero-shell {\n"
         "      display: grid;\n"
@@ -1302,11 +1302,11 @@ HUB = """<!DOCTYPE html>
   <main>
     <img class="logo" src="https://stamped.work/LogoOrange.png" alt="Stamped Energy" width="140" height="36" />
     <h1>Pick your industry deck</h1>
-    <p class="lede">Same Proof Run walkthrough — prescriptions, data sources, and optimisation targets tuned for each plant type.</p>
+    <p class="lede">Same Proof Run walkthrough: prescriptions, data sources, and optimisation targets tuned for each plant type.</p>
     <div class="grid">
       <a class="card" href="./cement.html">
         <strong>Cement</strong>
-        <span>Kiln, mills, WHR dispatch, and kWh/ton — MD and peak-grid actions.</span>
+        <span>Kiln, mills, WHR dispatch, and kWh/ton: MD and peak-grid actions.</span>
         <em>Open cement deck →</em>
       </a>
       <a class="card" href="./steel.html">
@@ -1342,7 +1342,7 @@ def main() -> None:
             snapshot.write_text(base, encoding="utf-8")
         elif "hero-photo" in base:
             raise SystemExit(
-                "index.html already transformed and no _base.snapshot.html — restore base first"
+                "index.html already transformed and no _base.snapshot.html - restore base first"
             )
 
     for industry in ("cement", "steel", "pharma"):
