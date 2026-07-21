@@ -46,7 +46,7 @@ Three structural implications for L3:
 
 1. **No engine needs to be heroic.** Each category needs a detector good enough to find the top 2–3 recurring instances per plant per month with high precision. A 3% category closed reliably beats a 6% category detected at 40% precision that destroys trust.
 2. **Precision > recall, everywhere.** The scarce resource is plant-side attention (supervisor actions per week). A false prescription costs more than a missed one — it burns the credibility that closure depends on (closure-rate target ≥60% on high-priority Rx `[!]`).
-3. **The bill is the ground truth.** Every engine's ₹ estimate must decompose onto a DISCOM bill line (energy, demand, PF penalty, TOD) so [L5 M&V](L5-closure-and-verification.md) can reconcile it. This is why the tariff engine is deterministic and why baselines must be M&V-grade, not merely predictive.
+3. **Ops-cleared is P0 verification; ₹ is calculated until bill ships.** Every Finding must emit machine-evalable `ops_clearance` so [L5](L5-closure-and-verification.md) can prove the fault fixed / load stabilized on L2 tags (ADR-020). `estimated_monthly_*` remain Stamped **calculated** savings (potential → ops-realised); they must still decompose onto a DISCOM bill line so a **deferred** bill path can reconcile later — tariff stays deterministic, baselines stay M&V-grade.
 
 ### 1.2 What L3 must NOT do
 
@@ -79,7 +79,7 @@ All nine engines emit the same schema. **Canonical:** [`contracts/schemas/findin
 
 ```json
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "finding_id": "f-2026-07-08-0042",
   "org_id": "org_acme",
   "plant_id": "plant_ghaziabad_1",
@@ -105,18 +105,43 @@ All nine engines emit the same schema. **Canonical:** [`contracts/schemas/findin
   "engine_version": "1.4.2",
   "rule_or_model_ref": "rulepack://compressor/1.4.2#sp_drift",
   "suppressions_checked": ["startup_window", "production_mix_change"],
+  "ops_clearance": {
+    "measurement_boundary": "compressor-2",
+    "related_tag_ids": ["compressor-2/active_power", "compressor-2/line_pressure"],
+    "clearance_predicate": {
+      "metric": "specific_power_kw_per_nm3min",
+      "comparator": "in_band",
+      "band_ref": [5.5, 6.1],
+      "relative_to": "baseline"
+    },
+    "expected_post_fix_signal": "SP within baseline band at stable pressure for 30 min",
+    "stabilize_window": "PT30M",
+    "reopen_if_regresses": {
+      "enabled": true,
+      "predicate": {
+        "metric": "specific_power_kw_per_nm3min",
+        "comparator": "out_of_band",
+        "band_ref": [5.5, 6.1],
+        "relative_to": "baseline"
+      },
+      "grace_window": "PT10M"
+    }
+  },
+  "alarm_hint": {"severity": "warning", "category_code": "ca.sp_drift"},
   "dedupe_key": "sha256:a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
 }
 ```
 
-**Field names (locked):** use `baseline_value` / `actual_value` — not `baseline` / `actual`. `plant_id` and `org_id` are required. Top-level `engine` + `engine_version` + `rule_or_model_ref` identify the producer; optional `evidence.model_version` / `evidence.rule_version` version the cited baseline/rule artefacts.
+**Field names (locked):** use `baseline_value` / `actual_value` — not `baseline` / `actual`. `plant_id` and `org_id` are required. Top-level `engine` + `engine_version` + `rule_or_model_ref` identify the producer; optional `evidence.model_version` / `evidence.rule_version` version the cited baseline/rule artefacts. **`schema_version` is `1.1.0`** (required `ops_clearance`).
 
 Contract rules that matter for L3 design:
 
-1. **`engine` + `engine_version` + `rule_or_model_ref` are mandatory** — M&V cites them; the model registry (§5.6) must be able to reproduce any historical finding.
+1. **`engine` + `engine_version` + `rule_or_model_ref` are mandatory** — L5 clearance + future M&V cite them; the model registry (§5.6) must be able to reproduce any historical finding.
 2. **`confidence` is calibrated, not cosmetic** — it feeds the L4 ranker (`score = inr × confidence / effort`), so per-engine calibration curves are part of the evaluation protocol (§5). Cold-start defaults: §5.2.
-3. **`evidence.baseline_id` points to an immutable baseline version** in the L2 baseline store when the finding cites a baseline (required for M&V-eligible ₹).
+3. **`evidence.baseline_id` points to an immutable baseline version** in the L2 baseline store when the finding cites a baseline (required for calculated ₹ and future bill path).
 4. **`dedupe_key`** = sha256 of (category, sorted assets, window) — L3 emits at most one open finding per key; persistence escalates severity instead of re-emitting.
+5. **`ops_clearance` is mandatory (Finding 1.1.0)** — `related_tag_ids` must be L2 tag ids L5 can poll; predicate + `stabilize_window` must be machine-evalable. Optional `alarm_hint` is a suggestion only — L5 owns ack/route/escalate. L3 does **not** implement alarm routing or ops clearance evaluation.
+6. **`estimated_monthly_kwh` / `estimated_monthly_inr` are calculated-savings SoT** — potential at emit; L5 labels ops-realised after clearance (`ops_confirmed`). Never claim bill-verified from L3.
 5. Findings are **idempotent and replayable**: same inputs + same engine version ⇒ same finding. This makes backtesting (§5.4) and audit possible.
 
 ---
@@ -242,6 +267,7 @@ Given solar/WHR/DG availability, grid TOD windows, and process constraints, reco
 - **Parameter layer, not retraining** ([architecture L3 engines table](../02-technical-architecture.md) — per-plant calibration row): plant config = anomaly sensitivities, SEC norms, idle thresholds, startup suppression windows, shift boundaries. Model *code* is fleet-shared; parameters are per-plant.
 - **Hierarchical / partial pooling:** treat plant-level baseline coefficients (e.g. compressor SP, furnace holding kW, idle floors) as draws from a vertical-level prior distribution. With 2 weeks of data the posterior sits near the fleet prior (wide bands); with 6 months it is dominated by plant data. Implementable as closed-form Bayesian linear regression updates or empirical-Bayes shrinkage — no MCMC needed for linear-in-parameters baselines `[~]`. This is the formal version of "fleet priors → tightened bands weeks 4–10".
 - **False-positive-driven threshold tuning:** L5 workflow reason codes (rejected / already-fixed / wrong-owner / deferred) flow back as labels. Per plant per category, adjust detection thresholds to hold the precision target (§5.2) — e.g. raise the CUSUM decision interval where rejections cluster. This is the single most valuable learning loop in the system because it directly optimises the closure metric.
+- **False-clear / regress feedback (ops-first):** when L5 records `ops_verified` then `ops_regressed` (or clears then re-alarms within grace), treat as **false-clear** — widen `stabilize_window`, tighten clearance predicate, or raise reopen sensitivity for that engine×plant. Persistent false-clears without regress → loosen reopen or shorten stabilize. Labels come from L5 WorkflowEvents; L3 only recalibrates emit/clearance parameters.
 - **Guardrail:** calibration may tighten/loosen thresholds within fleet-defined bounds only; it must never silently disable a category (a plant that rejects everything is a customer-success signal, not a tuning signal).
 
 ---
@@ -264,7 +290,7 @@ Given solar/WHR/DG availability, grid TOD windows, and process constraints, reco
 
 ### 4.2 Why this shape is right for Stamped
 
-1. **Everything of record is linear-in-parameters or deterministic** → every finding and every M&V claim can be reproduced by hand from the report. This is the moat for the "bill-verified" positioning, not a limitation.
+1. **Everything of record is linear-in-parameters or deterministic** → every finding, ops-clearance predicate, and calculated ₹ path can be reproduced by hand. That is the moat for trust (ops-cleared now; bill-verified later), not a limitation.
 2. **ML where it pays, in supporting roles:** GBMs sharpen forecasts and challenge baselines; matrix profile mines signatures; isolation forest sweeps for the unknown-unknowns. None of them are load-bearing for a ₹ claim.
 3. **One codebase, many plants:** fleet-shared engine code + per-plant parameter packs + hierarchical priors is the only shape that scales to 100+ plants with a small ML team (the Greenovative-style "base model + per-plant parameterisation" pattern noted in [master document](../00-stamped-master-document.md)).
 4. **Suppression logic is a first-class shared service** — most anomaly-quality problems will be solved there, not in detector choice.
@@ -450,6 +476,15 @@ All engines call suppression before emit:
 | `data_quality` | L2 quality flags | Reject `estimated` for M&V-eligible |
 
 Applied suppressions recorded on `suppressions_checked[]`.
+
+**Suppression vs reopen (do not conflate):**
+
+| Mechanism | Owner | When |
+|---|---|---|
+| Suppression | L3 before emit | Transient plant context (startup, mix change, maintenance, bad data) — never emit Finding |
+| `reopen_if_regresses` | L5 after ops_verified | Clearance predicate fails again after grace — reopen Workflow / re-alarm; L3 may later re-emit on new evidence window via normal detect path |
+
+Suppressions do **not** clear open Findings. Reopen does **not** invent a new Finding category — it reactivates the Rx/alarm for the same clearance contract.
 
 ---
 

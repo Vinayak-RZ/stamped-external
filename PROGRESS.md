@@ -59,11 +59,22 @@
 | handoff/stamped-l5-architecture-handoff.md + build-plan | done |
 | Cross-doc contradiction sync (arch §5.4/§11, prod-eng Temporal, L2 DDL) | done |
 
+## Ops-first L5 + L3 enablement (2026-07-21)
+
+| Item | Status |
+|------|--------|
+| L5 SSOT / ADR-020 / handoffs reframed: ops-clearance, EMS alarms, bill deferred | done |
+| Contracts **0.8.0**: Finding 1.1.0 `ops_clearance`, ledger `ops_confirmed`, workflow alarm/ops events | done |
+| L3 SSOT + arch §5.2 + build-order + paste-ready L3 prompt | done |
+| L3-core / L4 fixtures scaffold sync for 1.1.0 | done |
+
 ## Next (P1 — out of P0 scope)
 
 - Create `stamped-l5` consumer repo per [handoff/stamped-l5-build-plan.md](handoff/stamped-l5-build-plan.md)
+- L3 consumer repos: paste [stamped-l3-ops-clearance-consumer-prompt.md](handoff/stamped-l3-ops-clearance-consumer-prompt.md)
 - Live L2 query API + ledger append endpoint
 - LangGraph full agent lane (per L4 handoff)
 - Forging/auto rulepacks
+- Deferred bill reconcile / IPMVP Option C gate (not P0)
 - TimesFM promotion re-eval with pilot data
 - Event NILM-lite attribution shadow (gated 1-min + labels)

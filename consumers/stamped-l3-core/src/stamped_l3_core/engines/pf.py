@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from stamped_l3_core.models.finding import Finding
+from stamped_l3_core.models.finding import Finding, default_ops_clearance
 
 
 def detect_pf_slab_breach(
@@ -32,7 +32,7 @@ def detect_pf_slab_breach(
 
     return [
         Finding(
-            schema_version="1.0.0",
+            schema_version="1.1.0",
             finding_id=f"f-pf-{worst_ts.replace(':', '').replace('-', '')[:15]}",
             org_id=org_id,
             plant_id=plant_id,
@@ -54,5 +54,14 @@ def detect_pf_slab_breach(
             engine="rules.pf_slab",
             engine_version=engine_version,
             rule_or_model_ref=f"rulepack://incomer/{rulepack_version}#pf_slab_breach",
+            ops_clearance=default_ops_clearance(
+                asset_id=asset_id,
+                metric="power_factor",
+                tag_id=f"{asset_id}/power_factor",
+                threshold=pf_threshold,
+                comparator="gte",
+                expected=f"Power factor ≥ {pf_threshold}",
+            ),
+            alarm_hint={"severity": "warning", "category_code": "pq.pf_slab"},
         )
     ]

@@ -230,7 +230,7 @@ Guarantees L1 makes to L2: units normalised · timestamps UTC (plant TZ preserve
 
 ```
 Finding {
-  schema_version,                      // "1.0.0"
+  schema_version,                      // "1.1.0"
   finding_id, org_id, plant_id,        // plant_id required
   category,                            // closed enum (md_overlap | compressor_sp_drift | …)
   waste_category,                      // 1–6 (§3.1)
@@ -241,19 +241,25 @@ Finding {
     model_version?, rule_version?                   // versions of cited artefacts
   },
   confidence,                          // calibrated 0–1
-  estimated_monthly_kwh, estimated_monthly_inr,
-  inr_decomposition?,                  // bill_line + rate_ref
+  estimated_monthly_kwh, estimated_monthly_inr,  // calculated savings SoT (not bill-verified)
+  inr_decomposition?,                  // bill_line + rate_ref (for deferred bill path)
   urgency,                             // low | medium | high
   engine, engine_version,              // producer identity (e.g. rules.compressor_sp_drift / 1.4.2)
   rule_or_model_ref,                   // URI, e.g. rulepack://compressor/1.4.2#sp_drift
   suppressions_checked?,
+  ops_clearance {                      // required — L5 ops-first verification (ADR-020)
+    measurement_boundary, related_tag_ids[],
+    clearance_predicate, expected_post_fix_signal,
+    stabilize_window, reopen_if_regresses
+  },
+  alarm_hint?,                         // severity + category_code — L5 routes; L3 suggests only
   dedupe_key                           // sha256:… stable business key
 }
 ```
 
-**Naming map (do not mix):** `evidence.baseline_value` / `evidence.actual_value` are the numbers; `evidence.model_version` / `evidence.rule_version` version cited artefacts; top-level `engine` + `engine_version` + `rule_or_model_ref` identify the producer for M&V replay. Layer docs that used `baseline`/`actual` are obsolete.
+**Naming map (do not mix):** `evidence.baseline_value` / `evidence.actual_value` are the numbers; `evidence.model_version` / `evidence.rule_version` version cited artefacts; top-level `engine` + `engine_version` + `rule_or_model_ref` identify the producer for replay. Layer docs that used `baseline`/`actual` are obsolete.
 
-Guarantees L3 makes to L4: findings are category-tagged (generic alerts rejected) · every number traces to a versioned baseline/model/rule · confidence is calibrated, not raw model score · schema matches `finding.json`.
+Guarantees L3 makes to L4/L5: findings are category-tagged (generic alerts rejected) · every number traces to a versioned baseline/model/rule · confidence is calibrated, not raw model score · every Finding carries evalable `ops_clearance` · schema matches `finding.json` **1.1.0**.
 
 ### 5.3 L4 → L5: `Prescription`
 
@@ -285,19 +291,20 @@ LedgerEntry {
   mv_method, baseline_id,              // IPMVP option, locked baseline
   bill_line_refs[],                    // DISCOM bill reconciliation
   intensity_delta,                     // SEC change if production tagged
-  verification_status,                 // pending | verified | disputed | modeled
+  verification_status,                 // pending | ops_confirmed | verified | disputed | modeled
+                                       // ops_confirmed = P0 telemetry clearance; verified reserved for deferred bill
   supersedes_entry_id?                 // corrections = new rows (never mutate)
 }
 
 WorkflowEvent {
-  event_id, prescription_id, event_type,
-  from_status, to_status,              // L5 runtime: open…verified|disputed|…
+  event_id, prescription_id, event_type, // includes alarm_* | ops_verified | ops_regressed
+  from_status, to_status,              // L5 runtime: open…verified|disputed|… (verified = ops-cleared)
   actor_type, reason_code?, channel?, wamid?,
   workflow_version, occurred_at, dedupe_key
 }
 ```
 
-Guarantees L5 makes to L6: append-only ledger in **L2** (L5 appends via HTTP, ADR-019) · baseline locked for open verification cases · `modeled` never presented as bill-verified · workflow closure states live on `WorkflowEvent`, not L4 `Prescription.status`.
+Guarantees L5 makes to L6: append-only ledger in **L2** (L5 appends via HTTP, ADR-019) · ops clearance evaluated from Finding `ops_clearance` · `ops_confirmed` / `modeled` never presented as bill-verified · EMS alarm list from WorkflowEvents · workflow closure states live on `WorkflowEvent`, not L4 `Prescription.status`.
 
 ---
 

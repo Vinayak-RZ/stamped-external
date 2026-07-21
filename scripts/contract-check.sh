@@ -44,6 +44,7 @@ pairs = {
     "ledger_entry.valid.json": "ledger-entry.json",
     "ledger_entry_opportunity_cost.valid.json": "ledger-entry.json",
     "workflow_event.valid.json": "workflow-event.json",
+    "workflow_event_ops_verified.valid.json": "workflow-event.json",
 }
 for fixture, schema_name in pairs.items():
     fp, sp = fixtures / fixture, schemas / schema_name

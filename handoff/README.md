@@ -90,8 +90,9 @@ Also read ADRs: [ADR-001](../decisions/ADR-001-l1-repo-split-and-boundaries.md),
 |---|----------|---------|
 | 1 | [stamped-l3-build-order.md](./stamped-l3-build-order.md) | P0 build order across three L3 repos |
 | 2 | [stamped-l3-dual-lane-consumer-prompt.md](./stamped-l3-dual-lane-consumer-prompt.md) | **Paste to core & rulepacks agents** after ADR-015/016 — submodule pin + dual-lane + attribution shadows |
+| 3 | [stamped-l3-ops-clearance-consumer-prompt.md](./stamped-l3-ops-clearance-consumer-prompt.md) | **Paste to L3 agents** — Finding 1.1.0 `ops_clearance` + `alarm_hint` for L5 ops-first verification |
 
-Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · [ADR-015](../decisions/ADR-015-l3-dual-lane-lab-detections.md) · [ADR-016](../decisions/ADR-016-attribution-shadow-challengers.md).
+Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · [ADR-015](../decisions/ADR-015-l3-dual-lane-lab-detections.md) · [ADR-016](../decisions/ADR-016-attribution-shadow-challengers.md) · [ADR-020](../decisions/ADR-020-l5-mv-claim-governance.md).
 
 ---
 
@@ -119,13 +120,13 @@ Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · 
 | 2 | [stamped-l5-build-plan.md](./stamped-l5-build-plan.md) | Starter commit matrix for next agents |
 | 3 | [../technical/layers/L5-closure-and-verification.md](../technical/layers/L5-closure-and-verification.md) | Architecture SSOT |
 | 4 | [../decisions/ADR-019-l5-runtime-and-consistency.md](../decisions/ADR-019-l5-runtime-and-consistency.md) | Runtime + L2 append protocol |
-| 5 | [../decisions/ADR-020-l5-mv-claim-governance.md](../decisions/ADR-020-l5-mv-claim-governance.md) | M&V claim gates |
+| 5 | [../decisions/ADR-020-l5-mv-claim-governance.md](../decisions/ADR-020-l5-mv-claim-governance.md) | Ops-first claim gates (`ops_confirmed`; bill deferred) |
 | 6 | [../decisions/ADR-021-l5-notification-and-evidence.md](../decisions/ADR-021-l5-notification-and-evidence.md) | WhatsApp + evidence |
 | 7 | [l6-counterfactual-display-stub.md](./l6-counterfactual-display-stub.md) | Modeled delay-cost display |
 
 ### stamped-l5 one-line mission
 
-**stamped-l5** is **Closure & Verification** — workflow, WhatsApp-first notification, IPMVP M&V, bill reconciliation, and ledger append policy (L2 stores financial truth).
+**stamped-l5** is **Closure & Verification** — EMS alarm routing, ops-clearance verification, WhatsApp-first notification, calculated savings ledger (bill path deferred), and L2 append policy.
 
 L6 consumer handoff remains empty until `stamped-l6` is planned beyond display stubs.
 
@@ -180,3 +181,4 @@ L5 consumer README snapshot: empty until `stamped-l5` repo exists (architecture 
 | 2026-07-17 | L4 architecture handoff + ADR-017; build-order superseded |
 | 2026-07-19 | Link consumer README snapshots under `consumers/readmes/` |
 | 2026-07-20 | L5 architecture handoff + build plan; ADR-019/020/021; contracts 0.7.0 |
+| 2026-07-21 | Ops-first L5 + Finding 1.1.0 `ops_clearance`; contracts 0.8.0; L3 ops-clearance consumer prompt |

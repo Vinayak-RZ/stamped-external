@@ -1,5 +1,13 @@
 # Changelog — stamped-l1-contracts
 
+## 0.8.0 — 2026-07-21
+
+- `finding.json` **1.1.0**: additive `ops_clearance` + optional `alarm_hint` for L5 ops-first verification / EMS alarms
+- `ledger-entry.json`: add `ops_confirmed` to `verification_status` (`verified` reserved for deferred bill path)
+- `workflow-event.json`: add `alarm_raised|acked|cleared`, `ops_verified`, `ops_regressed`; actor `clearance_engine`
+- Fixtures: `finding` with clearance, `workflow_event_ops_verified`, ledger `ops_confirmed`
+- ADR-020 revised ops-first
+
 ## 0.7.0 — 2026-07-20
 
 - Add `workflow-event.json` v1.0.0 — L5 → L6 workflow/notification stream (ADR-019)

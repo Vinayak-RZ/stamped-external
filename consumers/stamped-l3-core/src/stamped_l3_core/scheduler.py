@@ -94,7 +94,7 @@ def run_hot_path(
         ranked = sorted(attr_candidates, key=lambda c: c.get("score") or 0, reverse=True)
         primary = ranked[0]
         attr_payload = {
-            "schema_version": "1.0.0",
+            "schema_version": "1.1.0",
             "finding_id": f"f-attr-{primary.get('asset', 'x')}",
             "org_id": org_id,
             "plant_id": plant_id,
@@ -114,6 +114,20 @@ def run_hot_path(
             "engine": "rules.costart_window",
             "engine_version": "1.0.0",
             "rule_or_model_ref": "rulepack://attribution/1.0.0#costart_window",
+            "ops_clearance": {
+                "measurement_boundary": primary.get("asset") or "incomer_1",
+                "related_tag_ids": [f"{primary.get('asset', 'incomer_1')}/apparent_power_kva"],
+                "clearance_predicate": {
+                    "metric": "co_start_score",
+                    "comparator": "lt",
+                    "threshold": 0.3,
+                    "relative_to": "absolute",
+                },
+                "expected_post_fix_signal": "Co-start score below 0.3 for stabilize window",
+                "stabilize_window": "PT30M",
+                "reopen_if_regresses": {"enabled": True},
+            },
+            "alarm_hint": {"severity": "warning", "category_code": "md.coincidence"},
         }
         lab.add_detection(
             detection_id=f"attr-rank-1-{primary.get('asset', 'x')}",

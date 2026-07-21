@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "finding_id": "f-2026-07-10-0022",
   "org_id": "org_acme",
   "plant_id": "plant_ghaziabad_1",
@@ -26,5 +26,31 @@
   "engine": "rules.tod_exposure",
   "engine_version": "1.0.0",
   "rule_or_model_ref": "rulepack://incomer/1.0.0#tod_exposure",
+  "ops_clearance": {
+    "measurement_boundary": "furnace_line_2",
+    "related_tag_ids": ["furnace_line_2/energy_kwh"],
+    "clearance_predicate": {
+      "metric": "energy_kwh",
+      "comparator": "lte",
+      "threshold": 1200.0,
+      "relative_to": "baseline"
+    },
+    "expected_post_fix_signal": "Peak-TOD energy at or below baseline for stabilize window",
+    "stabilize_window": "PT2H",
+    "reopen_if_regresses": {
+      "enabled": true,
+      "predicate": {
+        "metric": "energy_kwh",
+        "comparator": "gt",
+        "threshold": 1500.0,
+        "relative_to": "absolute"
+      },
+      "grace_window": "PT30M"
+    }
+  },
+  "alarm_hint": {
+    "severity": "warning",
+    "category_code": "tariff.tod_exposure"
+  },
   "dedupe_key": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
 }

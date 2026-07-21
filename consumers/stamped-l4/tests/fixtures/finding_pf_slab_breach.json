@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "finding_id": "f-2026-07-09-0011",
   "org_id": "org_acme",
   "plant_id": "plant_ghaziabad_1",
@@ -26,5 +26,31 @@
   "engine": "rules.pf_slab_breach",
   "engine_version": "1.0.0",
   "rule_or_model_ref": "rulepack://incomer/1.0.0#pf_slab_breach",
+  "ops_clearance": {
+    "measurement_boundary": "incomer_1",
+    "related_tag_ids": ["incomer_1/power_factor"],
+    "clearance_predicate": {
+      "metric": "power_factor",
+      "comparator": "gte",
+      "threshold": 0.95,
+      "relative_to": "absolute"
+    },
+    "expected_post_fix_signal": "PF at or above slab threshold for stabilize window",
+    "stabilize_window": "PT1H",
+    "reopen_if_regresses": {
+      "enabled": true,
+      "predicate": {
+        "metric": "power_factor",
+        "comparator": "lt",
+        "threshold": 0.95,
+        "relative_to": "absolute"
+      },
+      "grace_window": "PT15M"
+    }
+  },
+  "alarm_hint": {
+    "severity": "warning",
+    "category_code": "pq.pf_slab"
+  },
   "dedupe_key": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
 }

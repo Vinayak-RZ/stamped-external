@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "event_id": "we-2026-07-08-0099",
+  "org_id": "org_acme",
+  "plant_id": "plant_ghaziabad_1",
+  "prescription_id": "rx-2026-07-08-0031",
+  "event_type": "ops_verified",
+  "from_status": "done",
+  "to_status": "verified",
+  "actor_type": "clearance_engine",
+  "actor_id": "ops_clearance_poller",
+  "reason_code": null,
+  "channel": null,
+  "wamid": null,
+  "occurred_at": "2026-07-08T09:00:00Z",
+  "workflow_version": 5,
+  "correlation_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+  "details": {
+    "stabilize_window": "PT30M",
+    "verification_status": "ops_confirmed"
+  },
+  "dedupe_key": "sha256:f6789012345678901234567890abcdef1234567890abcdef1234567890abcdef"
+}
