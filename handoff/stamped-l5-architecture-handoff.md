@@ -1,11 +1,12 @@
 # stamped-l5 — Architecture handoff
 
-> **Audience:** Engineers / agents building the L5 consumer repo.  
-> **Planned consumer repo:** [Vinayak-RZ/stamped-l5](https://github.com/Vinayak-RZ/stamped-l5) (not created yet)  
+> **Audience:** Engineers / agents working on the L5 consumer or integrating L6.  
+> **Consumer repo (live):** [Vinayak-RZ/closure-verification](https://github.com/Vinayak-RZ/closure-verification) — package `stamped-l5`  
+> **README snapshot:** [../consumers/readmes/closure-verification.md](../consumers/readmes/closure-verification.md)  
 > **Authority:** [L5 SSOT](../technical/layers/L5-closure-and-verification.md) · [ADR-019](../decisions/ADR-019-l5-runtime-and-consistency.md) · [ADR-020](../decisions/ADR-020-l5-mv-claim-governance.md) · [ADR-021](../decisions/ADR-021-l5-notification-and-evidence.md) · [ADR-013](../decisions/ADR-013-counterfactual-savings-ledger.md)  
 > **L3 dependency:** [stamped-l3-ops-clearance-consumer-prompt.md](./stamped-l3-ops-clearance-consumer-prompt.md) · Finding 1.1.0 `ops_clearance`  
 > **Contracts:** [`prescription.json`](../contracts/schemas/prescription.json) · [`workflow-event.json`](../contracts/schemas/workflow-event.json) · [`ledger-entry.json`](../contracts/schemas/ledger-entry.json) · [`finding.json`](../contracts/schemas/finding.json)  
-> **Build plan:** [stamped-l5-build-plan.md](./stamped-l5-build-plan.md)
+> **Build plan:** [stamped-l5-build-plan.md](./stamped-l5-build-plan.md) (P0–P2 historical; see consumer README for shipped surface)
 
 ---
 

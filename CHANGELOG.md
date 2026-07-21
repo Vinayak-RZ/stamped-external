@@ -37,6 +37,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/). Platform tags: `vYYYY.M
 - Contracts **0.7.0** — `workflow-event.json`, envelope `workflow_event`, ledger `supersedes_entry_id` / `emission_factor_ref`
 - **Ops-first L5 + L3 enablement** — Finding **1.1.0** `ops_clearance` / `alarm_hint`; ledger `ops_confirmed`; workflow `alarm_*` / `ops_verified` / `ops_regressed`; [L3 ops-clearance consumer prompt](handoff/stamped-l3-ops-clearance-consumer-prompt.md)
 - Contracts **0.8.0** — see [contracts/CHANGELOG.md](contracts/CHANGELOG.md)
+- L5 consumer README snapshot — [consumers/readmes/closure-verification.md](consumers/readmes/closure-verification.md) (`Vinayak-RZ/closure-verification`)
 
 ### Changed
 
