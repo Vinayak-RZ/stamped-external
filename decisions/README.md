@@ -25,9 +25,13 @@ Decision records for the Stamped platform. **Distributed via [stamped-external](
 | [ADR-019](ADR-019-l5-runtime-and-consistency.md) | L5 runtime charter — modular monolith, Postgres workflow, L2 ledger append protocol | **Accepted** (2026-07-20) |
 | [ADR-020](ADR-020-l5-mv-claim-governance.md) | L5 claim governance — ops-first clearance (`ops_confirmed`); bill path deferred | **Accepted** (2026-07-20; ops-first 2026-07-21) |
 | [ADR-021](ADR-021-l5-notification-and-evidence.md) | L5 notification + evidence — Meta direct, shared number, DLT P0/SMS P1 | **Accepted** (2026-07-20) |
+| [ADR-022](ADR-022-l6-bff-runtime-boundary.md) | L6 BFF runtime boundary + repo charter | **Accepted** (2026-07-21) |
+| [ADR-023](ADR-023-l6-ems-and-analyst-context.md) | L6 EMS console + dual-mode analyst context policy | **Accepted** (2026-07-21) |
 
 Compliance register: [../compliance/india-compliance-register.md](../compliance/india-compliance-register.md)
 
 **L5 handoff:** [../handoff/stamped-l5-architecture-handoff.md](../handoff/stamped-l5-architecture-handoff.md) · [../handoff/stamped-l5-build-plan.md](../handoff/stamped-l5-build-plan.md)
+
+**L6 handoff:** [../handoff/stamped-l6-architecture-handoff.md](../handoff/stamped-l6-architecture-handoff.md) · [../handoff/stamped-l6-ui-ux-charter.md](../handoff/stamped-l6-ui-ux-charter.md) · [../handoff/stamped-l6-build-plan.md](../handoff/stamped-l6-build-plan.md)
 
 When a downstream repo (L2, L3, …) needs L1 context, start with [../technical/README.md](../technical/README.md) then read ADRs here.

@@ -15,6 +15,8 @@
 | ADR-019 | L5 runtime charter and consistency | **Accepted** |
 | ADR-020 | L5 M&V claim governance (ops-first 2026-07-21) | **Accepted** |
 | ADR-021 | L5 notification and evidence policy | **Accepted** |
+| ADR-022 | L6 BFF runtime boundary and repo charter | **Accepted** |
+| ADR-023 | L6 EMS console and dual-mode analyst context | **Accepted** |
 
 ## L5 architecture (2026-07-20)
 
@@ -39,6 +41,21 @@
 | Finding | **1.1.0** required `ops_clearance` (+ optional `alarm_hint`) |
 | Contracts | **0.8.0** |
 | L3 paste prompt | [handoff/stamped-l3-ops-clearance-consumer-prompt.md](handoff/stamped-l3-ops-clearance-consumer-prompt.md) |
+
+## L6 architecture + UI (2026-07-21)
+
+| Topic | Choice |
+|-------|--------|
+| Repo | Separate `stamped-l6` modular monolith — web + BFF + worker ([ADR-022](decisions/ADR-022-l6-bff-runtime-boundary.md)) |
+| Composition | Browser → L6 BFF → L2/L4/L5 HTTP only; no L2 DB / OT writes |
+| Claims UI | Dual badges: `ops_confirmed` vs reserved bill `verified`; modeled disclaimer for opportunity_cost |
+| EMS | L6 console; L5 lifecycle truth; L3 detect/`alarm_hint` |
+| Analyst | Dual-mode: P0 contextual side + P1 full `/analyst`; explicit removable context envelope ([ADR-023](decisions/ADR-023-l6-ems-and-analyst-context.md)) |
+| Density | Today ≤7 signals; advanced modules behind role-aware Reveal |
+| Language | English through P2 (ADR-018) |
+| Design | Forge Industrial v2.0; demo dashboard inspiration, not clone |
+| Platform seed | `consumers/stamped-l6/` non-canonical typed reference UI |
+| Handoff | [handoff/stamped-l6-architecture-handoff.md](handoff/stamped-l6-architecture-handoff.md) · [UI charter](handoff/stamped-l6-ui-ux-charter.md) · [build plan](handoff/stamped-l6-build-plan.md) |
 
 ## L4 architecture (2026-07-17)
 

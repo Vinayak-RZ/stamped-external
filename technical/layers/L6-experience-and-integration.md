@@ -4,17 +4,24 @@ title: "L6 — Experience & Integration"
 description: "Deep research and build spec for Stamped's L6 layer: web dashboard, prescription queue UX, PDF/CSV sustainability exports, and the outbound REST/webhook/ERP integration surface."
 tags: [stamped-energy, technical, layer-spec]
 timestamp: "2026-07-09T00:00:00Z"
+updated: "2026-07-21T00:00:00Z"
 ---
 
 # L6 — Experience & Integration
 
-*Layer research document · July 2026 · Status: pre-build research, feeds engineering scoping*
+*Layer research document · July 2026 · Status: architecture + UI handoff in progress (ops-first reconciliation 2026-07-21)*
 
 > **Honesty convention:** `[~]` approximate / benchmark-derived · `[!]` evolving — verify before customer-facing claims.
 >
 > **Siblings:** [L5 — Closure & verification](L5-closure-and-verification.md) · [L2 — Universal repository](L2-universal-repository.md) · [Technical architecture](../02-technical-architecture.md)
+>
+> **Binding ADRs:** [ADR-022](../../decisions/ADR-022-l6-bff-runtime-boundary.md) (BFF/runtime) · [ADR-023](../../decisions/ADR-023-l6-ems-and-analyst-context.md) (EMS + dual-mode analyst) · [ADR-020](../../decisions/ADR-020-l5-mv-claim-governance.md) (ops-first claims)
+>
+> **Handoff:** [stamped-l6-architecture-handoff.md](../../handoff/stamped-l6-architecture-handoff.md) · [stamped-l6-ui-ux-charter.md](../../handoff/stamped-l6-ui-ux-charter.md)
 
-L6 is everything the customer *sees and connects to*: the web dashboard, the prescription queue, PDF/CSV report generation (including the monthly sustainability pack), and the outbound integration surface — REST API, signed webhooks, ERP/ESG connectors, and the "connect to any custom system" promise. Every other layer produces intelligence; L6 is where that intelligence gets acted on, renewed, and defended in front of a CFO or an auditor.
+L6 is everything the customer *sees and connects to*: the ops-first web dashboard, EMS alarm console, prescription queue, dual-mode analyst UX (contextual side + full workspace), PDF/CSV report generation (including the monthly sustainability pack), and the outbound integration surface — REST API, signed webhooks, ERP/ESG connectors, and the "connect to any custom system" promise. Every other layer produces intelligence; L6 is where that intelligence gets acted on, renewed, and defended in front of a plant head or (later) a CFO.
+
+**Claim rule (2026-07-21):** P0 customer-facing “verified” means **`ops_confirmed`** (telemetry clearance). Bill-reconciled `verified` is deferred. UI must never imply DISCOM verification from ops alone.
 
 ---
 
@@ -42,10 +49,10 @@ A prescription that is *seen, understood, and trivially actionable* closes; one 
 
 ### 1.2 Exports drive renewal
 
-The renewal conversation is: "Stamped saved us ₹X verified this year, here is the bill-reconciled evidence, and here is the sustainability pack our ESG team forwarded to corporate." Both artifacts are L6 outputs:
+The renewal conversation is: "Stamped saved us ₹X that we actually closed this year — here is the ops-confirmed evidence, and here is the sustainability pack our ESG team forwarded to corporate." Artifacts are L6 outputs:
 
-- **CFO renewal artifact:** savings ledger export — potential vs realised ₹, per prescription, reconciled against DISCOM bill lines (data from L5).
-- **Sustainability renewal artifact:** the monthly pack — verified kWh, tCO₂e with factor disclosure, SEC trends, methodology note, BRSR/PAT adjunct tables. This is what makes Stamped sticky with a *second* buyer persona inside the account.
+- **Plant-head / CFO renewal artifact:** savings ledger export — potential vs **ops_confirmed** realised ₹, per prescription (data from L5→L2 ledger). Bill-reconciled columns are **deferred** behind a future flag ([ADR-020](../../decisions/ADR-020-l5-mv-claim-governance.md)).
+- **Sustainability renewal artifact:** the monthly pack — ops-confirmed kWh, tCO₂e with factor disclosure, SEC trends, methodology note, BRSR/PAT adjunct tables. Sticky with a *second* buyer persona inside the account.
 - **Integration stickiness:** once a customer's ESG tool, ERP dashboard, or group-level reporting consumes Stamped webhooks/API, ripping Stamped out breaks their own reporting pipeline. Integration depth is churn insurance `[~]`.
 
 ### 1.3 What L6 must NOT become
@@ -60,32 +67,40 @@ The architecture rule from the [technical architecture](../02-technical-architec
 
 | Input | Producing layer | Consumed by |
 | --- | --- | --- |
-| Savings ledger entries (potential/verified ₹, kWh, tCO₂e) | L5 ledger | Savings ledger module, exports, `ledger.entry.added` webhook |
-| Prescription workflow state (Open → In Progress → Done/Deferred/Rejected) | L5 workflow | Prescription queue, WhatsApp sync, `prescription.*` webhooks |
-| M&V verification results + bill reconciliation flags | L5 M&V | Evidence drill-down, methodology note, dispute view |
+| Savings ledger entries (potential / `ops_confirmed` / modeled ₹, kWh, tCO₂e) | L5→L2 ledger | Savings ledger module, exports, `ledger.entry.added` webhook |
+| Prescription workflow state (Needs review → Active → Verifying → Closed) | L5 workflow (`WorkflowEvent` truth) | Prescription queue, WhatsApp sync, `prescription.*` webhooks |
+| Ops-clearance results (+ deferred bill flags) | L5 verification | Evidence drill-down, dual claim badges, dispute view |
+| EMS alarm lifecycle (raised/acked/escalated/silenced/cleared) | L5 alarm router | **EMS console** (L6), SSE `alarm_*` |
 | Time-series telemetry + baseline bands | L2 TS store + baseline store | 30-day trend, TOD profile, evidence charts |
-| Anomaly scores / findings stream | L3 | Live anomaly feed, equipment health map, `anomaly.raised` webhook |
+| Anomaly scores / findings stream | L3 (via L5/SSE) | Live anomaly feed, equipment health map, `anomaly.raised` |
 | SEC / intensity series | L3 SEC engine + L2 | Intensity chart, sustainability pack |
 | Feature store aggregates (top consumers, benchmarks) | L2 feature store | Top consumers module, multi-plant benchmark |
+| Analyst answers + citations (RAG) | L4 HTTP analyst API | Dual-mode analyst UX ([ADR-023](../../decisions/ADR-023-l6-ems-and-analyst-context.md)) |
 | Narrative text (methodology, pack prose) | L4 narrative engine | PDF pack generation |
 | Emission factor (value + source + vintage) | L4 impact calculator | Every tCO₂e figure rendered or exported |
-| Audit trail (issued/viewed/acted/verified) | L5 audit log | Prescription audit trail export, compliance view |
+| Audit trail (issued/viewed/acted/ops-confirmed) | L5 audit log | Prescription audit trail export, compliance view |
 
 ### 2.2 Dashboard module list (from §10.1 of the architecture, mapped to demo)
 
 The demo at [stamped-energy.vercel.app](https://stamped-energy.vercel.app/) is the visual reference `[!]` (site was intermittently unreachable during this research — treat the module list below, which comes from the architecture doc, as authoritative):
 
-| # | Module | Data source | Primary user |
-| --- | --- | --- | --- |
-| M1 | Savings ledger | L5 ledger | Plant head, CFO |
-| M2 | 30-day trend vs baseline | L2 TS + baseline store | Energy manager |
-| M3 | Equipment health map | L3 anomaly scores | Operations |
-| M4 | Live anomaly feed | L3 findings stream | All |
-| M5 | Prescription queue | L4 + L5 workflow | Supervisors |
-| M6 | Top consumers vs benchmark | L2 feature store | Energy manager |
-| M7 | TOD / 24h demand profile | L3 MD engine | Utilities |
-| M8 | Intensity (SEC) chart | SEC engine + production | Sustainability |
-| M9 | CO₂ equivalent card | Impact calculator | Sustainability |
+| # | Module | Data source | Primary user | Nav tier |
+| --- | --- | --- | --- | --- |
+| M0 | **Today** (ops home ≤7 signals) | L5 + L2 rollups | All | Primary |
+| M1 | Savings ledger | L2 ledger (`ops_confirmed` / potential / modeled) | Plant head, CFO | Primary (Reports/Today) |
+| M2 | 30-day trend vs baseline | L2 TS + baseline store | Energy manager | Reveal |
+| M3 | Equipment health map | L3 anomaly scores | Operations | Reveal |
+| M4 | Live anomaly feed | L3 findings (via SSE) | All | Today / Evidence |
+| M5 | Prescription queue | **L5** workflow truth (+ L4 text) | Supervisors | Primary |
+| M5b | **EMS alarm console** | L5 alarms + `alarm_*` events | Operator, supervisor | Primary |
+| M6 | Top consumers vs benchmark | L2 feature store | Energy manager | Reveal |
+| M7 | TOD / 24h demand profile | L3 MD engine | Utilities | Reveal |
+| M8 | Intensity (SEC) chart | SEC engine + production | Sustainability | Reveal |
+| M9 | CO₂ equivalent card | Impact calculator | Sustainability | Reveal |
+| M10 | **Analyst** (side + full workspace) | L4 analyst API + screen context | Supervisor+, energy manager | Primary |
+| M11 | Export centre | L2/L5 aggregates + L4 narrative | Sustainability, admin | Primary (Reports) |
+
+**Progressive disclosure ([ADR-023](../../decisions/ADR-023-l6-ems-and-analyst-context.md)):** Primary nav = Today · Alarms · Prescriptions · Evidence · Analyst · Reports. Role-gated **More / Reveal** exposes M2/M3/M6–M9, Integrations, Admin. Critical alarms and assigned Rx cannot be hidden.
 
 ### 2.3 Non-functional requirements inherited from §14
 
@@ -165,14 +180,20 @@ Energy-specific idioms (from EMS/tariff domain practice, `[~]` synthesised):
 
 RBAC roles from §14 map to view compositions, not separate apps:
 
-| Role | Landing view | Hidden |
+| Role | Landing view | Hidden / reveal-only |
 | --- | --- | --- |
-| Operator | Live anomaly feed + own assigned Rx (mobile-first) | ₹ ledger, tariff detail |
-| Supervisor | Prescription queue (triage view) + equipment health | Multi-plant, API keys |
-| Plant head | Savings ledger + closure rate + queue rollup | Admin config |
-| Sustainability | Intensity chart + CO₂ card + export centre | Workflow actions |
-| CFO / group exec | Ledger + multi-plant rollup + benchmark (read-only) | Telemetry detail |
+| Operator | Alarms + assigned Rx (mobile-first) | ₹ ledger detail, tariff, Admin |
+| Supervisor | Prescriptions triage + Alarms | Multi-plant, API keys |
+| Plant head | Today (ledger + closure + queue rollup) | Admin config |
+| Sustainability | Intensity + CO₂ + Export centre | Workflow write actions |
+| CFO / group exec | Ledger + multi-plant rollup (P2, read-only) | Telemetry detail, alarm ack |
 | Admin | Everything + user/API/webhook management | — |
+
+**Dual claim badges:** every savings figure shows `ops_label` (e.g. Ops-confirmed) separately from any future `bill_label`. Modeled `opportunity_cost` always shows **Modeled — not bill-verified** ([l6-counterfactual-display-stub.md](../../handoff/l6-counterfactual-display-stub.md)).
+
+#### EMS alarm console (P0)
+
+L3 detects + optional `alarm_hint`; L5 routes lifecycle; **L6 renders** the console ([ADR-023](../../decisions/ADR-023-l6-ems-and-analyst-context.md)). States: raised → acked → escalated → silenced → cleared. Severity-first sort, ageing, evidence deep-link, keyboard triage, SSE sync with WhatsApp where L5 emits.
 
 #### Mobile responsiveness
 
@@ -183,7 +204,7 @@ Plant heads and supervisors live on phones. The demo's module grid must collapse
 For Next.js App Router, `next-intl` is the 2026 standard: RSC-native, ICU MessageFormat (handles Hindi's two grammatical genders and plural rules properly), type-safe keys, middleware locale routing ([Nair — Indian language guide [11]](https://rajeshrnair.com/blog/web-development/frontend/nextjs-i18n-indian-languages-hindi-malayalam-tamil-2026.html), [next-intl guide [12]](https://noqta.tn/en/tutorials/nextjs-next-intl-i18n-app-router-guide-2026)). Specifics for Hindi:
 
 - **Font:** self-host Noto Sans Devanagari via `next/font/google` — Devanagari font files are several hundred kB and naive loading causes layout shift [11].
-- **Scope discipline `[!]`:** translate the *operator/supervisor surfaces* (Rx cards, acknowledge flow, anomaly labels) first; keep CFO/sustainability/export surfaces English-only in P0–P1. Prescription text itself is generated by L4 — Hindi Rx generation is an L4 concern L6 must merely render (Devanagari-safe layout, no truncation assumptions).
+- **Scope discipline:** **English only through P2** ([ADR-018](../../decisions/ADR-018-l4-pilot-execution-knowledge-reasoning.md) §10). Hindi/Hinglish are far-future — ignore older P1 Hindi rows in this document's history. Layout must remain Devanagari-safe when Hindi eventually ships (self-host Noto Sans Devanagari).
 - Numbers stay Latin numerals with Indian digit grouping (₹12,34,567) via `Intl.NumberFormat('en-IN')`.
 
 ### 3.2 Prescription queue UX
@@ -203,7 +224,18 @@ Stamped-specific additions beyond the Linear pattern:
 - **₹-sorted, not recency-sorted.** Default ordering is addressable ₹/month × confidence, with an ageing boost. Total addressable ₹ for the open queue is the header number.
 - **Evidence drill-down as a first-class interaction.** Every Rx card expands to: the telemetry chart slice that triggered it (with baseline band and the anomalous window highlighted), the rule/engine that fired (from L3), the tariff math for the ₹ figure (from L4 impact calculator), and source tag IDs (lineage). This is the "What/Why/Impact/Owner/Due/Priority" card from the product definition, backed by proof. Design rule: the chart is *pre-scoped* to the event window — never dump the user into a generic explorer.
 - **WhatsApp ↔ dashboard state sync (with L5).** WhatsApp button replies ("Done", "Defer") update L5 workflow state; the dashboard queue reflects it in seconds via SSE. Conversely, dashboard state changes suppress redundant WhatsApp nudges. Every WhatsApp message carries a deep link `stamped.app/rx/{id}` that opens the mobile-responsive Rx detail with a one-tap acknowledge — no login wall for a signed, expiring link `[!]` (magic-link with short TTL; security review needed on link forwarding risk).
-- **Verification visibility.** After "Done", the card doesn't disappear — it moves to a "Verifying" lane showing the M&V window countdown, then lands in "Verified ₹X" or "Disputed". Closure feels rewarding; this is the loop that builds trust.
+- **Verification visibility.** After "Done", the card moves to a "Verifying" lane (ops-clearance window), then lands in **Ops-confirmed ₹X** or "Disputed" — never a bill-verified badge in P0–P1.
+
+### 3.2b Dual-mode analyst UX
+
+L4 owns RAG/agent runtime; L6 owns product chat UX ([ADR-018](../../decisions/ADR-018-l4-pilot-execution-knowledge-reasoning.md) §6, [ADR-023](../../decisions/ADR-023-l6-ems-and-analyst-context.md)).
+
+| Mode | Phase | Behaviour |
+| --- | --- | --- |
+| **A — Contextual side assistant** | **P0** shell | Mounted beside Alarms / Prescriptions / Evidence / …; explicit removable screen-context chips; RAG still via L4 |
+| **B — Full `/analyst` workspace** | **P1** | Conversation + sources + evidence canvas + saved investigations + handoff-to-action (human confirm) |
+
+Agent may propose ack/defer/assign; user must confirm irreversible actions.
 
 ### 3.3 Report & export generation
 
@@ -333,32 +365,32 @@ If enterprise customers demand "your charts inside our portal": Metabase's paid 
 
 | Concern | Pick | Rationale |
 | --- | --- | --- |
-| Framework | **Next.js (App Router) + TypeScript** | RSC for data-dense first paint; team/ecosystem default; matches demo |
-| UI kit | **Tailwind + shadcn/ui** | Fast, ownable components; no design-system licence |
-| Charts | **Apache ECharts 6** (tree-shaken) for all time-series/heatmap/TOD modules; Recharts acceptable for small static cards `[~]` | Canvas + LTTB handles 15-min×30-day×multi-series without jank [2][4]; calendar/heatmap native |
-| Data fetching | TanStack Query + REST (the same `/v1` public API where possible) | Dogfooding the public API keeps it honest |
-| Realtime | **SSE** (Redis pub/sub fan-out), heartbeats, `Last-Event-ID` resume | One-way traffic shape; proxy-friendly for factory IT [5][6][7] |
-| i18n | **next-intl** + self-hosted Noto Sans Devanagari | RSC-native, ICU for Hindi grammar [11][12] |
-| Auth (users) | Session auth + org-scoped RBAC; **WorkOS (or equivalent) for SAML/OIDC** when first enterprise deal demands it | Buy the protocol zoo [38][39] |
-| PDF | **Playwright print-CSS** over dedicated report routes, warm browser pool on worker | Screen/paper chart parity; templates are React [15][17] |
-| Jobs | **BullMQ** (`upsertJobScheduler`) + Bull Board | Redis already present; idempotent cron [19] |
-| Excel/CSV | ExcelJS (xlsx), streaming CSV | No licensing; handles large ledger exports |
-| Hosting `[!]` | India region (AWS Mumbai / GCP Delhi-Mumbai); self-hosted Next.js (not Vercel) for data-residency and SSE control | §14 residency default |
+| Framework | **Next.js (App Router) + TypeScript** | RSC for data-dense first paint; team/ecosystem default |
+| UI kit | **Tailwind + shadcn/ui themed with Forge Industrial** | Ownable components; [design system](../../design/forge-industrial-design-system.md) mandatory |
+| Charts | **Apache ECharts 6** for dense time-series; small SVG gauges OK | Canvas + LTTB; demo Recharts only for tiny static cards |
+| Data fetching | TanStack Query via **L6 BFF** ([ADR-022](../../decisions/ADR-022-l6-bff-runtime-boundary.md)) | Browser never holds L2/L4/L5 service keys |
+| Realtime | **SSE** (Redis pub/sub fan-out), heartbeats, `Last-Event-ID` | One-way; proxy-friendly for factory IT |
+| i18n | **next-intl** ready; **en-IN only through P2** | Hindi deferred ([ADR-018](../../decisions/ADR-018-l4-pilot-execution-knowledge-reasoning.md)) |
+| Auth (users) | Session + org-scoped RBAC; WorkOS when first enterprise SSO | Buy protocol zoo |
+| PDF | **Playwright print-CSS** over report routes | Screen/paper chart parity |
+| Jobs | **BullMQ** + Bull Board | Redis already present for SSE |
+| Excel/CSV | ExcelJS (xlsx), streaming CSV | No licensing |
+| Hosting `[!]` | India region; self-hosted Next for residency + SSE control | §14 residency default |
 
 ### 4.2 Dashboard module specs (delta over demo)
 
 | Module | Spec highlights |
 | --- | --- |
-| M1 Savings ledger | Dual-audience card: ₹ (CFO) and kWh/tCO₂e (sustainability) toggled, never mixed on one axis. Potential vs realised as paired bars; every tCO₂e hover discloses factor value+source+vintage |
-| M2 Trend vs baseline | ECharts line + shaded P10–P90 baseline band; bill-period markers; anomaly windows highlighted; LTTB downsampling above 5k points |
-| M3 Equipment health | Grid of asset tiles: load %, anomaly score as border state (grayscale normal, amber/red abnormal — ISA-101 colour discipline) |
-| M4 Anomaly feed | SSE-driven; severity-grouped, not strictly chronological; each item links to pre-scoped evidence chart |
-| M5 Prescription queue | Triage pattern per §3.2: Needs-review / Active / Verifying / Closed lanes; ₹-sorted; keyboard quick actions; reason-required defer/reject; ageing badges |
-| M6 Top consumers | Horizontal bars (long asset labels) with benchmark deviation markers |
-| M7 TOD profile | 24h area chart with tariff-period background shading; CMD reference line; MD histogram sub-view |
-| M8 Intensity | SEC line per production line/product; production-volume context band; PAT target reference line where configured |
-| M9 CO₂ card | Single number + factor disclosure footnote; links to methodology |
-| Export centre (new) | All downloads in one place: monthly packs (archive), ledger CSV/xlsx, BRSR adjunct CSV, audit trail; per-file generation timestamp and data-window disclosure |
+| M0 Today | ≤7 signals: critical alarms, Rx needing review, ops-confirmed ₹, deviation vs baseline, stale-data, closure health |
+| M1 Savings ledger | Dual-audience ₹ / kWh/tCO₂e toggle; potential vs ops-confirmed paired; modeled opportunity_cost disclaimer; factor disclosure on tCO₂e |
+| M2 Trend vs baseline | ECharts + P10–P90 band; bill-period markers; anomaly windows; LTTB above 5k points |
+| M3 Equipment health | Asset tiles; grayscale normal, amber/red abnormal (ISA-101) |
+| M4 Anomaly feed | SSE; severity-grouped; pre-scoped evidence |
+| M5 Prescription queue | Triage lanes; ₹-sorted; keyboard actions; reason-required defer/reject; ageing |
+| M5b EMS console | Alarm lifecycle UI; ack/escalate/silence; stale SSE banner; mobile ack |
+| M6–M9 | Reveal-tier energy / intensity modules (see §2.2) |
+| M10 Analyst | Mode A contextual side (P0); Mode B full workspace (P1); explicit context chips |
+| Export centre | Packs, ledger CSV/xlsx, BRSR adjunct, audit trail; timestamp + data-window disclosure |
 
 Performance budgets (enforced in CI, see §5): overview route LCP < 2.5 s on mid-range Android over 4G `[~]`, INP < 200 ms, chart interaction (zoom/pan on 30-day 15-min series) at 60 fps target / 30 fps floor, JS bundle for the overview route < 350 kB gz `[!]`.
 
@@ -429,25 +461,24 @@ Aligned to the master phases (§15 of the technical architecture):
 
 | Phase | L6 scope | Exit criterion |
 | --- | --- | --- |
-| **P0** (weeks 1–8) | Dashboard core: M1 savings ledger, M2 trend vs baseline, M4 anomaly feed, M5 prescription queue (triage lanes, evidence drill-down, WhatsApp deep-link acknowledge); SSE updates; mobile-responsive queue; CSV export on ledger + queue; role-gated views (operator/supervisor/plant head); English UI | A pilot supervisor closes an Rx end-to-end from phone; plant head reads verified ₹ without asking anyone |
-| **P1** (months 3–6) | M3 health map, M6 top consumers, M7 TOD profile, M8 intensity; Playwright PDF pipeline + first monthly pack (savings summary, SEC report, methodology note); BullMQ scheduled packs; Hindi UI for operator/supervisor surfaces; Export centre | Month-end pack generates unattended and survives a customer's sustainability-lead review |
-| **P2** (months 6–12) | Public REST API v1 (OpenAPI, scoped keys, rate limits) + docs; Standard Webhooks sender + event catalogue + delivery log; polling events endpoint; BRSR/PAT adjunct CSVs; multi-plant rollup + benchmark view; SSO (SAML/OIDC via provider) for first enterprise account; T3 guided-integration playbook | One customer system consumes Stamped events in production without Stamped hand-holding |
-| **P3** | T4 named connectors as demand proves (SAP OData export, Tally production-pull agent, first ESG connector); OAuth2 client credentials; embedded/share-link analytics `[!]`; conversational analyst surface (L4-driven); SCIM if a 500+ seat account requires it | Decided per paid engagement, not roadmap faith |
+| **P0** | Today home; M1 ledger (ops_confirmed badges); M2 trend; M4 feed; **M5 queue**; **M5b EMS console**; SSE; mobile queue/alarm ack; CSV export; role-gated views; English; **Mode A analyst shell** (fixture/L4 stub OK) | Supervisor closes Rx + acks alarm from phone; plant head reads ops-confirmed ₹ without asking anyone |
+| **P1** | M3/M6–M8 reveal modules; Playwright monthly pack; BullMQ schedules; Export centre; **Mode B full `/analyst`** wired to L4 | Month-end pack survives sustainability-lead review; analyst investigation → handoff-to-Rx with citations |
+| **P2** | Public REST `/v1` + Standard Webhooks; BRSR adjunct; multi-plant rollup; SSO for first enterprise; T3 guided integration | One customer system consumes Stamped events without hand-holding |
+| **P3** | T4 named connectors; OAuth2; share-link embeds; SCIM if demanded | Per paid engagement |
 
-Deliberately late: embedded analytics, named connectors, SCIM, native mobile app — each waits for a paying pull signal.
+Deliberately late: embedded analytics, named connectors, SCIM, native mobile, Hindi UI — each waits for a paying pull signal (Hindi also gated by ADR-018).
 
 ---
 
 ## 7. Open questions
 
-1. **WhatsApp deep-link auth `[!]`** — signed magic links with short TTL vs forcing login: forwarding a link must not leak plant data. Needs a security decision with L5 (who owns link issuance) before P0 ships.
-2. **Time-series API granularity economics** — raw-resolution API pulls could hammer the L2 TSDB; where do we cap granularity/range per tier, and do heavy consumers get a pre-aggregated export instead?
-3. **Hindi prescription text** — L4 generates Rx text; does it generate Hindi natively or does L6 machine-translate `[!]`? Rendering is L6's job, generation ownership is unresolved.
-4. **Pack sign-off workflow** — does the monthly pack auto-send, or does a customer sustainability lead approve before distribution? Auto-send risks a wrong number reaching corporate ESG; approval adds friction. Leaning approval-first for the first year `[~]`.
-5. **Svix buy trigger** — at what webhook volume/endpoint count does operating our own sender cost more than Svix's fee? Revisit at 50 active endpoints `[~]`.
-6. **Demo dashboard → product parity** — the Vercel demo's visual language must be audited against ISA-101 colour discipline (§3.1) before it hardens into the product; deviation-first charts may require redesigning some demo modules.
-7. **BRSR XBRL ambitions `[!]`** — customers may ask Stamped to emit MCA-taxonomy XBRL fragments rather than CSV. Explicitly out of scope for now (filing-adjacent liability); revisit only with legal review.
-8. **On-prem dashboard variant** — will any enterprise demand a plant-LAN-hosted read-only mirror (OT-security posture)? Would fork the hosting story; no current evidence of demand `[~]`.
+1. **WhatsApp deep-link auth `[!]`** — signed magic links with short TTL vs forcing login; L5 vs L6 ownership of issuance.
+2. **Time-series API granularity economics** — cap raw resolution per tier.
+3. **Pack sign-off workflow** — auto-send vs sustainability-lead approve (lean approval-first year one).
+4. **Svix buy trigger** — revisit at ~50 active webhook endpoints.
+5. **On-prem dashboard variant** — no current demand evidence; hosting fork if asked.
+
+**Resolved (2026-07-21):** Hindi timing → ADR-018 English through P2. Analyst placement → ADR-023 P0 Mode A / P1 Mode B. BFF → ADR-022. Ops vs bill claims → ADR-020.
 
 ---
 
