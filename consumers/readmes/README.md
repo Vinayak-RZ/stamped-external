@@ -19,7 +19,7 @@
 | **L3** | `intelligence-rulepacks` | [intelligence-rulepacks.md](./intelligence-rulepacks.md) | ✅ Mirrored (product: stamped-l3-rulepacks) |
 | **L4** | `knowledge-reasoning` | [knowledge-reasoning.md](./knowledge-reasoning.md) | ✅ Mirrored (product: stamped-l4) |
 | **L5** | `closure-verification` | [closure-verification.md](./closure-verification.md) | ✅ Mirrored (product: stamped-l5) |
-| **L6** | — | — | 📋 Not created yet |
+| **L6** | `stamped-l6` (planned) | [../stamped-l6/README.md](../stamped-l6/README.md) | 📋 Platform UI seed (not a live README snapshot) |
 
 Related: [REPOS.md](../../REPOS.md) · [handoff/](../../handoff/) · scaffold code under [`../`](../) (reference only; not these snapshots).
 

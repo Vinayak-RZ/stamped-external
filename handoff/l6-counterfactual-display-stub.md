@@ -1,7 +1,8 @@
 # L6 handoff — counterfactual display fields
 
-> **Scope:** Display stub only — no L6 implementation in P0.  
-> **Contract:** [ledger-entry.json](../contracts/schemas/ledger-entry.json) · [ADR-013](../decisions/ADR-013-counterfactual-savings-ledger.md)
+> **Scope:** Display contract for `opportunity_cost` rows — still required in L6 UI.  
+> **Full L6 handoff:** [stamped-l6-architecture-handoff.md](./stamped-l6-architecture-handoff.md) · [UI charter](./stamped-l6-ui-ux-charter.md)  
+> **Contract:** [ledger-entry.json](../contracts/schemas/ledger-entry.json) · [ADR-013](../decisions/ADR-013-counterfactual-savings-ledger.md) · [ADR-020](../decisions/ADR-020-l5-mv-claim-governance.md)
 
 ---
 

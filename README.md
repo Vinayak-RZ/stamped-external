@@ -115,7 +115,7 @@ flowchart TD
 | **L3** | Baselines, anomaly, MD/demand, attribution, rules/physics, waste classifier | `stamped-l3` | [`technical/layers/L3-intelligence-core.md`](technical/layers/L3-intelligence-core.md) |
 | **L4** | Dual-lane prescription agent, adaptive RAG, impact calculator, OSS eval stack | `stamped-l4` | [`technical/layers/L4-knowledge-and-reasoning.md`](technical/layers/L4-knowledge-and-reasoning.md) · [`handoff/stamped-l4-architecture-handoff.md`](handoff/stamped-l4-architecture-handoff.md) |
 | **L5** | Workflow, WhatsApp, IPMVP M&V, bill reconciliation, savings ledger | `stamped-l5` | [`technical/layers/L5-closure-and-verification.md`](technical/layers/L5-closure-and-verification.md) |
-| **L6** | Dashboard, prescription queue, REST API, exports, webhooks | `stamped-l6` | [`technical/layers/L6-experience-and-integration.md`](technical/layers/L6-experience-and-integration.md) |
+| **L6** | Dashboard, EMS console, prescription queue, dual-mode analyst, REST API, exports, webhooks | `stamped-l6` | [`technical/layers/L6-experience-and-integration.md`](technical/layers/L6-experience-and-integration.md) · [handoff](handoff/stamped-l6-architecture-handoff.md) |
 
 Engineering authority: [`technical/02-technical-architecture.md`](technical/02-technical-architecture.md) · Boundary contracts: [`architecture/layer-interfaces-l2.md`](architecture/layer-interfaces-l2.md).
 
@@ -219,7 +219,7 @@ Quality spine: [`technical/cross-cutting/04-evaluation-and-quality.md`](technica
 | intelligence-evals | [Vinayak-RZ/intelligence-evals](https://github.com/Vinayak-RZ/intelligence-evals) | L3 eval | `external/` | — |
 | knowledge-reasoning | [Vinayak-RZ/knowledge-reasoning](https://github.com/Vinayak-RZ/knowledge-reasoning) | L4 | `external/` | — |
 | stamped-l5 | planned | L5 | `external/` | [handoff](handoff/stamped-l5-architecture-handoff.md) |
-| stamped-l6 | planned | L6 | `external/` | — |
+| stamped-l6 | planned | L6 | `external/` | Seed [consumers/stamped-l6](consumers/stamped-l6/) · [handoff](handoff/stamped-l6-architecture-handoff.md) |
 
 Full table: [REPOS.md](REPOS.md). Mirrored root READMEs: [`consumers/readmes/`](consumers/readmes/README.md). Pin each consumer to a **semver tag** of this repo. Do not float on `main` in production branches.
 
