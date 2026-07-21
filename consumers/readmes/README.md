@@ -18,7 +18,7 @@
 | **L3** | `intelligence-evals` | [intelligence-evals.md](./intelligence-evals.md) | ✅ Mirrored (product: stamped-l3-eval) |
 | **L3** | `intelligence-rulepacks` | [intelligence-rulepacks.md](./intelligence-rulepacks.md) | ✅ Mirrored (product: stamped-l3-rulepacks) |
 | **L4** | `knowledge-reasoning` | [knowledge-reasoning.md](./knowledge-reasoning.md) | ✅ Mirrored (product: stamped-l4) |
-| **L5** | — | — | 📋 Not created yet |
+| **L5** | `closure-verification` | [closure-verification.md](./closure-verification.md) | ✅ Mirrored (product: stamped-l5) |
 | **L6** | — | — | 📋 Not created yet |
 
 Related: [REPOS.md](../../REPOS.md) · [handoff/](../../handoff/) · scaffold code under [`../`](../) (reference only; not these snapshots).
@@ -41,4 +41,4 @@ DATE=$(date -u +%Y-%m-%d)
 } > "consumers/readmes/${REPO}.md"
 ```
 
-When L5 / L6 repos exist, add `<repo-name>.md` here and a row in the table above.
+When L6 exists, add `<repo-name>.md` here and a row in the table above.

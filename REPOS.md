@@ -12,7 +12,7 @@ Consumer repos mount this platform pack as a git submodule at `external/`.
 | intelligence-rulepacks | `Vinayak-RZ/intelligence-rulepacks` | L3 artifacts (stamped-l3-rulepacks) | `external/` | — | [consumers/readmes/intelligence-rulepacks.md](consumers/readmes/intelligence-rulepacks.md) |
 | intelligence-evals | `Vinayak-RZ/intelligence-evals` | L3 eval (stamped-l3-eval) | `external/` | — | [consumers/readmes/intelligence-evals.md](consumers/readmes/intelligence-evals.md) |
 | knowledge-reasoning | `Vinayak-RZ/knowledge-reasoning` | L4 (stamped-l4) | `external/` | — | [consumers/readmes/knowledge-reasoning.md](consumers/readmes/knowledge-reasoning.md) |
-| stamped-l5 | `Vinayak-RZ/stamped-l5` (planned) | L5 | `external/` | — | [handoff/stamped-l5-architecture-handoff.md](handoff/stamped-l5-architecture-handoff.md) |
+| closure-verification | `Vinayak-RZ/closure-verification` | L5 (stamped-l5) | `external/` | — | [consumers/readmes/closure-verification.md](consumers/readmes/closure-verification.md) |
 | stamped-l6 | `Vinayak-RZ/stamped-l6` (planned) | L6 | `external/` | — | — |
 
 **README snapshots index:** [consumers/readmes/README.md](consumers/readmes/README.md)
