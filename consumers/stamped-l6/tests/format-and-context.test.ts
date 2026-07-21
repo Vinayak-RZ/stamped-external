@@ -37,14 +37,14 @@ describe("analyst context", () => {
 
   it("builds removable chips", () => {
     const chips = visibleContextChips(base);
-    assert.ok(chips.includes("EMS alarm console"));
-    assert.ok(chips.includes("alarm:alm_1"));
+    assert.ok(chips.some((c) => c.value === "EMS alarm console"));
+    assert.ok(chips.some((c) => c.value === "alarm:alm_1"));
   });
 
   it("honours excludeKeys", () => {
     const chips = visibleContextChips({ ...base, excludeKeys: ["focus", "summary:0"] });
-    assert.ok(!chips.some((c) => c.startsWith("alarm:")));
-    assert.ok(!chips.includes("critical open"));
+    assert.ok(!chips.some((c) => c.key === "focus"));
+    assert.ok(!chips.some((c) => c.value === "critical open"));
   });
 
   it("rejects cross-tenant focus plant", () => {

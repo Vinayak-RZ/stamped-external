@@ -1,16 +1,19 @@
 import type { AnalystContextEnvelope } from "./types";
 
+export interface ContextChip {
+  key: string;
+  value: string;
+}
+
 /**
  * Build the user-visible context chips for Mode A analyst.
  * Strips excluded keys; never includes secrets.
  */
 export function visibleContextChips(
   envelope: AnalystContextEnvelope,
-): string[] {
+): ContextChip[] {
   const excluded = new Set(envelope.excludeKeys ?? []);
-  const chips: string[] = [];
-
-  const candidates: Array<{ key: string; value: string }> = [
+  const candidates: ContextChip[] = [
     { key: "screen", value: envelope.screenTitle },
     { key: "route", value: envelope.routeId },
     {
@@ -33,11 +36,7 @@ export function visibleContextChips(
     })),
   ];
 
-  for (const c of candidates) {
-    if (!c.value || excluded.has(c.key)) continue;
-    chips.push(c.value);
-  }
-  return chips;
+  return candidates.filter((c) => c.value && !excluded.has(c.key));
 }
 
 /** Reject cross-tenant focus entities at the BFF boundary. */

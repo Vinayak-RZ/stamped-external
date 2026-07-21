@@ -104,24 +104,9 @@ export function ContextualAnalyst({
             ) : (
               chips.map((chip) => (
                 <button
-                  key={chip}
+                  key={chip.key}
                   type="button"
-                  onClick={() =>
-                    setExcluded((prev) => [
-                      ...prev,
-                      envelope.visibleSummary.includes(chip)
-                        ? `summary:${envelope.visibleSummary.indexOf(chip)}`
-                        : chip === envelope.screenTitle
-                          ? "screen"
-                          : chip === envelope.routeId
-                            ? "route"
-                            : envelope.focusEntity &&
-                                chip ===
-                                  `${envelope.focusEntity.type}:${envelope.focusEntity.id}`
-                              ? "focus"
-                              : chip,
-                    ])
-                  }
+                  onClick={() => setExcluded((prev) => [...prev, chip.key])}
                   title="Remove from context"
                   style={{
                     fontSize: 11,
@@ -132,7 +117,7 @@ export function ContextualAnalyst({
                     color: "var(--forge-primary)",
                   }}
                 >
-                  {chip} ×
+                  {chip.value} ×
                 </button>
               ))
             )}
