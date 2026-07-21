@@ -38,6 +38,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/). Platform tags: `vYYYY.M
 - **Ops-first L5 + L3 enablement** — Finding **1.1.0** `ops_clearance` / `alarm_hint`; ledger `ops_confirmed`; workflow `alarm_*` / `ops_verified` / `ops_regressed`; [L3 ops-clearance consumer prompt](handoff/stamped-l3-ops-clearance-consumer-prompt.md)
 - Contracts **0.8.0** — see [contracts/CHANGELOG.md](contracts/CHANGELOG.md)
 - L5 consumer README snapshot — [consumers/readmes/closure-verification.md](consumers/readmes/closure-verification.md) (`Vinayak-RZ/closure-verification`)
+- **L6 architecture + UI handoff** — [ADR-022](decisions/ADR-022-l6-bff-runtime-boundary.md) / [ADR-023](decisions/ADR-023-l6-ems-and-analyst-context.md); [architecture handoff](handoff/stamped-l6-architecture-handoff.md) · [UI charter](handoff/stamped-l6-ui-ux-charter.md) · [build plan](handoff/stamped-l6-build-plan.md) · [agent onboarding](handoff/stamped-l6-agent-onboarding.md); typed seed [consumers/stamped-l6](consumers/stamped-l6/)
 
 ### Changed
 
@@ -46,10 +47,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/). Platform tags: `vYYYY.M
 - Arch §5.2 / §5.4 — Finding 1.1.0 + ops_confirmed / alarm events
 - ADR-020 reframed: ops-cleared verification; bill path deferred
 - L5 SSOT / handoffs: EMS alarm router; calculated savings; vertical catalog map
+- L6 SSOT reconciled ops-first + EMS console + dual-mode analyst (P0 Mode A / P1 Mode B); English through P2
 
 ### Planned
 
 - Submodule migration in connectors-edge, connectors-cloud, connectors-bill, universal-repositary
 - `stamped-l1-contracts` PyPI/npm publish (optional P1)
 - Create `stamped-l5` consumer repo per build plan
+- Create `stamped-l6` consumer repo per [handoff/stamped-l6-build-plan.md](handoff/stamped-l6-build-plan.md)
 - Bill reconcile / IPMVP Option C as optional add-on (not P0 gate)

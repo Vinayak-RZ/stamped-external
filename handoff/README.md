@@ -129,7 +129,26 @@ Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · 
 
 **stamped-l5** (`closure-verification`) is **Closure & Verification** — EMS alarm routing, ops-clearance verification, WhatsApp-first notification, calculated savings ledger (bill path deferred), and L2 append policy.
 
-L6 consumer handoff remains empty until `stamped-l6` is planned beyond display stubs.
+---
+
+## stamped-l6 — read first (ops-first UI + BFF)
+
+| # | Document | Purpose |
+|---|----------|---------|
+| 1 | [stamped-l6-architecture-handoff.md](./stamped-l6-architecture-handoff.md) | **Primary handoff** — BFF topology, L2/L4/L5 integration, P0 band |
+| 2 | [stamped-l6-ui-ux-charter.md](./stamped-l6-ui-ux-charter.md) | Routes, EMS, progressive reveal, dual-mode analyst, a11y |
+| 3 | [stamped-l6-build-plan.md](./stamped-l6-build-plan.md) | Nawab commit matrix for consumer |
+| 4 | [stamped-l6-agent-onboarding.md](./stamped-l6-agent-onboarding.md) | Paste into consumer `AGENTS.md` |
+| 5 | [../technical/layers/L6-experience-and-integration.md](../technical/layers/L6-experience-and-integration.md) | Architecture SSOT |
+| 6 | [../decisions/ADR-022-l6-bff-runtime-boundary.md](../decisions/ADR-022-l6-bff-runtime-boundary.md) | BFF / repo charter |
+| 7 | [../decisions/ADR-023-l6-ems-and-analyst-context.md](../decisions/ADR-023-l6-ems-and-analyst-context.md) | EMS + analyst context policy |
+| 8 | [l6-counterfactual-display-stub.md](./l6-counterfactual-display-stub.md) | Modeled delay-cost display |
+| 9 | [../consumers/stamped-l6/README.md](../consumers/stamped-l6/README.md) | Typed UI seed + [TRANSFER.md](../consumers/stamped-l6/TRANSFER.md) |
+| 10 | [../design/forge-industrial-design-system.md](../design/forge-industrial-design-system.md) | Forge Industrial v2.0 |
+
+### stamped-l6 one-line mission
+
+**stamped-l6** is **Experience & Integration** — ops-first dashboard, EMS alarm console, prescription queue, dual-mode analyst UX, exports, and outbound API/webhooks (P2).
 
 ---
 
@@ -184,3 +203,4 @@ L5 consumer README snapshot: [../consumers/readmes/closure-verification.md](../c
 | 2026-07-20 | L5 architecture handoff + build plan; ADR-019/020/021; contracts 0.7.0 |
 | 2026-07-21 | Ops-first L5 + Finding 1.1.0 `ops_clearance`; contracts 0.8.0; L3 ops-clearance consumer prompt |
 | 2026-07-21 | Mirrored completed L5 README → `consumers/readmes/closure-verification.md` |
+| 2026-07-21 | L6 architecture + UI handoff (ADR-022/023); ops-first SSOT; `consumers/stamped-l6` reference seed |

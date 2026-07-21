@@ -21,7 +21,7 @@
 | **L4 agent** | "Template path" vague | Two-lane architecture: deterministic template-fast-path (P0) + bounded LangGraph (P1) |
 | **Evals** | Missing from matrix | L4 golden eval harness (≥20 cases) + L3 golden replay in CI |
 | **§17 Risks** | Mitigation only | Likelihood / impact / contingency columns |
-| **Frontend** | L6 non-goal only | L6 handoff stub for counterfactual `opportunity_cost` display (no L6 commits P0) |
+| **Frontend** | L6 non-goal only | L6 handoff stub for counterfactual `opportunity_cost` display (no L6 commits P0) — **superseded 2026-07-21:** full L6 architecture/UI handoff + `consumers/stamped-l6` seed (ADR-022/023) |
 
 ---
 
