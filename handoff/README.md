@@ -112,21 +112,22 @@ Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · 
 
 ---
 
-## stamped-l5 — architecture ready (repo planned)
+## stamped-l5 — consumer live (`closure-verification`)
 
 | # | Document | Purpose |
 |---|----------|---------|
-| 1 | [stamped-l5-architecture-handoff.md](./stamped-l5-architecture-handoff.md) | **Primary handoff** — runtime, modules, consistency, P0 band |
-| 2 | [stamped-l5-build-plan.md](./stamped-l5-build-plan.md) | Starter commit matrix for next agents |
-| 3 | [../technical/layers/L5-closure-and-verification.md](../technical/layers/L5-closure-and-verification.md) | Architecture SSOT |
-| 4 | [../decisions/ADR-019-l5-runtime-and-consistency.md](../decisions/ADR-019-l5-runtime-and-consistency.md) | Runtime + L2 append protocol |
-| 5 | [../decisions/ADR-020-l5-mv-claim-governance.md](../decisions/ADR-020-l5-mv-claim-governance.md) | Ops-first claim gates (`ops_confirmed`; bill deferred) |
-| 6 | [../decisions/ADR-021-l5-notification-and-evidence.md](../decisions/ADR-021-l5-notification-and-evidence.md) | WhatsApp + evidence |
-| 7 | [l6-counterfactual-display-stub.md](./l6-counterfactual-display-stub.md) | Modeled delay-cost display |
+| 1 | [../consumers/readmes/closure-verification.md](../consumers/readmes/closure-verification.md) | **Consumer README snapshot** — shipped L5 API/worker surface |
+| 2 | [stamped-l5-architecture-handoff.md](./stamped-l5-architecture-handoff.md) | Platform handoff — runtime, modules, consistency |
+| 3 | [stamped-l5-build-plan.md](./stamped-l5-build-plan.md) | Starter commit matrix (historical P0–P2) |
+| 4 | [../technical/layers/L5-closure-and-verification.md](../technical/layers/L5-closure-and-verification.md) | Architecture SSOT |
+| 5 | [../decisions/ADR-019-l5-runtime-and-consistency.md](../decisions/ADR-019-l5-runtime-and-consistency.md) | Runtime + L2 append protocol |
+| 6 | [../decisions/ADR-020-l5-mv-claim-governance.md](../decisions/ADR-020-l5-mv-claim-governance.md) | Ops-first claim gates (`ops_confirmed`; bill deferred) |
+| 7 | [../decisions/ADR-021-l5-notification-and-evidence.md](../decisions/ADR-021-l5-notification-and-evidence.md) | WhatsApp + evidence |
+| 8 | [l6-counterfactual-display-stub.md](./l6-counterfactual-display-stub.md) | Modeled delay-cost display |
 
 ### stamped-l5 one-line mission
 
-**stamped-l5** is **Closure & Verification** — EMS alarm routing, ops-clearance verification, WhatsApp-first notification, calculated savings ledger (bill path deferred), and L2 append policy.
+**stamped-l5** (`closure-verification`) is **Closure & Verification** — EMS alarm routing, ops-clearance verification, WhatsApp-first notification, calculated savings ledger (bill path deferred), and L2 append policy.
 
 L6 consumer handoff remains empty until `stamped-l6` is planned beyond display stubs.
 
@@ -140,7 +141,7 @@ Mirrored root READMEs from live consumer repos (context only — canonical docs 
 |-------|----------------|
 | L1–L4 | [../consumers/readmes/README.md](../consumers/readmes/README.md) |
 
-L5 consumer README snapshot: empty until `stamped-l5` repo exists (architecture handoff above is authoritative).
+L5 consumer README snapshot: [../consumers/readmes/closure-verification.md](../consumers/readmes/closure-verification.md) (architecture SSOT remains the L5 layer doc + ADRs).
 
 ---
 
@@ -182,3 +183,4 @@ L5 consumer README snapshot: empty until `stamped-l5` repo exists (architecture 
 | 2026-07-19 | Link consumer README snapshots under `consumers/readmes/` |
 | 2026-07-20 | L5 architecture handoff + build plan; ADR-019/020/021; contracts 0.7.0 |
 | 2026-07-21 | Ops-first L5 + Finding 1.1.0 `ops_clearance`; contracts 0.8.0; L3 ops-clearance consumer prompt |
+| 2026-07-21 | Mirrored completed L5 README → `consumers/readmes/closure-verification.md` |
