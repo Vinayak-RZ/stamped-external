@@ -40,7 +40,7 @@ PACKS = {
         },
         "hook": {
             "eyebrow": "Monday 06:40 · Kiln / mill handover",
-            "h2": "Your cement plant already has the data.",
+            "h2": "The systems are there. The handoff is not.",
             "ledeD": "The incomer saw the MD spike when the cement mill and kiln auxiliaries overlapped. The EMS logged it. Nobody got a work order with a rupee figure.",
             "ledeM": "Mill and kiln fans overlapped. EMS logged it. Nobody got a ₹ work order.",
             "t1s": "Mill start and kiln fans overlap",
@@ -188,7 +188,7 @@ PACKS = {
         },
         "hook": {
             "eyebrow": "Monday 07:15 · Melt / roll handover",
-            "h2": "Your steel plant already has the data.",
+            "h2": "The systems are there. The handoff is not.",
             "ledeD": "The incomer saw the MD spike when the furnace restart overlapped the rolling-mill bite. The EMS logged it. Nobody got a work order with a rupee figure.",
             "ledeM": "Furnace and mill overlapped. EMS logged it. Nobody got a ₹ work order.",
             "t1s": "Furnace restart and mill start overlap",
@@ -336,7 +336,7 @@ PACKS = {
         },
         "hook": {
             "eyebrow": "Monday 07:05 · Utilities handover",
-            "h2": "Your pharma plant already has the data.",
+            "h2": "The systems are there. The handoff is not.",
             "ledeD": "The incomer saw the MD spike when chillers and autoclave heat-up overlapped: a classic load-management miss. The EMS logged it. Nobody got a work order with a rupee figure.",
             "ledeM": "Chillers and autoclave overlapped. A load spike with no ₹ work order.",
             "t1s": "Chillers and autoclave start together",
@@ -510,38 +510,6 @@ HERO_CSS = """
       text-transform: uppercase;
     }
 
-    /* Desktop gap slide: fewer blocks, more air */
-    @media (min-width: 721px) {
-      #scene-gap .gap-outcomes { display: none !important; }
-      #scene-gap .silo-board {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1.5rem;
-        max-width: 640px;
-        width: 100%;
-        margin: 2.75rem auto 0;
-      }
-      #scene-gap .silo-card:nth-child(1),
-      #scene-gap .silo-card:nth-child(3) { display: none; }
-      #scene-gap .silo-card {
-        min-height: 0;
-        padding: 1.6rem 1.45rem;
-      }
-      #scene-gap .silo-card > p { display: none; }
-      #scene-gap .silo-meta { margin-top: 1.15rem; gap: 0.65rem; font-size: 0.84rem; }
-      #scene-gap .gap-break {
-        margin: 2.75rem auto 0;
-        max-width: 480px;
-        padding: 1.05rem 1.35rem;
-      }
-      #scene-gap .lede {
-        max-width: 32em;
-        margin-bottom: 0.25rem;
-      }
-      #scene-gap h2 { margin-bottom: 0.75rem; }
-      #scene-gap .slide__inner--wide {
-        padding-top: 0.5rem;
-      }
-    }
 """
 
 MOBILE_HERO_CSS = """
@@ -821,12 +789,12 @@ def inject_ids_and_hooks(html: str) -> str:
     replacements = [
         (
             '<p class="eyebrow reveal">Monday 07:15 · Shift handover</p>\n'
-            '        <h2 class="reveal">Your plant already has the data.</h2>\n'
-            '        <p class="lede reveal hide-mobile">The incomer saw the MD spike. The EMS logged it. Nobody on the floor received a work order with a rupee figure attached.</p>\n'
+            '        <h2 class="reveal">The systems are there. The handoff is not.</h2>\n'
+            '        <p class="lede reveal hide-mobile">The incomer saw the MD spike. The EMS logged it. Nobody got a ₹ work order.</p>\n'
             '        <p class="lede reveal show-mobile">MD spiked. EMS logged it. Nobody got a ₹ work order.</p>',
             '<p class="eyebrow reveal" id="hookEyebrow">Monday 07:15 · Shift handover</p>\n'
-            '        <h2 class="reveal" id="hookH2">Your plant already has the data.</h2>\n'
-            '        <p class="lede reveal hide-mobile" id="hookLedeD">The incomer saw the MD spike. The EMS logged it. Nobody on the floor received a work order with a rupee figure attached.</p>\n'
+            '        <h2 class="reveal" id="hookH2">The systems are there. The handoff is not.</h2>\n'
+            '        <p class="lede reveal hide-mobile" id="hookLedeD">The incomer saw the MD spike. The EMS logged it. Nobody got a ₹ work order.</p>\n'
             '        <p class="lede reveal show-mobile" id="hookLedeM">MD spiked. EMS logged it. Nobody got a ₹ work order.</p>',
         ),
         (
@@ -874,18 +842,12 @@ def inject_ids_and_hooks(html: str) -> str:
             '<div class="has" id="gapBillHas">Has: MD, energy, PF line items</div>',
         ),
         (
-            '<p class="lede reveal">Stamped sits on top of the EMS and EnMS you already run. It reads existing data, issues a ranked action in rupees, sends it to the floor, and closes the result on the next bill.</p>',
-            '<p class="lede reveal" id="whatLede">Stamped sits on top of the EMS and EnMS you already run. It reads existing data, issues a ranked action in rupees, sends it to the floor, and closes the result on the next bill.</p>',
-        ),
-        (
             "<p>Incomer, sub-meters, SCADA and PLC states, and utility line items. Read-only. No control writes to the plant.</p>",
             '<p id="whatStep1">Incomer, sub-meters, SCADA and PLC states, and utility line items. Read-only. No control writes to the plant.</p>',
         ),
         (
-            '<p class="lede reveal hide-mobile">Start with one plant. Audit the data, run prescriptions on the floor, then go or no-go at Day 60: on ₹ savings and whether it actually made the plant easier to run.</p>\n'
-            '        <p class="lede reveal show-mobile">Audit → floor execution → go / no-go at Day 60.</p>',
-            '<p class="lede reveal hide-mobile" id="offerLedeD">Start with one plant. Audit the data, run prescriptions on the floor, then go or no-go at Day 60: on ₹ savings and whether it actually made the plant easier to run.</p>\n'
-            '        <p class="lede reveal show-mobile" id="offerLedeM">Audit → floor execution → go / no-go at Day 60.</p>',
+            '<p class="lede reveal show-mobile">Audit → floor execution → go / no-go at Day 60.</p>',
+            '<p class="lede reveal show-mobile" id="offerLedeM">Audit → floor execution → go / no-go at Day 60.</p>',
         ),
         (
             "<li>MD coincidence, idle and holding loads, compressed air, thermal</li>",
@@ -939,12 +901,10 @@ def replace_rx_block(html: str, pack: dict) -> str:
     html = html.replace(
         '<p class="eyebrow reveal">Where electricity cost usually hides</p>\n'
         '        <h2 class="reveal">Five areas we check first</h2>\n'
-        '        <p class="lede reveal hide-mobile">These are the first places we look when a plant already has metering and still sees avoidable ₹ on the HT bill.</p>\n'
-        '        <p class="lede reveal show-mobile">First places we look for avoidable ₹ on the HT bill.</p>',
+        '        <p class="lede reveal">First places we look for avoidable ₹ on the HT bill.</p>',
         f'<p class="eyebrow reveal" id="mathEyebrow">{pack["math"]["eyebrow"]}</p>\n'
         f'        <h2 class="reveal" id="mathH2">{pack["math"]["h2"]}</h2>\n'
-        f'        <p class="lede reveal hide-mobile" id="mathLedeD">{pack["math"]["ledeD"]}</p>\n'
-        f'        <p class="lede reveal show-mobile" id="mathLedeM">{pack["math"]["ledeM"]}</p>',
+        f'        <p class="lede reveal" id="mathLede">{pack["math"].get("ledeM") or pack["math"].get("ledeD")}</p>',
         1,
     )
 
@@ -1136,10 +1096,8 @@ def apply_static_pack_fields(html: str, pack: dict) -> str:
         "gapEmsHas": pack["gapHas"]["ems"],
         "gapMetersHas": pack["gapHas"]["meters"],
         "gapBillHas": pack["gapHas"]["bill"],
-        "whatLede": pack["whatLede"],
         "whatStep1": pack["whatStep1"],
         "techPhysicsBullet": pack["techBullet"],
-        "offerLedeD": pack["offerLedeD"],
         "offerLedeM": pack["offerLedeM"],
     }
     for eid, text in pairs.items():
