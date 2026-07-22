@@ -263,7 +263,6 @@
       color: var(--on-surface-variant);
     }
     .meta { font-size: 0.78rem; opacity: 0.55; margin-top: 1rem; letter-spacing: 0.02em; }
-    .tilde { font-size: 0.72em; opacity: 0.65; font-weight: 500; }
 
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
@@ -815,88 +814,283 @@
 
     /* 7 Floor / phone */
     .floor-layout {
-      display: grid; grid-template-columns: minmax(280px, 340px) 1fr;
-      gap: clamp(1.4rem, 3vw, 2.4rem); align-items: center; margin-top: 1rem;
-      justify-items: start;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 372px);
+      gap: clamp(1.6rem, 3.5vw, 2.8rem);
+      align-items: center;
+      margin-top: 0.85rem;
     }
-    #scene-floor .phone { margin: 0; justify-self: start; }
+    #scene-floor .status-rail { justify-self: stretch; max-width: 420px; }
+    #scene-floor .phone { justify-self: end; margin: 0; }
     .phone {
-      width: 100%; max-width: 320px; margin: 0;
-      background: linear-gradient(165deg, #2c2c2e 0%, #1c1c1e 55%, #0f0f10 100%);
-      border: 1px solid #3a3a3c; border-radius: 36px; padding: 10px;
+      width: 100%;
+      max-width: 348px;
       position: relative;
-      box-shadow: 0 24px 48px -28px rgba(5,31,19,0.45);
+      padding: 11px 10px 12px;
+      border-radius: 44px;
+      background:
+        linear-gradient(160deg, #5c5c60 0%, #2c2c2e 28%, #111113 72%, #050506 100%);
+      border: 1.5px solid #6a6a6e;
+      box-shadow:
+        0 36px 70px -30px rgba(5, 31, 19, 0.55),
+        0 12px 28px -18px rgba(0,0,0,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.22),
+        inset 0 -2px 4px rgba(0,0,0,0.55);
+      transform: perspective(900px) rotateY(-4deg) rotateX(1.5deg);
+      transform-origin: center right;
+      transition: transform 0.35s var(--ease);
+    }
+    .phone:hover {
+      transform: perspective(900px) rotateY(-1deg) rotateX(0.5deg) translateY(-2px);
     }
     .slide.active .phone {
-      animation: phoneIn 0.62s var(--ease) 0.1s both;
+      animation: phoneIn 0.7s var(--ease) 0.08s both;
     }
     .phone::before { content: none; }
+    .phone::after {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 8px;
+      border-radius: 36px;
+      background: linear-gradient(125deg, rgba(255,255,255,0.14) 0%, transparent 38%, transparent 62%, rgba(255,255,255,0.04) 100%);
+      z-index: 4;
+    }
+    .phone-btn {
+      position: absolute;
+      background: linear-gradient(90deg, #3a3a3c, #1f1f21);
+      border-radius: 2px;
+      z-index: 5;
+      box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.12);
+    }
+    .phone-btn--silent {
+      left: -3px; top: 98px; width: 3px; height: 24px;
+      border-radius: 2px 0 0 2px;
+    }
+    .phone-btn--vol-up {
+      left: -3px; top: 140px; width: 3px; height: 46px;
+      border-radius: 2px 0 0 2px;
+    }
+    .phone-btn--vol-down {
+      left: -3px; top: 194px; width: 3px; height: 46px;
+      border-radius: 2px 0 0 2px;
+    }
+    .phone-btn--power {
+      right: -3px; top: 158px; width: 3px; height: 70px;
+      border-radius: 0 2px 2px 0;
+    }
+    .phone__bezel {
+      border-radius: 34px;
+      overflow: hidden;
+      background: #000;
+      padding: 3px;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+    }
     .phone__screen {
-      background: #efeae6; border-radius: 28px; overflow: hidden;
-      min-height: 480px; display: flex; flex-direction: column;
+      background: #0b141a;
+      border-radius: 31px;
+      overflow: hidden;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
       position: relative;
     }
     .phone-statusbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.45rem 1rem 0.2rem; font-size: 0.68rem; font-weight: 650;
-      color: #1a1210; background: #efeae6; position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0.62rem 1.15rem 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #f5f5f5;
+      position: relative;
+      z-index: 3;
+      background: #075e54;
     }
+    .phone-time { justify-self: start; letter-spacing: 0.02em; }
     .phone-island {
-      position: absolute; left: 50%; top: 0.35rem; transform: translateX(-50%);
-      width: 86px; height: 22px; background: #0f0f10; border-radius: 14px;
+      width: 98px; height: 26px; background: #050505; border-radius: 18px;
+      justify-self: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+      position: relative;
+      display: flex; align-items: center; justify-content: flex-end;
+      padding-right: 10px; gap: 6px;
     }
-    .phone-status-right { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+    .phone-island::before,
+    .phone-island::after {
+      content: "";
+      border-radius: 50%;
+      background: #1a1a1c;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+    }
+    .phone-island::before { width: 8px; height: 8px; background: radial-gradient(circle at 35% 35%, #3a4a5a, #0a1018 70%); }
+    .phone-island::after { width: 6px; height: 6px; }
+    .phone-status-right {
+      justify-self: end;
+      display: inline-flex; align-items: center; gap: 0.28rem;
+      font-variant-numeric: tabular-nums;
+      font-size: 0.64rem;
+    }
+    .phone-sig, .phone-bat { width: 16px; height: 11px; fill: currentColor; }
+    .phone-bat { width: 22px; height: 11px; }
     .wa-header {
-      background: #075e54; color: #fff; padding: 0.7rem 1rem 0.75rem;
-      display: flex; align-items: center; gap: 0.65rem;
+      background: #075e54;
+      color: #fff;
+      padding: 0.35rem 0.7rem 0.7rem;
+      display: grid;
+      grid-template-columns: auto auto 1fr auto;
+      align-items: center;
+      gap: 0.45rem;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.18);
+      position: relative;
+      z-index: 2;
     }
+    .wa-back { font-size: 1.4rem; line-height: 1; opacity: 0.95; padding: 0 0.1rem; font-weight: 300; }
     .wa-avatar {
       width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(255,255,255,0.22); display: flex; align-items: center;
-      justify-content: center; font-size: 0.72rem; font-weight: 750;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08)),
+        #128c7e;
+      display: flex; align-items: center;
+      justify-content: center; font-size: 0.68rem; font-weight: 750;
+      box-shadow: 0 0 0 1.5px rgba(255,255,255,0.18);
     }
-    .wa-header strong { display: block; font-size: 0.9rem; }
-    .wa-header span { font-size: 0.68rem; opacity: 0.88; }
-    .wa-body { flex: 1; padding: 0.95rem; display: flex; flex-direction: column; gap: 0.65rem; }
-    .wa-meta {
-      font-size: 0.68rem; color: var(--on-surface-variant); text-align: center;
-      letter-spacing: 0.02em;
+    .wa-head-text strong { display: block; font-size: 0.9rem; letter-spacing: -0.01em; }
+    .wa-head-text span {
+      font-size: 0.66rem; opacity: 0.9;
+      display: inline-flex; align-items: center; gap: 0.28rem;
     }
-    .wa-bubble {
-      background: #fff; border: none;
-      border-radius: 10px 10px 10px 2px; padding: 0.85rem 0.9rem;
-      font-size: 0.78rem; line-height: 1.45; color: #1a1210;
-      box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+    .wa-head-text span::before {
+      content: "";
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #25d366;
+      box-shadow: 0 0 0 2px rgba(37,211,102,0.25);
+    }
+    .wa-head-icons {
+      opacity: 0.92; font-size: 1rem; padding: 0 0.15rem;
+      display: inline-flex; gap: 0.55rem; letter-spacing: 0.05em;
+    }
+    .wa-body {
+      flex: 1; padding: 0.7rem 0.65rem 0.45rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255,255,255,0.22), transparent 42%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23cbbfb3' stroke-width='1' opacity='0.35'%3E%3Cpath d='M10 30c8-6 16 6 24 0s16 6 24 0'/%3E%3Cpath d='M70 80c6-8 18-2 22-12'/%3E%3Ccircle cx='28' cy='78' r='8'/%3E%3Cpath d='M88 28h14v14'/%3E%3C/g%3E%3C/svg%3E"),
+        #e5ddd5;
+      background-size: auto, 120px 120px, auto;
+      min-height: 0;
       position: relative;
     }
+    .wa-meta {
+      font-size: 0.64rem; color: #54656f; text-align: center;
+      letter-spacing: 0.02em;
+      background: rgba(255,255,255,0.72);
+      align-self: center;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      box-shadow: 0 1px 1px rgba(11,20,26,0.06);
+    }
+    .wa-bubble {
+      background: #fff;
+      border: none;
+      border-radius: 7.5px 7.5px 7.5px 0;
+      padding: 0.75rem 0.8rem 1.4rem;
+      font-size: 0.78rem; line-height: 1.45; color: #111b21;
+      box-shadow: 0 1px 0.5px rgba(11,20,26,0.13);
+      position: relative;
+      max-width: 100%;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .wa-bubble::before {
+      content: "";
+      position: absolute;
+      left: -6px; bottom: 0;
+      width: 10px; height: 14px;
+      background: #fff;
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+    .wa-bubble:active { transform: scale(0.985); }
     .wa-bubble .tag {
-      display: inline-block; font-size: 0.65rem; font-weight: 750;
-      letter-spacing: 0.05em; text-transform: uppercase; color: #c45a4a;
-      margin-bottom: 0.4rem;
+      display: inline-block; font-size: 0.6rem; font-weight: 750;
+      letter-spacing: 0.04em; text-transform: uppercase; color: #c45a4a;
+      margin-bottom: 0.32rem;
+      background: rgba(247,84,64,0.08);
+      padding: 0.12rem 0.4rem;
+      border-radius: 4px;
     }
     .wa-bubble h4 {
-      font-family: var(--font-display); font-size: 0.92rem; font-weight: 750;
-      line-height: 1.3; margin-bottom: 0.55rem;
+      font-family: var(--font-display); font-size: 0.88rem; font-weight: 750;
+      line-height: 1.28; margin-bottom: 0.4rem;
     }
-    .wa-line { margin-top: 0.35rem; }
-    .wa-line b { font-weight: 700; }
+    .wa-line { margin-top: 0.26rem; }
+    .wa-line b { font-weight: 700; color: #3b4a54; }
     .wa-cta {
-      margin-top: 0.7rem; border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
-      background: color-mix(in srgb, var(--primary) 9%, transparent);
-      color: var(--primary); border-radius: 8px; padding: 0.55rem 0.7rem;
-      font-size: 0.75rem; font-weight: 700; text-align: center;
+      margin-top: 0.6rem; border: 1px solid color-mix(in srgb, var(--primary) 28%, transparent);
+      background: color-mix(in srgb, var(--primary) 10%, transparent);
+      color: var(--primary); border-radius: 8px; padding: 0.48rem 0.6rem;
+      font-size: 0.72rem; font-weight: 700; text-align: center;
+    }
+    .wa-tick {
+      position: absolute; right: 0.5rem; bottom: 0.32rem;
+      font-size: 0.6rem; color: #53bdeb;
+      display: inline-flex; align-items: center; gap: 0.22rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .wa-tick::before {
+      content: "✓✓";
+      font-size: 0.58rem;
+      letter-spacing: -0.12em;
+      color: #53bdeb;
     }
     .wa-actions {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; margin-top: auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-top: 0.15rem;
     }
     .wa-actions button {
-      border: 1px solid #e0c7c1; background: #fff; border-radius: 8px;
-      padding: 0.55rem; font-size: 0.72rem; font-weight: 650; color: var(--on-surface);
+      border: 1px solid rgba(0,0,0,0.08); background: #fff; border-radius: 22px;
+      padding: 0.58rem; font-size: 0.74rem; font-weight: 650; color: var(--on-surface);
+      box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+      transition: transform 0.12s ease, background 0.12s ease;
     }
+    .wa-actions button:hover { background: #f7f8f9; }
+    .wa-actions button:active { transform: scale(0.97); }
     .wa-actions button.primary {
       background: var(--primary); border-color: var(--primary); color: #fff;
     }
+    .wa-actions button.primary:hover { filter: brightness(1.04); }
     .wa-actions button:disabled { opacity: 0.55; cursor: wait; }
+    .wa-compose {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.45rem 0.2rem;
+      background: #f0f2f5;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      flex-shrink: 0;
+    }
+    .wa-compose__icon {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: grid; place-items: center;
+      color: #54656f; font-size: 0.95rem; font-weight: 600;
+      user-select: none;
+    }
+    .wa-compose__field {
+      background: #fff;
+      border-radius: 18px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.72rem;
+      color: #8696a0;
+      border: 1px solid rgba(0,0,0,0.05);
+      min-height: 1.7rem;
+    }
+    .wa-compose__mic {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: #075e54; color: #fff;
+      display: grid; place-items: center;
+      font-size: 0.75rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+    }
     #floorBubble { cursor: pointer; }
     #floorBubble:focus-visible {
       outline: 2px solid var(--primary);
@@ -911,6 +1105,9 @@
     .wa-bubble.is-enter {
       animation: floorEnter 0.34s var(--ease) both;
     }
+    .phone.is-pulse .phone__bezel {
+      animation: phonePulse 0.45s var(--ease);
+    }
     @keyframes floorAckOut {
       to { opacity: 0; transform: translateY(-18px) scale(0.96); }
     }
@@ -921,13 +1118,19 @@
       from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: none; }
     }
+    @keyframes phonePulse {
+      0%, 100% { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06); }
+      50% { box-shadow: inset 0 0 0 1px rgba(247,84,64,0.45), 0 0 0 3px rgba(247,84,64,0.12); }
+    }
     .wa-end {
       flex: 1;
       min-height: 180px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
+      gap: 0.35rem;
       padding: 1rem;
     }
     .wa-end[hidden] { display: none !important; }
@@ -938,7 +1141,19 @@
       letter-spacing: -0.02em;
       color: var(--secondary);
     }
-    .floor-rail-lede { margin-bottom: 0.35rem; font-size: 0.9rem; max-width: 28em; }
+    .wa-end span { font-size: 0.78rem; color: #667781; }
+    .phone-home {
+      height: 16px;
+      display: flex; align-items: center; justify-content: center;
+      background: #f0f2f5;
+      flex-shrink: 0;
+    }
+    .phone-home::after {
+      content: "";
+      width: 112px; height: 4px; border-radius: 999px; background: #1c1c1e;
+      opacity: 0.88;
+    }
+    .floor-rail-lede { margin-bottom: 0.45rem; font-size: 0.92rem; max-width: 26em; }
     .status-rail { display: grid; gap: 0.65rem; }
     .status-item {
       display: grid; grid-template-columns: 14px 1fr; gap: 0.75rem;
@@ -1149,7 +1364,7 @@
       border-radius: var(--radius-lg);
       border: 1px solid var(--outline-variant);
       overflow: hidden; background: #0a140f;
-      height: clamp(420px, 68vh, 720px);
+      height: clamp(520px, 82vh, 820px);
       position: relative;
       box-shadow: 0 18px 40px -28px rgba(5,31,19,0.22);
     }
@@ -1217,22 +1432,39 @@
     .contact-line { margin-top: 1.15rem; font-size: 0.92rem; color: var(--on-surface-variant); }
     .contact-line a { color: var(--primary); text-decoration: none; font-weight: 650; }
     .contact-line a:hover { text-decoration: underline; }
+    .founders { margin-top: 0.75rem; font-size: 0.88rem; color: var(--on-surface-variant); }
+    .founders a { color: var(--primary); font-weight: 650; text-decoration: none; }
+    .founders a:hover { text-decoration: underline; }
     .cred-quiet { margin-top: 0.7rem; font-size: 0.72rem; color: var(--outline); }
+
 
 
 
     @media (min-width: 721px) {
       #scene-hook .silo-board {
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.85rem;
-        margin-top: 1.25rem;
+        gap: 0.65rem;
+        margin-top: 0.75rem;
         max-width: none;
       }
-      #scene-hook .silo-card { padding: 1rem 1rem; min-height: 0; }
-      #scene-hook .silo-meta { margin-top: 0.65rem; font-size: 0.78rem; gap: 0.4rem; }
-      #scene-hook .gap-break { margin-top: 1.15rem; max-width: 520px; }
-      #scene-hook .problem-top { margin-top: 0.75rem; }
+      #scene-hook .silo-card { padding: 0.7rem 0.8rem; min-height: 0; }
+      #scene-hook .silo-meta { margin-top: 0.4rem; font-size: 0.72rem; gap: 0.25rem; }
+      #scene-hook .silo-meta .has { display: none; }
+      #scene-hook .gap-break { display: none; }
+      #scene-hook .problem-top { margin-top: 0.45rem; }
+      #scene-hook .lede { margin-bottom: 0.25rem; max-width: 32em; font-size: 0.95rem; }
+      #scene-hook h2 { margin-bottom: 0.3rem; }
+      #scene-title .lede.hide-mobile { max-width: 30em; font-size: 0.95rem; line-height: 1.45; }
+      #scene-title .flow-tags { margin-bottom: 0; }
+      #scene-math .lede { margin-bottom: 0.4rem; font-size: 0.95rem; max-width: 34em; }
+      #scene-what .do-step p { font-size: 0.84rem; }
+      #scene-tech .tech-card p { font-size: 0.84rem; }
+      #scene-tech .tech-card ul { font-size: 0.78rem; }
+      #scene-floor .floor-rail-lede { font-size: 0.88rem; }
+      #scene-floor .status-item p { font-size: 0.76rem; }
+      #scene-verify .meta { font-size: 0.78rem; }
     }
+
 
     .show-mobile { display: none !important; }
     .hide-mobile { display: revert; }
@@ -1252,9 +1484,10 @@
       .rx-flip, .rx-flip__inner { min-height: 360px; }
       .tech-card, .waste-card, .do-step, .silo-card { min-height: 0; }
       .silo-board, .stat-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .phone { max-width: 300px; }
+      .phone { max-width: 300px; transform: none; }
+      .phone:hover { transform: none; }
       .phone__screen { min-height: 400px; }
-      .dash-shell { height: clamp(320px, 58vh, 520px); }
+      .dash-shell { height: clamp(380px, 66vh, 600px); }
       #scene-title .hero-shell { gap: var(--space-6); }
     }
 
@@ -1429,6 +1662,7 @@
         justify-content: flex-start;
       }
       #scene-floor .phone {
+        order: -1;
         width: min(100%, 340px);
         max-width: 100%;
         margin: 0 auto;
@@ -1439,7 +1673,9 @@
         flex-direction: column;
         min-height: 0;
         max-height: calc(100dvh - var(--chrome-h) - var(--progress-h) - var(--safe-t) - 7.5rem);
+        transform: none;
       }
+      #scene-floor .phone:hover { transform: none; }
       #scene-floor .phone::before {
         width: 72px;
         height: 14px;
@@ -1570,7 +1806,7 @@
 
     @media (max-height: 760px) and (min-width: 721px) {
       .phone__screen { min-height: 360px; }
-      .dash-shell { height: clamp(280px, 56vh, 460px); }
+      .dash-shell { height: clamp(420px, 72vh, 640px); }
       .video-frame { max-height: min(50vh, 400px); }
       h1 { font-size: clamp(1.7rem, 3.8vw, 2.5rem); }
       h2 { font-size: clamp(1.35rem, 2.8vw, 1.9rem); }
@@ -1613,9 +1849,9 @@
             <p class="eyebrow reveal hide-mobile">Operational energy decisions, verified on the bill</p>
             <p class="eyebrow reveal show-mobile">Bill-verified decisions</p>
             <p class="brand-name reveal">Stamped Energy</p>
-            <h1 class="reveal hide-mobile">From plant signals to owned actions on the invoice.</h1>
+            <h1 class="reveal hide-mobile">From plant meters to bill-line actions.</h1>
             <h1 class="reveal show-mobile">Owned ₹ actions on the bill.</h1>
-            <p class="lede reveal hide-mobile">You already have meters, EMS, and often renewables. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.</p>
+            <p class="lede reveal hide-mobile">You already have meters and EMS. Stamped ranks floor work in rupees, then checks the result on the next DISCOM bill.</p>
             <p class="lede reveal show-mobile">Ranked floor actions from your meters and EMS. Verified on the DISCOM bill.</p>
             <div class="flow-tags reveal hide-mobile">
               <span class="chip">Physics &amp; rules</span>
@@ -1668,30 +1904,30 @@
     <section class="slide slide--light grid-bg" id="scene-hook" data-theme="light" aria-label="Why savings get missed">
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Monday 07:15 · Shift handover</p>
-        <h2 class="reveal">The systems are there. The handoff is not.</h2>
-        <p class="lede reveal hide-mobile">The incomer saw the MD spike. The EMS logged it. Nobody got a ₹ work order.</p>
-        <p class="lede reveal show-mobile">MD spiked. EMS logged it. Nobody got a ₹ work order.</p>
+        <h2 class="reveal">Your plant already logs this. Nobody owns the fix.</h2>
+        <p class="lede reveal hide-mobile">MD spiked. EMS logged it. No work order went out.</p>
+        <p class="lede reveal show-mobile">MD spiked. EMS logged it. No work order went out.</p>
         <div class="two-col problem-top">
           <div class="timeline reveal">
             <div class="tl-item">
               <div class="tl-time">07:12</div>
               <div class="tl-card">
                 <strong>Compressors + furnace bay start together</strong>
-                <p>Shift B brings utilities online in a 4-minute overlap.</p>
+                <p class="hide-mobile">Shift B brings utilities online together.</p>
               </div>
             </div>
             <div class="tl-item">
               <div class="tl-time">07:15</div>
               <div class="tl-card tl-card--break">
                 <strong>MD spike hits the incomer</strong>
-                <p>EMS threshold crossed. Alert created. Still no assigned owner.</p>
+                <p class="hide-mobile">Alert created. Still no owner.</p>
               </div>
             </div>
             <div class="tl-item">
               <div class="tl-time">07:40</div>
               <div class="tl-card">
                 <strong>Production continues as usual</strong>
-                <p>The bill will price this later. The floor never saw the fix.</p>
+                <p class="hide-mobile">The floor never saw the fix.</p>
               </div>
             </div>
           </div>
@@ -1699,11 +1935,10 @@
             <div class="meter-label">Sample demand window</div>
             <div class="meter-value">1,180 <span style="font-size:0.45em;color:var(--on-surface-variant)">kVA</span></div>
             <div class="meter-bar"><i class="grow-on-active"></i></div>
-            <p class="meter-note hide-mobile">The EMS recorded the spike, but nobody was assigned to change the next shift start.</p>
             <div class="stat-row" style="grid-template-columns:1fr 1fr;margin-top:1rem;">
               <div class="stat-card">
-                <strong>~₹42k</strong>
-                <span>Monthly demand impact <span class="tilde">[~]</span></span>
+                <strong>₹42k</strong>
+                <span>Monthly demand impact</span>
               </div>
               <div class="stat-card">
                 <strong>0</strong>
@@ -1742,7 +1977,7 @@
             </div>
           </article>
         </div>
-        <div class="gap-break reveal">No assignment <span>→</span> no floor action <span>→</span> bill settles unchanged</div>
+        <div class="gap-break reveal">No owner <span>→</span> no floor change <span>→</span> bill unchanged</div>
       </div>
     </section>
 
@@ -1754,8 +1989,8 @@
     <section class="slide slide--light" id="scene-math" data-theme="light" aria-label="Savings map">
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Where electricity cost usually hides</p>
-        <h2 class="reveal">Five areas we check first</h2>
-        <p class="lede reveal">First places we look for avoidable ₹ on the HT bill.</p>
+        <h2 class="reveal">Where we look first</h2>
+        <p class="lede reveal">Avoidable ₹ on the HT bill, starting with these lines.</p>
         <div class="waste-grid reveal">
           <article class="waste-card">
             <h3>MD / demand</h3>
@@ -1813,7 +2048,7 @@
             <thead>
               <tr>
                 <th>Monthly HT bill</th>
-                <th>About 15% often addressable <span class="tilde">[~]</span></th>
+                <th>About 15% often addressable</th>
                 <th>Cost of waiting 60 days</th>
               </tr>
             </thead>
@@ -1824,7 +2059,7 @@
             </tbody>
           </table>
         </div>
-        <p class="footnote reveal hide-mobile">Indicative ranges from comparable plants <span class="tilde">[~]</span>. A 60-day proof run replaces estimates with figures from your plant and DISCOM bills.</p>
+        <p class="footnote reveal hide-mobile">Indicative ranges from comparable plants. A 60-day proof run replaces estimates with figures from your plant and DISCOM bills.</p>
       </div>
     </section>
 
@@ -1832,7 +2067,7 @@
     <section class="slide slide--light" id="scene-what" data-theme="light" aria-label="What Stamped does">
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">What Stamped does</p>
-        <h2 class="reveal">From a plant signal to an assigned job.</h2>
+        <h2 class="reveal">Signals become work orders.</h2>
         <div class="do-chain reveal">
           <article class="do-step">
             <div class="do-step__num">01</div>
@@ -1871,7 +2106,7 @@
     <section class="slide slide--light" id="scene-prescription" data-theme="light" aria-label="Prescription">
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Sample prescriptions</p>
-        <h2 class="reveal">A clear action, priced on a bill line.</h2>
+        <h2 class="reveal">Every action has a bill line and an owner.</h2>
         <div class="rx-layout">
           <button type="button" class="rx-flip reveal" data-rx-flip aria-pressed="false" aria-label="MD stagger prescription. Show evidence.">
             <div class="rx-flip__inner">
@@ -1886,7 +2121,7 @@
                     <div class="rx-row"><dt>Why</dt><dd>Mon 07:12-07:20 overlap drove the incomer MD window</dd></div>
                     <div class="rx-row"><dt>Bill line</dt><dd>MD (kVA) · billing demand</dd></div>
                     <div class="rx-row"><dt>Owner</dt><dd>Electrical shift supervisor · Shift B</dd></div>
-                    <div class="rx-row"><dt>Impact</dt><dd><strong>₹2.5-4L / month</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong>₹2.5-4L / month</strong></dd></div>
                     <div class="rx-row"><dt>Effort</dt><dd>Sequence only · no capex · no PLC write</dd></div>
                     <div class="rx-row"><dt>Rule</dt><dd>md_overlap@v2.4 · Confidence High</dd></div>
                     <div class="rx-row"><dt>Due</dt><dd>This week · verify on next MD line</dd></div>
@@ -1939,7 +2174,7 @@
                     <div class="rx-row"><dt>Why</dt><dd>Unload kWh with no production tag on 3 of last 5 changeovers</dd></div>
                     <div class="rx-row"><dt>Bill line</dt><dd>Energy (kWh) · ToD shoulder</dd></div>
                     <div class="rx-row"><dt>Owner</dt><dd>Utilities supervisor · Line 2</dd></div>
-                    <div class="rx-row"><dt>Impact</dt><dd><strong>₹80k-1.2L / month</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong>₹80k-1.2L / month</strong></dd></div>
                     <div class="rx-row"><dt>Effort</dt><dd>Staging SOP · no capex · no PLC write</dd></div>
                     <div class="rx-row"><dt>Rule</dt><dd>idle_hold@v1.8 · Confidence High</dd></div>
                     <div class="rx-row"><dt>Due</dt><dd>Next changeover · verify on energy line</dd></div>
@@ -1969,7 +2204,7 @@
                     <tbody>
                       <tr><td><code>BANK_B.RUN</code></td><td>ON · unload</td><td>45 min avg</td></tr>
                       <tr><td><code>LINE2.PROD</code></td><td>0 units</td><td>same window</td></tr>
-                      <tr><td><code>BANK_B.kWh</code></td><td>~210 kWh</td><td>per event <span class="tilde">[~]</span></td></tr>
+                      <tr><td><code>BANK_B.kWh</code></td><td>210 kWh</td><td>per event</td></tr>
                       <tr><td><code>CHANGEOVER.FLAG</code></td><td>TRUE</td><td>planned</td></tr>
                     </tbody>
                   </table>
@@ -1987,66 +2222,86 @@
     <!-- 7 Floor -->
     <section class="slide slide--light" id="scene-floor" data-theme="light" aria-label="Floor delivery">
       <div class="slide__inner slide__inner--wide">
-        <p class="eyebrow reveal hide-mobile">Execution channel</p>
+        <p class="eyebrow reveal hide-mobile">Floor channel</p>
         <p class="eyebrow reveal show-mobile">On the floor</p>
-        <h2 class="reveal">The action reaches the floor.</h2>
+        <h2 class="reveal">On the supervisor's phone.</h2>
         <div class="floor-layout">
-          <div class="phone reveal" id="floorPhone" role="region" aria-label="Plant prescription phone">
-            <div class="phone__screen">
-              <div class="phone-statusbar" aria-hidden="true">
-                <span>07:18</span>
-                <span class="phone-island"></span>
-                <span class="phone-status-right">5G · 84%</span>
-              </div>
-              <div class="wa-header">
-                <div class="wa-avatar">SE</div>
-                <div>
-                  <strong>Stamped Energy</strong>
-                  <span>online · plant prescriptions</span>
-                </div>
-              </div>
-              <div class="wa-body" id="floorWaBody">
-                <p class="wa-meta" id="floorMeta">Today · Shift B · 07:18</p>
-                <div class="wa-bubble" id="floorBubble" role="button" tabindex="0" aria-label="Acknowledge prescription">
-                  <span class="tag" id="floorTag">New prescription · High</span>
-                  <h4 id="floorTitle">Stagger Comp 1 &amp; 3 vs furnace bay ≥8 min</h4>
-                  <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak Mon 07:12-07:20 overlap</p>
-                  <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹2.5-4L/mo on MD line <span class="tilde">[~]</span></p>
-                  <p class="wa-line" id="floorOwner"><b>Owner:</b> Electrical shift supervisor · B</p>
-                  <p class="wa-line" id="floorDue"><b>Due:</b> This week · before next peak</p>
-                  <div class="wa-cta">Tap to acknowledge &rarr;</div>
-                </div>
-                <div class="wa-actions" id="floorActions">
-                  <button type="button" id="floorSnooze" aria-label="Snooze prescription">Snooze</button>
-                  <button type="button" class="primary" id="floorAck" aria-label="Acknowledge prescription">Acknowledge</button>
-                </div>
-                <div class="wa-end" id="floorEnd" hidden>
-                  <strong>Stamped Energy</strong>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="status-rail reveal hide-mobile">
-            <p class="lede floor-rail-lede">Assigned work. Status changes when the supervisor acts.</p>
+            <p class="lede floor-rail-lede">The prescription lands as assigned work.</p>
             <div class="status-item">
               <span class="status-dot done"></span>
               <div>
                 <strong>Open</strong>
-                <p>Prescription issued with owner, due time, and ₹ impact.</p>
+                <p>Owner, due time, and ₹ impact attached.</p>
               </div>
             </div>
             <div class="status-item">
               <span class="status-dot active pulse-on-active"></span>
               <div>
                 <strong>In progress</strong>
-                <p>Supervisor acknowledges and sequences the startup stagger.</p>
+                <p>Supervisor acknowledges and runs the stagger.</p>
               </div>
             </div>
             <div class="status-item">
               <span class="status-dot"></span>
               <div>
-                <strong>Completed, ready to verify</strong>
-                <p>Tracked against the next billing cycle MD / energy lines.</p>
+                <strong>Done, ready to verify</strong>
+                <p>Checked on the next MD / energy bill lines.</p>
+              </div>
+            </div>
+          </div>
+          <div class="phone reveal" id="floorPhone" role="region" aria-label="Plant prescription phone">
+            <div class="phone-btn phone-btn--silent" aria-hidden="true"></div>
+            <div class="phone-btn phone-btn--vol-up" aria-hidden="true"></div>
+            <div class="phone-btn phone-btn--vol-down" aria-hidden="true"></div>
+            <div class="phone-btn phone-btn--power" aria-hidden="true"></div>
+            <div class="phone__bezel">
+              <div class="phone__screen">
+                <div class="phone-statusbar" aria-hidden="true">
+                  <span class="phone-time">07:18</span>
+                  <span class="phone-island"></span>
+                  <span class="phone-status-right">
+                    <svg class="phone-sig" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="2" width="3" height="10" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+                    <span>5G</span>
+                    <svg class="phone-bat" viewBox="0 0 28 14" aria-hidden="true"><rect x="1" y="2" width="22" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="4" width="16" height="6" rx="1"/><rect x="24" y="5" width="2.5" height="4" rx="0.5"/></svg>
+                  </span>
+                </div>
+                <div class="wa-header">
+                  <div class="wa-back" aria-hidden="true">‹</div>
+                  <div class="wa-avatar">SE</div>
+                  <div class="wa-head-text">
+                    <strong>Stamped Energy</strong>
+                    <span>online</span>
+                  </div>
+                  <div class="wa-head-icons" aria-hidden="true"><span>⌕</span><span>⋮</span></div>
+                </div>
+                <div class="wa-body" id="floorWaBody">
+                  <p class="wa-meta" id="floorMeta">Today · Shift B · 07:18</p>
+                  <div class="wa-bubble" id="floorBubble" role="button" tabindex="0" aria-label="Acknowledge prescription">
+                    <span class="tag" id="floorTag">New prescription · High</span>
+                    <h4 id="floorTitle">Stagger Comp 1 &amp; 3 vs furnace bay ≥8 min</h4>
+                    <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak Mon 07:12-07:20 overlap</p>
+                    <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹2.5-4L/mo on MD line</p>
+                    <p class="wa-line" id="floorOwner"><b>Owner:</b> Electrical shift supervisor · B</p>
+                    <p class="wa-line" id="floorDue"><b>Due:</b> This week · before next peak</p>
+                    <div class="wa-cta">Tap to acknowledge →</div>
+                    <span class="wa-tick" aria-hidden="true">07:18</span>
+                  </div>
+                  <div class="wa-actions" id="floorActions">
+                    <button type="button" id="floorSnooze" aria-label="Snooze prescription">Snooze</button>
+                    <button type="button" class="primary" id="floorAck" aria-label="Acknowledge prescription">Acknowledge</button>
+                  </div>
+                  <div class="wa-end" id="floorEnd" hidden>
+                    <strong>Stamped Energy</strong>
+                    <span>Inbox clear for this shift</span>
+                  </div>
+                </div>
+                <div class="wa-compose" aria-hidden="true">
+                  <span class="wa-compose__icon">+</span>
+                  <div class="wa-compose__field">Message</div>
+                  <span class="wa-compose__mic">◉</span>
+                </div>
+                <div class="phone-home" aria-hidden="true"></div>
               </div>
             </div>
           </div>
@@ -2058,16 +2313,16 @@
     <section class="slide slide--light" id="scene-verify" data-theme="light" aria-label="Bill verification">
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Measurement and verification</p>
-        <h2 class="reveal">Verified on the bill.</h2>
+        <h2 class="reveal">Checked on the DISCOM bill.</h2>
         <p class="lede reveal show-mobile">Savings count only when the DISCOM bill line moves.</p>
         <div class="kpi-pair reveal">
           <div class="kpi">
             <div class="kpi__label">Potential</div>
-            <div class="kpi__value">₹4.0L <span class="tilde">[~]</span></div>
+            <div class="kpi__value">₹4.0L</div>
           </div>
           <div class="kpi kpi--hot">
             <div class="kpi__label">Realised</div>
-            <div class="kpi__value">₹3.4L <span class="tilde">[~]</span></div>
+            <div class="kpi__value">₹3.4L</div>
           </div>
         </div>
         <div class="ledger-wrap reveal">
@@ -2102,7 +2357,7 @@
             </tbody>
           </table>
         </div>
-        <p class="meta reveal hide-mobile">Sample ledger for walkthrough · labelled <span class="tilde">[~]</span> · not a customer guarantee</p>
+        <p class="meta reveal hide-mobile">Sample ledger for walkthrough · labelled · not a customer guarantee</p>
       </div>
     </section>
 
@@ -2110,7 +2365,7 @@
     <section class="slide slide--light grid-bg" id="scene-tech" data-theme="light" aria-label="Technology stack">
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Technology</p>
-        <h2 class="reveal">The stack behind every prescription</h2>
+        <h2 class="reveal">The stack behind each prescription</h2>
         <div class="tech-grid reveal">
           <article class="tech-card">
             <div class="tech-card__num">01 · Physics</div>
@@ -2124,8 +2379,8 @@
           </article>
           <article class="tech-card">
             <div class="tech-card__num">02 · Models</div>
-            <h3>Domain foundation models</h3>
-            <p>A set of models trained for industrial energy work, not a single generic chatbot on top of meter data.</p>
+            <h3>Industrial energy models</h3>
+            <p>Models trained on industrial load behaviour, not a general chatbot sitting on meter dumps.</p>
             <ul>
               <li>Load and demand forecasting models</li>
               <li>Pattern and anomaly models for waste detection</li>
@@ -2134,8 +2389,8 @@
           </article>
           <article class="tech-card">
             <div class="tech-card__num">03 · Agents</div>
-            <h3>Agentic AI for prescriptions</h3>
-            <p>Agents read structured findings and draft the floor action: what changes, why it matters, who owns it, effort, ₹ impact, and due time.</p>
+            <h3>Prescription agents</h3>
+            <p>Agents draft the floor action: what changes, why it matters, who owns it, effort, ₹ impact, and due time.</p>
             <ul>
               <li>Ranks the queue so high-₹, low-effort work surfaces first</li>
               <li>Keeps numbers tied to the finding and tariff line</li>
@@ -2165,7 +2420,7 @@
     <section class="slide slide--light" id="scene-audit" data-theme="light" aria-label="Auditability and sustainability">
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">Auditability and sustainability</p>
-        <h2 class="reveal">A full trail from action to bill to evidence pack.</h2>
+        <h2 class="reveal">Action, bill line, evidence.</h2>
         <div class="audit-grid">
           <div class="audit-col reveal">
             <h3>Auditability</h3>
@@ -2196,7 +2451,7 @@
     <section class="slide slide--light" id="scene-boundaries" data-theme="light" aria-label="Boundaries">
       <div class="slide__inner slide__inner--wide">
         <p class="eyebrow reveal">How we engage OT</p>
-        <h2 class="reveal">Read-only first. Clear boundaries.</h2>
+        <h2 class="reveal">Read-only on OT. Clear limits.</h2>
         <div class="bound-grid">
           <div class="bound-col bound-col--not reveal hide-mobile">
             <h3>What we are not</h3>
@@ -2231,7 +2486,7 @@
     <section class="slide slide--light" id="scene-video" data-theme="light" aria-label="How it works video">
       <div class="slide__inner slide__inner--media">
         <p class="eyebrow reveal">2-minute walkthrough</p>
-        <h2 class="reveal">How Stamped works, end to end</h2>
+        <h2 class="reveal">How Stamped works</h2>
         <div class="video-frame reveal">
           <video
             controls
@@ -2296,7 +2551,7 @@
           </tbody>
         </table>
         <div class="commercial reveal">
-          <span class="chip">Fixed pilot ₹1-5L <span class="tilde">[~]</span></span>
+          <span class="chip">Fixed pilot ₹1-5L</span>
           <span class="chip">Then pay-as-you-save · a cut of the value we deliver</span>
         </div>
         <div class="ask-box reveal">
@@ -2308,6 +2563,12 @@
           <a href="mailto:contact@stamped.work">contact@stamped.work</a>
           ·
           <a href="https://stamped.work" target="_blank" rel="noopener noreferrer">stamped.work</a>
+        </p>
+        <p class="founders reveal">
+          Founders:
+          <a href="https://in.linkedin.com/in/vinayak-rz" target="_blank" rel="noopener noreferrer">Vinayak</a>
+          ·
+          <a href="https://in.linkedin.com/in/utso" target="_blank" rel="noopener noreferrer">Utso</a>
         </p>
         <p class="cred-quiet reveal hide-mobile">Built on energy systems research at IIT Roorkee.</p>
       </div>
@@ -2419,7 +2680,7 @@
         if (floorTag) floorTag.textContent = "New prescription · " + (rx.priority || "High");
         if (floorTitle) floorTitle.textContent = rx.title || "";
         if (floorWhy) floorWhy.innerHTML = "<b>Why:</b> " + (rx.why || "");
-        if (floorImpact) floorImpact.innerHTML = "<b>Impact:</b> " + (rx.impact || "") + ' <span class="tilde">[~]</span>';
+        if (floorImpact) floorImpact.innerHTML = "<b>Impact:</b> " + (rx.impact || "") + '';
         if (floorOwner) floorOwner.innerHTML = "<b>Owner:</b> " + (rx.owner || "");
         if (floorDue) floorDue.innerHTML = "<b>Due:</b> " + (rx.due || "This week · before next peak");
         if (floorMeta) floorMeta.textContent = "Today · Shift B · 07:18 · " + (i + 1) + "/" + floorRx.length;
@@ -2454,6 +2715,12 @@
         if (floorBusy || !floorBubble || floorBubble.hidden || !floorRx.length) return;
         floorBusy = true;
         setFloorControlsEnabled(false);
+        var phoneEl = document.getElementById("floorPhone");
+        if (phoneEl) {
+          phoneEl.classList.remove("is-pulse");
+          void phoneEl.offsetWidth;
+          phoneEl.classList.add("is-pulse");
+        }
         floorBubble.classList.remove("is-enter", "is-dismiss-ack", "is-dismiss-snooze");
         void floorBubble.offsetWidth;
         floorBubble.classList.add(mode === "snooze" ? "is-dismiss-snooze" : "is-dismiss-ack");

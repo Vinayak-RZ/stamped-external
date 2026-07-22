@@ -58,7 +58,7 @@ def check_deck(page, base: str, path: str) -> None:
     h2 = page.locator("#scene-floor h2")
     assert h2.is_visible(), f"{path}: floor h2 not visible on mobile"
     h2_text = h2.inner_text().strip()
-    assert h2_text == "The action reaches the floor.", f"{path}: bad h2 {h2_text!r}"
+    assert h2_text == "On the supervisor's phone.", f"{path}: bad h2 {h2_text!r}"
 
     t0 = dismiss(page, "ack")
     t1 = page.locator("#floorTitle").inner_text()
@@ -70,9 +70,28 @@ def check_deck(page, base: str, path: str) -> None:
 
     dismiss(page, "ack")
     page.wait_for_selector("#floorEnd:not([hidden])", timeout=3000)
-    end = page.locator("#floorEnd").inner_text().strip()
+    end = page.locator("#floorEnd strong").inner_text().strip()
     assert end == "Stamped Energy", f"{path}: end state {end!r}"
     assert not page.locator("#floorBubble").is_visible(), f"{path}: bubble still visible"
+
+    # Desktop: status left, phone right
+    page.set_viewport_size({"width": 1440, "height": 900})
+    page.reload(wait_until="networkidle")
+    go_to_slide(page, "scene-floor")
+    layout = page.evaluate(
+        """() => {
+      const phone = document.getElementById('floorPhone');
+      const rail = document.querySelector('#scene-floor .status-rail');
+      if (!phone || !rail) return null;
+      const pr = phone.getBoundingClientRect();
+      const rr = rail.getBoundingClientRect();
+      return { phoneLeft: pr.left, railLeft: rr.left, mid: window.innerWidth / 2 };
+    }"""
+    )
+    assert layout and layout["railLeft"] < layout["phoneLeft"], f"{path}: status should be left of phone {layout}"
+    assert layout["phoneLeft"] > layout["mid"] * 0.85, f"{path}: phone should sit on the right {layout}"
+    assert page.locator(".wa-compose").count() == 1, f"{path}: missing compose bar"
+    assert page.locator(".phone-island").count() == 1, f"{path}: missing dynamic island"
 
     go_to_slide(page, "scene-verify")
     cells = page.evaluate(

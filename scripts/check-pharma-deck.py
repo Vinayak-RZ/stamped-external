@@ -131,6 +131,10 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
           href: cal ? cal.getAttribute('href') : null,
           day60: /Day 60/.test(slide.textContent || ''),
           pay: /pay-as-you-save/i.test(slide.textContent || ''),
+          founders: Array.from(slide.querySelectorAll('.founders a')).map((a) => ({
+            text: a.textContent.trim(),
+            href: a.getAttribute('href'),
+          })),
         };
       }
       if (slideId === 'scene-floor') {
@@ -143,7 +147,9 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
           h2Visible: !!(h2 && getComputedStyle(h2).display !== 'none' && h2.getBoundingClientRect().height > 0),
           rxCount: Array.isArray(window.__FLOOR_RX__) ? window.__FLOOR_RX__.length : 0,
           hasStatusbar: !!statusbar,
-          phoneLeft: rect ? rect.left < window.innerWidth * 0.45 : false,
+          phoneRight: rect ? rect.left > window.innerWidth * 0.42 : false,
+          hasCompose: !!slide.querySelector('.wa-compose'),
+          hasIsland: !!slide.querySelector('.phone-island'),
         };
       }
       return {problems};
@@ -165,12 +171,22 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
                 issues.append(f"{label}/scene-offer: missing Day 60")
             if not report.get("pay"):
                 issues.append(f"{label}/scene-offer: missing pay-as-you-save")
+            founders = report.get("founders") or []
+            hrefs = {f.get("href") for f in founders}
+            if "https://in.linkedin.com/in/vinayak-rz" not in hrefs:
+                issues.append(f"{label}/scene-offer: missing Vinayak LinkedIn")
+            if "https://in.linkedin.com/in/utso" not in hrefs:
+                issues.append(f"{label}/scene-offer: missing Utso LinkedIn")
 
         if sid == "scene-floor":
-            if width > 720 and not report.get("phoneLeft"):
-                issues.append(f"{label}/scene-floor: phone not on left")
+            if width > 720 and not report.get("phoneRight"):
+                issues.append(f"{label}/scene-floor: phone not on right")
             if not report.get("hasStatusbar"):
                 issues.append(f"{label}/scene-floor: missing realistic status bar")
+            if not report.get("hasCompose"):
+                issues.append(f"{label}/scene-floor: missing compose bar")
+            if not report.get("hasIsland"):
+                issues.append(f"{label}/scene-floor: missing dynamic island")
             if width <= 720:
                 if not report.get("h2Visible"):
                     issues.append(f"{label}/scene-floor: h2 not visible")
