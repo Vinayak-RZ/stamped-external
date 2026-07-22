@@ -1041,17 +1041,17 @@ def replace_rx_block(html: str, pack: dict) -> str:
     if not isinstance(floors, list) or len(floors) != 3:
         raise SystemExit("pack['floor'] must be a list of 3 prescriptions")
     f = floors[0]
-    old_floor = '''                        <span class="tag" id="floorTag">New prescription · High</span>
+    old_floor = '''                        <span class="tag" id="floorTag">Alarm · High</span>
                         <h4 id="floorTitle">Stagger Comp 1 &amp; 3 vs furnace bay ≥8 min</h4>
                         <div class="wa-bubble__divider" aria-hidden="true"></div>
-                        <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak Mon 07:12-07:20 overlap</p>
+                        <p class="wa-line" id="floorWhy"><b>Alarm:</b> MD peak Mon 07:12-07:20 · Comp 1 &amp; 3 overlapped furnace bay</p>
                         <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹2.5-4L/mo on MD line</p>
                         <p class="wa-line" id="floorOwner"><b>Owner:</b> Electrical shift supervisor · B</p>
                         <p class="wa-line" id="floorDue"><b>Due:</b> This week · before next peak</p>'''
-    new_floor = f'''                        <span class="tag" id="floorTag">New prescription · {f.get("priority", "High")}</span>
+    new_floor = f'''                        <span class="tag" id="floorTag">Alarm · {f.get("priority", "High")}</span>
                         <h4 id="floorTitle">{f["title"]}</h4>
                         <div class="wa-bubble__divider" aria-hidden="true"></div>
-                        <p class="wa-line" id="floorWhy"><b>Why:</b> {f["why"]}</p>
+                        <p class="wa-line" id="floorWhy"><b>Alarm:</b> {f["why"]}</p>
                         <p class="wa-line" id="floorImpact"><b>Impact:</b> {f["impact"]}</p>
                         <p class="wa-line" id="floorOwner"><b>Owner:</b> {f["owner"]}</p>
                         <p class="wa-line" id="floorDue"><b>Due:</b> {f.get("due", "This week · before next peak")}</p>'''

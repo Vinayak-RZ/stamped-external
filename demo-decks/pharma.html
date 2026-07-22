@@ -875,11 +875,19 @@
     }
 
     /* 7 Floor / phone — iPhone 15 proportions (393×852 pt) */
+    #scene-floor .slide__inner--wide {
+      max-width: min(1180px, 100%);
+      padding-inline: clamp(2rem, 7vw, 5rem);
+    }
     .floor-layout {
       display: grid;
-      grid-template-columns: minmax(0, 420px) auto;
-      gap: clamp(1.25rem, 3vw, 2.5rem);
-      align-items: start;
+      grid-template-columns: minmax(0, 28rem) auto;
+      gap: clamp(1.5rem, 2.8vw, 2.4rem);
+      align-items: center;
+      justify-content: center;
+      margin: 0.15rem auto 0;
+      width: 100%;
+      max-width: 52rem;
     }
     .floor-copy {
       display: flex;
@@ -888,17 +896,54 @@
       min-width: 0;
     }
     .floor-copy .eyebrow { margin-bottom: 0.55rem; }
-    .floor-copy h2 { margin-bottom: 0.3rem; }
+    .floor-copy h2 { margin-bottom: 0.35rem; }
     .floor-copy .lede {
       margin-bottom: 0;
-      max-width: none;
-      font-size: clamp(0.92rem, 1.4vw, 1.08rem);
+      max-width: 34em;
+      font-size: clamp(0.92rem, 1.35vw, 1.02rem);
+      line-height: 1.45;
     }
-    .floor-copy .status-rail { margin-top: 1.1rem; }
+    .floor-copy .status-rail { margin-top: 1.25rem; }
+    .floor-route {
+      margin-top: 1.35rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+    .floor-route__title {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      margin: 0;
+    }
+    .floor-route-grid {
+      display: grid;
+      gap: 0.85rem;
+    }
+    .floor-route-card {
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-card);
+      background: var(--white);
+      padding: 0.9rem 1rem;
+    }
+    .floor-route-card strong {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+      color: var(--on-surface);
+    }
+    .floor-route-card p {
+      font-size: 0.8rem;
+      color: var(--on-surface-variant);
+      line-height: 1.4;
+      margin: 0;
+    }
     #scene-floor .phone-col {
       display: flex;
-      justify-content: flex-end;
-      align-items: flex-start;
+      justify-content: center;
+      align-items: center;
       min-width: 0;
     }
     .phone {
@@ -1321,6 +1366,7 @@
       padding: 1rem;
     }
     .wa-end[hidden] { display: none !important; }
+    .wa-msg[hidden] { display: none !important; }
     .wa-end strong {
       font-family: var(--font-display);
       font-size: 1.15rem;
@@ -1342,11 +1388,11 @@
       opacity: 0.9;
     }
     .floor-rail-lede { margin-bottom: 0.55rem; font-size: 0.92rem; max-width: 26em; line-height: 1.45; }
-    .status-rail { display: grid; gap: 0.65rem; }
+    .status-rail { display: grid; gap: 1rem; }
     .status-item {
       display: grid; grid-template-columns: 14px 1fr; gap: 0.75rem;
       align-items: start; border: 1px solid var(--outline-variant);
-      border-radius: var(--radius-card); background: var(--white); padding: 0.85rem 1rem;
+      border-radius: var(--radius-card); background: var(--white); padding: 0.95rem 1.05rem;
     }
     .status-dot {
       width: 10px; height: 10px; border-radius: 50%; margin-top: 0.35rem;
@@ -1648,10 +1694,12 @@
       #scene-what .do-step p { font-size: 0.84rem; }
       #scene-tech .tech-card p { font-size: 0.84rem; }
       #scene-tech .tech-card ul { font-size: 0.78rem; }
-      #scene-floor h2 { margin-bottom: 0.3rem; }
-      #scene-floor .floor-copy .lede { margin-bottom: 0; max-width: none; font-size: 0.95rem; }
-      #scene-floor .floor-copy .status-rail { margin-top: 1.1rem; }
-      #scene-floor .status-item p { font-size: 0.76rem; }
+      #scene-floor h2 { margin-bottom: 0.35rem; }
+      #scene-floor .floor-copy .lede { margin-bottom: 0; max-width: 34em; font-size: 0.95rem; }
+      #scene-floor .floor-copy .status-rail { margin-top: 1.25rem; gap: 1rem; }
+      #scene-floor .status-item p { font-size: 0.78rem; }
+      #scene-floor .floor-route-card p { font-size: 0.78rem; }
+      #scene-floor .phone-col { justify-content: center; }
       #scene-verify .meta { font-size: 0.78rem; }
     }
 
@@ -2472,21 +2520,21 @@
             <p class="eyebrow reveal hide-mobile">Floor channel</p>
             <p class="eyebrow reveal show-mobile">On the floor</p>
             <h2 class="reveal">On the supervisor's phone.</h2>
-            <p class="lede reveal hide-mobile">The prescription lands as assigned work — owner, due time, and ₹ impact attached.</p>
-            <p class="lede reveal show-mobile">Tap Snooze or Acknowledge to walk through three prescriptions.</p>
-            <div class="status-rail hide-mobile">
+            <p class="lede reveal hide-mobile">Alarms and prescriptions do not dump straight onto every phone. Routes are set in admin, urgent fixes get a quick confirm, and larger work is assigned before it notifies the owner.</p>
+            <p class="lede reveal show-mobile">Tap Snooze or Acknowledge. Each message is an alarm plus the fix to run.</p>
+            <div class="status-rail hide-mobile reveal">
               <div class="status-item">
                 <span class="status-dot done"></span>
                 <div>
                   <strong>Open</strong>
-                  <p>Owner, due time, and ₹ impact attached.</p>
+                  <p>Alarm fired. Fix, owner, due time, and ₹ impact attached.</p>
                 </div>
               </div>
               <div class="status-item">
                 <span class="status-dot active pulse-on-active"></span>
                 <div>
                   <strong>In progress</strong>
-                  <p>Supervisor acknowledges and runs the stagger.</p>
+                  <p>Supervisor acknowledges and runs the fix on shift.</p>
                 </div>
               </div>
               <div class="status-item">
@@ -2495,6 +2543,23 @@
                   <strong>Done, ready to verify</strong>
                   <p>Checked on the next MD / energy bill lines.</p>
                 </div>
+              </div>
+            </div>
+            <div class="floor-route hide-mobile reveal">
+              <p class="floor-route__title">Before it hits the phone</p>
+              <div class="floor-route-grid">
+                <article class="floor-route-card">
+                  <strong>Alarm routes</strong>
+                  <p>Pick which role gets which alarm. Re-map recipients when the org chart moves, without rewriting the floor SOP.</p>
+                </article>
+                <article class="floor-route-card">
+                  <strong>Urgent prescriptions</strong>
+                  <p>Admin confirms first, then the recommended fix goes out as an authenticated handoff to the assigned phone.</p>
+                </article>
+                <article class="floor-route-card">
+                  <strong>Larger prescriptions</strong>
+                  <p>Stay in the admin dashboard until someone assigns an owner. Only then does that person get the notification.</p>
+                </article>
               </div>
             </div>
           </div>
@@ -2528,11 +2593,11 @@
                   <div class="wa-body" id="floorWaBody">
                     <p class="wa-meta" id="floorMeta">Today · Shift B · 07:18</p>
                     <div class="wa-msg" id="floorMsg">
-                      <div class="wa-bubble" id="floorBubble" role="button" tabindex="0" aria-label="Acknowledge prescription">
-                        <span class="tag" id="floorTag">New prescription · High</span>
+                      <div class="wa-bubble" id="floorBubble" role="button" tabindex="0" aria-label="Acknowledge alarm and fix">
+                        <span class="tag" id="floorTag">Alarm · High</span>
                         <h4 id="floorTitle">Stagger chillers and autoclave by 10 min</h4>
                         <div class="wa-bubble__divider" aria-hidden="true"></div>
-                        <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak from Monday load overlap</p>
+                        <p class="wa-line" id="floorWhy"><b>Alarm:</b> MD peak from Monday load overlap</p>
                         <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹1.8-3.2L/mo on MD line</p>
                         <p class="wa-line" id="floorOwner"><b>Owner:</b> Utilities supervisor · B</p>
                         <p class="wa-line" id="floorDue"><b>Due:</b> This week · before next peak</p>
@@ -2953,10 +3018,10 @@
         var rx = floorRx[i];
         if (!rx || !floorBubble) return;
         floorIdx = i;
-        if (floorTag) floorTag.textContent = "New prescription · " + (rx.priority || "High");
+        if (floorTag) floorTag.textContent = "Alarm · " + (rx.priority || "High");
         if (floorTitle) floorTitle.textContent = rx.title || "";
-        if (floorWhy) floorWhy.innerHTML = "<b>Why:</b> " + (rx.why || "");
-        if (floorImpact) floorImpact.innerHTML = "<b>Impact:</b> " + (rx.impact || "") + '';
+        if (floorWhy) floorWhy.innerHTML = "<b>Alarm:</b> " + (rx.why || "");
+        if (floorImpact) floorImpact.innerHTML = "<b>Impact:</b> " + (rx.impact || "");
         if (floorOwner) floorOwner.innerHTML = "<b>Owner:</b> " + (rx.owner || "");
         if (floorDue) floorDue.innerHTML = "<b>Due:</b> " + (rx.due || "This week · before next peak");
         if (floorMeta) floorMeta.textContent = "Today · Shift B · 07:18 · " + (i + 1) + "/" + floorRx.length;

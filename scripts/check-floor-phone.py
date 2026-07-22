@@ -74,7 +74,7 @@ def check_deck(page, base: str, path: str) -> None:
     assert end == "Stamped Energy", f"{path}: end state {end!r}"
     assert not page.locator("#floorBubble").is_visible(), f"{path}: bubble still visible"
 
-    # Desktop: status left, phone right
+    # Desktop: status left, phone toward center-right; alarm wording
     page.set_viewport_size({"width": 1440, "height": 900})
     page.reload(wait_until="networkidle")
     go_to_slide(page, "scene-floor")
@@ -82,14 +82,26 @@ def check_deck(page, base: str, path: str) -> None:
         """() => {
       const phone = document.getElementById('floorPhone');
       const rail = document.querySelector('#scene-floor .status-rail');
+      const tag = document.getElementById('floorTag');
+      const why = document.getElementById('floorWhy');
       if (!phone || !rail) return null;
       const pr = phone.getBoundingClientRect();
       const rr = rail.getBoundingClientRect();
-      return { phoneLeft: pr.left, railLeft: rr.left, mid: window.innerWidth / 2 };
+      return {
+        phoneLeft: pr.left,
+        railRight: rr.right,
+        mid: window.innerWidth / 2,
+        routes: document.querySelectorAll('#scene-floor .floor-route-card').length,
+        tag: tag ? tag.textContent.trim() : '',
+        why: why ? why.textContent.trim() : '',
+      };
     }"""
     )
-    assert layout and layout["railLeft"] < layout["phoneLeft"], f"{path}: status should be left of phone {layout}"
-    assert layout["phoneLeft"] > layout["mid"] * 0.85, f"{path}: phone should sit on the right {layout}"
+    assert layout and layout["railRight"] <= layout["phoneLeft"] + 8, f"{path}: status should be left of phone {layout}"
+    assert layout["phoneLeft"] > layout["mid"] * 0.72, f"{path}: phone should sit toward center-right {layout}"
+    assert layout["routes"] >= 3, f"{path}: expected route cards, got {layout['routes']}"
+    assert layout["tag"].startswith("Alarm"), f"{path}: bad tag {layout['tag']!r}"
+    assert layout["why"].startswith("Alarm:"), f"{path}: bad alarm line {layout['why']!r}"
     assert page.locator(".wa-compose").count() == 1, f"{path}: missing compose bar"
     assert page.locator(".phone-island").count() == 1, f"{path}: missing dynamic island"
 
