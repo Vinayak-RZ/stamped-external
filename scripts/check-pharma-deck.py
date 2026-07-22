@@ -22,6 +22,16 @@ EXPECTED_MATH = [
     "Early warnings",
 ]
 
+EXPECTED_ORDER_PREFIX = [
+    "scene-title",
+    "scene-hook",
+    "scene-math",
+    "scene-what",
+    "scene-prescription",
+    "scene-floor",
+    "scene-verify",
+]
+
 
 def start_server() -> tuple[socketserver.TCPServer, str]:
     handler = partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT))
@@ -64,6 +74,10 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
     slides = visible_slides(page)
     if not slides:
         return [f"{label}: no visible slides"]
+    if slides[: len(EXPECTED_ORDER_PREFIX)] != EXPECTED_ORDER_PREFIX:
+        issues.append(f"{label}: order={slides[:8]} expected prefix={EXPECTED_ORDER_PREFIX}")
+    if "scene-gap" in slides:
+        issues.append(f"{label}: scene-gap should be merged away")
 
     hero = page.evaluate(
         """() => {
@@ -121,10 +135,15 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
       }
       if (slideId === 'scene-floor') {
         const h2 = slide.querySelector('h2');
+        const phone = document.getElementById('floorPhone');
+        const statusbar = slide.querySelector('.phone-statusbar');
+        const rect = phone ? phone.getBoundingClientRect() : null;
         return {
           problems,
           h2Visible: !!(h2 && getComputedStyle(h2).display !== 'none' && h2.getBoundingClientRect().height > 0),
           rxCount: Array.isArray(window.__FLOOR_RX__) ? window.__FLOOR_RX__.length : 0,
+          hasStatusbar: !!statusbar,
+          phoneLeft: rect ? rect.left < window.innerWidth * 0.45 : false,
         };
       }
       return {problems};
@@ -147,11 +166,16 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
             if not report.get("pay"):
                 issues.append(f"{label}/scene-offer: missing pay-as-you-save")
 
-        if sid == "scene-floor" and width <= 720:
-            if not report.get("h2Visible"):
-                issues.append(f"{label}/scene-floor: h2 not visible")
-            if report.get("rxCount") != 3:
-                issues.append(f"{label}/scene-floor: rxCount={report.get('rxCount')}")
+        if sid == "scene-floor":
+            if width > 720 and not report.get("phoneLeft"):
+                issues.append(f"{label}/scene-floor: phone not on left")
+            if not report.get("hasStatusbar"):
+                issues.append(f"{label}/scene-floor: missing realistic status bar")
+            if width <= 720:
+                if not report.get("h2Visible"):
+                    issues.append(f"{label}/scene-floor: h2 not visible")
+                if report.get("rxCount") != 3:
+                    issues.append(f"{label}/scene-floor: rxCount={report.get('rxCount')}")
 
     if width <= 720:
         go_to(page, "scene-floor")
