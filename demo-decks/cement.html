@@ -47,6 +47,12 @@
       --safe-b: env(safe-area-inset-bottom, 0px);
       --safe-l: env(safe-area-inset-left, 0px);
       --safe-r: env(safe-area-inset-right, 0px);
+      --phone-screen-w: 320px;
+      --phone-ratio: 393 / 852;
+      --phone-frame-pad: 12px;
+      --wa-teal: #075e54;
+      --wa-teal-light: #128c7e;
+      --wa-action: #008069;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -868,297 +874,422 @@
       padding: 0.85rem 1rem;
     }
 
-    /* 7 Floor / phone */
+    /* 7 Floor / phone — iPhone 15 proportions (393×852 pt) */
     .floor-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(300px, 372px);
-      gap: clamp(1.6rem, 3.5vw, 2.8rem);
-      align-items: center;
-      margin-top: 0.85rem;
+      grid-template-columns: minmax(0, 420px) auto;
+      gap: clamp(1.25rem, 3vw, 2.5rem);
+      align-items: start;
     }
-    #scene-floor .status-rail { justify-self: stretch; max-width: 420px; }
-    #scene-floor .phone { justify-self: end; margin: 0; }
+    .floor-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      min-width: 0;
+    }
+    .floor-copy .eyebrow { margin-bottom: 0.55rem; }
+    .floor-copy h2 { margin-bottom: 0.3rem; }
+    .floor-copy .lede {
+      margin-bottom: 0;
+      max-width: none;
+      font-size: clamp(0.92rem, 1.4vw, 1.08rem);
+    }
+    .floor-copy .status-rail { margin-top: 1.1rem; }
+    #scene-floor .phone-col {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      min-width: 0;
+    }
     .phone {
-      width: 100%;
-      max-width: 348px;
+      width: calc(var(--phone-screen-w) + var(--phone-frame-pad) * 2 + 2px);
+      max-width: calc(var(--phone-screen-w) + var(--phone-frame-pad) * 2 + 2px);
+      flex-shrink: 0;
       position: relative;
-      padding: 11px 10px 12px;
-      border-radius: 44px;
+      padding: var(--phone-frame-pad) calc(var(--phone-frame-pad) - 1px) calc(var(--phone-frame-pad) + 2px);
+      border-radius: 52px;
       background:
-        linear-gradient(160deg, #5c5c60 0%, #2c2c2e 28%, #111113 72%, #050506 100%);
-      border: 1.5px solid #6a6a6e;
+        linear-gradient(165deg, #636366 0%, #3a3a3c 16%, #1c1c1e 52%, #0a0a0b 100%);
+      border: 1.5px solid #48484a;
       box-shadow:
-        0 36px 70px -30px rgba(5, 31, 19, 0.55),
-        0 12px 28px -18px rgba(0,0,0,0.45),
-        inset 0 1px 0 rgba(255,255,255,0.22),
-        inset 0 -2px 4px rgba(0,0,0,0.55);
-      transform: perspective(900px) rotateY(-4deg) rotateX(1.5deg);
+        0 42px 84px -34px rgba(5, 31, 19, 0.52),
+        0 18px 36px -22px rgba(0,0,0,0.42),
+        inset 0 1px 0 rgba(255,255,255,0.24),
+        inset 0 -2px 6px rgba(0,0,0,0.52);
+      transform: perspective(1200px) rotateY(-5deg) rotateX(2deg);
       transform-origin: center right;
       transition: transform 0.35s var(--ease);
     }
     .phone:hover {
-      transform: perspective(900px) rotateY(-1deg) rotateX(0.5deg) translateY(-2px);
+      transform: perspective(1200px) rotateY(-2deg) rotateX(1deg) translateY(-3px);
+    }
+    #scene-floor .phone:hover {
+      transform: perspective(1200px) rotateY(-2deg) rotateX(1deg) translateY(-3px);
     }
     .slide.active .phone {
       animation: phoneIn 0.7s var(--ease) 0.08s both;
+    }
+    #scene-floor .slide.active .phone {
+      animation: phoneInFloor 0.7s var(--ease) 0.08s both;
+    }
+    @keyframes phoneInFloor {
+      from { opacity: 0; transform: perspective(1200px) rotateY(-5deg) rotateX(2deg) translateY(18px); }
+      to { opacity: 1; transform: perspective(1200px) rotateY(-5deg) rotateX(2deg) translateY(0); }
     }
     .phone::before { content: none; }
     .phone::after {
       content: "";
       pointer-events: none;
       position: absolute;
-      inset: 8px;
-      border-radius: 36px;
-      background: linear-gradient(125deg, rgba(255,255,255,0.14) 0%, transparent 38%, transparent 62%, rgba(255,255,255,0.04) 100%);
+      inset: 9px;
+      border-radius: 42px;
+      background: linear-gradient(125deg, rgba(255,255,255,0.16) 0%, transparent 36%, transparent 64%, rgba(255,255,255,0.05) 100%);
       z-index: 4;
     }
     .phone-btn {
       position: absolute;
-      background: linear-gradient(90deg, #3a3a3c, #1f1f21);
+      background: linear-gradient(90deg, #48484a, #1c1c1e);
       border-radius: 2px;
       z-index: 5;
-      box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.12);
+      box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.14);
     }
     .phone-btn--silent {
-      left: -3px; top: 98px; width: 3px; height: 24px;
+      left: -3px; top: 15%; width: 3px; height: 26px;
       border-radius: 2px 0 0 2px;
     }
     .phone-btn--vol-up {
-      left: -3px; top: 140px; width: 3px; height: 46px;
+      left: -3px; top: 22%; width: 3px; height: 48px;
       border-radius: 2px 0 0 2px;
     }
     .phone-btn--vol-down {
-      left: -3px; top: 194px; width: 3px; height: 46px;
+      left: -3px; top: 31%; width: 3px; height: 48px;
       border-radius: 2px 0 0 2px;
     }
     .phone-btn--power {
-      right: -3px; top: 158px; width: 3px; height: 70px;
+      right: -3px; top: 24%; width: 3px; height: 72px;
       border-radius: 0 2px 2px 0;
     }
     .phone__bezel {
-      border-radius: 34px;
+      border-radius: 40px;
       overflow: hidden;
       background: #000;
-      padding: 3px;
+      padding: 2px;
       position: relative;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.07);
     }
     .phone__screen {
-      background: #0b141a;
-      border-radius: 31px;
+      background: #000;
+      border-radius: 38px;
       overflow: hidden;
-      min-height: 560px;
+      aspect-ratio: var(--phone-ratio);
+      width: var(--phone-screen-w);
       display: flex;
       flex-direction: column;
       position: relative;
     }
-    .phone-statusbar {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      padding: 0.62rem 1.15rem 0.4rem;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #f5f5f5;
-      position: relative;
-      z-index: 3;
-      background: #075e54;
-    }
-    .phone-time { justify-self: start; letter-spacing: 0.02em; }
     .phone-island {
-      width: 98px; height: 26px; background: #050505; border-radius: 18px;
-      justify-self: center;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-      position: relative;
-      display: flex; align-items: center; justify-content: flex-end;
-      padding-right: 10px; gap: 6px;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 102px;
+      height: 30px;
+      background: #000;
+      border-radius: 18px;
+      z-index: 20;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.06),
+        0 1px 3px rgba(0,0,0,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 11px;
+      gap: 7px;
+      pointer-events: none;
     }
     .phone-island::before,
     .phone-island::after {
       content: "";
       border-radius: 50%;
-      background: #1a1a1c;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+      flex-shrink: 0;
     }
-    .phone-island::before { width: 8px; height: 8px; background: radial-gradient(circle at 35% 35%, #3a4a5a, #0a1018 70%); }
-    .phone-island::after { width: 6px; height: 6px; }
-    .phone-status-right {
-      justify-self: end;
-      display: inline-flex; align-items: center; gap: 0.28rem;
-      font-variant-numeric: tabular-nums;
-      font-size: 0.64rem;
+    .phone-island::before {
+      width: 9px; height: 9px;
+      background: radial-gradient(circle at 35% 35%, #2a3540, #080c10 72%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
     }
-    .phone-sig, .phone-bat { width: 16px; height: 11px; fill: currentColor; }
-    .phone-bat { width: 22px; height: 11px; }
-    .wa-header {
-      background: #075e54;
+    .phone-island::after {
+      width: 7px; height: 7px;
+      background: #141416;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+    .phone-statusbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 15;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 13px 20px 0;
+      font-size: 0.68rem;
+      font-weight: 600;
       color: #fff;
-      padding: 0.35rem 0.7rem 0.7rem;
+      background: transparent;
+      pointer-events: none;
+      letter-spacing: -0.01em;
+    }
+    .phone-time {
+      font-variant-numeric: tabular-nums;
+      padding-top: 1px;
+    }
+    .phone-status-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.22rem;
+      font-variant-numeric: tabular-nums;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding-top: 1px;
+    }
+    .phone-sig { width: 15px; height: 10px; fill: currentColor; }
+    .phone-bat { width: 21px; height: 10px; fill: currentColor; }
+    .wa-app {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--wa-teal);
+    }
+    .wa-header {
+      background: var(--wa-teal);
+      color: #fff;
+      padding: 2.55rem 0.65rem 0.55rem;
       display: grid;
       grid-template-columns: auto auto 1fr auto;
       align-items: center;
-      gap: 0.45rem;
-      box-shadow: 0 1px 0 rgba(0,0,0,0.18);
+      gap: 0.4rem;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.15);
       position: relative;
       z-index: 2;
+      flex-shrink: 0;
     }
-    .wa-back { font-size: 1.4rem; line-height: 1; opacity: 0.95; padding: 0 0.1rem; font-weight: 300; }
+    .wa-back {
+      font-size: 1.55rem; line-height: 1; opacity: 0.95;
+      padding: 0 0.15rem 0 0; font-weight: 300;
+      margin-right: -0.1rem;
+    }
     .wa-avatar {
-      width: 36px; height: 36px; border-radius: 50%;
+      width: 34px; height: 34px; border-radius: 50%;
       background:
-        linear-gradient(145deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08)),
-        #128c7e;
+        linear-gradient(145deg, rgba(255,255,255,0.28), rgba(255,255,255,0.06)),
+        var(--wa-teal-light);
       display: flex; align-items: center;
-      justify-content: center; font-size: 0.68rem; font-weight: 750;
-      box-shadow: 0 0 0 1.5px rgba(255,255,255,0.18);
+      justify-content: center; font-size: 0.62rem; font-weight: 750;
+      box-shadow: 0 0 0 1.5px rgba(255,255,255,0.2);
+      letter-spacing: 0.02em;
     }
-    .wa-head-text strong { display: block; font-size: 0.9rem; letter-spacing: -0.01em; }
+    .wa-head-text strong {
+      display: block; font-size: 0.86rem; font-weight: 600;
+      letter-spacing: -0.01em; line-height: 1.15;
+    }
     .wa-head-text span {
-      font-size: 0.66rem; opacity: 0.9;
-      display: inline-flex; align-items: center; gap: 0.28rem;
+      font-size: 0.62rem; opacity: 0.88;
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      margin-top: 0.05rem;
     }
     .wa-head-text span::before {
       content: "";
-      width: 6px; height: 6px; border-radius: 50%;
+      width: 5px; height: 5px; border-radius: 50%;
       background: #25d366;
-      box-shadow: 0 0 0 2px rgba(37,211,102,0.25);
     }
     .wa-head-icons {
-      opacity: 0.92; font-size: 1rem; padding: 0 0.15rem;
-      display: inline-flex; gap: 0.55rem; letter-spacing: 0.05em;
+      opacity: 0.9; font-size: 0.95rem; padding: 0 0.1rem;
+      display: inline-flex; gap: 0.85rem;
     }
     .wa-body {
-      flex: 1; padding: 0.7rem 0.65rem 0.45rem;
-      display: flex; flex-direction: column; gap: 0.5rem;
+      flex: 1; padding: 0.55rem 0.55rem 0.35rem;
+      display: flex; flex-direction: column; gap: 0.35rem;
+      justify-content: flex-start;
       background:
-        radial-gradient(circle at 12% 8%, rgba(255,255,255,0.22), transparent 42%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23cbbfb3' stroke-width='1' opacity='0.35'%3E%3Cpath d='M10 30c8-6 16 6 24 0s16 6 24 0'/%3E%3Cpath d='M70 80c6-8 18-2 22-12'/%3E%3Ccircle cx='28' cy='78' r='8'/%3E%3Cpath d='M88 28h14v14'/%3E%3C/g%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c8bdb2' stroke-width='0.85' opacity='0.32'%3E%3Cpath d='M10 30c8-6 16 6 24 0s16 6 24 0'/%3E%3Cpath d='M70 80c6-8 18-2 22-12'/%3E%3Ccircle cx='28' cy='78' r='7'/%3E%3Cpath d='M88 28h12v12'/%3E%3C/g%3E%3C/svg%3E"),
         #e5ddd5;
-      background-size: auto, 120px 120px, auto;
+      background-size: 120px 120px, auto;
       min-height: 0;
       position: relative;
+      overflow-y: auto;
     }
     .wa-meta {
-      font-size: 0.64rem; color: #54656f; text-align: center;
-      letter-spacing: 0.02em;
-      background: rgba(255,255,255,0.72);
+      font-size: 0.62rem; color: #54656f; text-align: center;
+      letter-spacing: 0.01em;
+      background: rgba(255,255,255,0.78);
       align-self: center;
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      box-shadow: 0 1px 1px rgba(11,20,26,0.06);
+      padding: 0.18rem 0.55rem;
+      border-radius: 7px;
+      box-shadow: 0 1px 0.5px rgba(11,20,26,0.08);
+      margin-bottom: 0.15rem;
+    }
+    .wa-msg {
+      align-self: flex-start;
+      max-width: 92%;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      flex: 0 0 auto;
+      position: relative;
+      border-radius: 0 8px 8px 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 0.5px rgba(11,20,26,0.13);
+    }
+    .wa-msg::before {
+      content: "";
+      position: absolute;
+      left: -6px;
+      bottom: 14px;
+      width: 8px;
+      height: 12px;
+      background: #fff;
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+      z-index: 1;
     }
     .wa-bubble {
       background: #fff;
       border: none;
-      border-radius: 7.5px 7.5px 7.5px 0;
-      padding: 0.75rem 0.8rem 1.4rem;
-      font-size: 0.78rem; line-height: 1.45; color: #111b21;
-      box-shadow: 0 1px 0.5px rgba(11,20,26,0.13);
+      border-radius: 0;
+      padding: 0.55rem 0.65rem 0.45rem;
+      font-size: 0.74rem; line-height: 1.42; color: #111b21;
+      box-shadow: none;
       position: relative;
-      max-width: 100%;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.15s ease;
+      flex: 0 0 auto;
     }
-    .wa-bubble::before {
-      content: "";
-      position: absolute;
-      left: -6px; bottom: 0;
-      width: 10px; height: 14px;
-      background: #fff;
-      clip-path: polygon(100% 0, 100% 100%, 0 100%);
-    }
+    .wa-bubble::before { content: none; }
     .wa-bubble:active { transform: scale(0.985); }
     .wa-bubble .tag {
-      display: inline-block; font-size: 0.6rem; font-weight: 750;
-      letter-spacing: 0.04em; text-transform: uppercase; color: #c45a4a;
-      margin-bottom: 0.32rem;
-      background: rgba(247,84,64,0.08);
-      padding: 0.12rem 0.4rem;
-      border-radius: 4px;
+      display: inline-block; font-size: 0.56rem; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase; color: #c45a4a;
+      margin-bottom: 0.28rem;
+      background: rgba(247,84,64,0.09);
+      padding: 0.1rem 0.38rem;
+      border-radius: 3px;
     }
     .wa-bubble h4 {
-      font-family: var(--font-display); font-size: 0.88rem; font-weight: 750;
-      line-height: 1.28; margin-bottom: 0.4rem;
+      font-family: var(--font-body); font-size: 0.82rem; font-weight: 650;
+      line-height: 1.32; margin-bottom: 0.35rem; color: #111b21;
     }
-    .wa-line { margin-top: 0.26rem; }
-    .wa-line b { font-weight: 700; color: #3b4a54; }
-    .wa-cta {
-      margin-top: 0.6rem; border: 1px solid color-mix(in srgb, var(--primary) 28%, transparent);
-      background: color-mix(in srgb, var(--primary) 10%, transparent);
-      color: var(--primary); border-radius: 8px; padding: 0.48rem 0.6rem;
-      font-size: 0.72rem; font-weight: 700; text-align: center;
+    .wa-bubble__divider {
+      height: 1px;
+      background: rgba(0,0,0,0.06);
+      margin: 0.1rem 0 0.35rem;
+    }
+    .wa-line {
+      margin-top: 0.18rem;
+      font-size: 0.72rem;
+      line-height: 1.38;
+      color: #3b4a54;
+    }
+    .wa-line b { font-weight: 600; color: #111b21; }
+    .wa-bubble__foot {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 0.3rem;
+      padding-top: 0.1rem;
     }
     .wa-tick {
-      position: absolute; right: 0.5rem; bottom: 0.32rem;
-      font-size: 0.6rem; color: #53bdeb;
-      display: inline-flex; align-items: center; gap: 0.22rem;
+      font-size: 0.58rem; color: #667781;
+      display: inline-flex; align-items: center; gap: 0.18rem;
       font-variant-numeric: tabular-nums;
     }
-    .wa-tick::before {
+    .wa-tick::after {
       content: "✓✓";
-      font-size: 0.58rem;
-      letter-spacing: -0.12em;
+      font-size: 0.56rem;
+      letter-spacing: -0.14em;
       color: #53bdeb;
     }
     .wa-actions {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-top: 0.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 0;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: none;
+      background: #fff;
+      flex: 0 0 auto;
     }
     .wa-actions button {
-      border: 1px solid rgba(0,0,0,0.08); background: #fff; border-radius: 22px;
-      padding: 0.58rem; font-size: 0.74rem; font-weight: 650; color: var(--on-surface);
-      box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-      transition: transform 0.12s ease, background 0.12s ease;
+      border: none;
+      border-top: 1px solid rgba(0,0,0,0.07);
+      background: #fff;
+      border-radius: 0;
+      padding: 0.48rem 0.65rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--wa-action);
+      transition: background 0.12s ease;
+      text-align: center;
+      min-height: 0;
+      height: auto;
+      flex: 0 0 auto;
     }
-    .wa-actions button:hover { background: #f7f8f9; }
-    .wa-actions button:active { transform: scale(0.97); }
+    .wa-actions button:first-child { border-top: none; }
+    .wa-actions button:hover { background: #f5f6f6; }
+    .wa-actions button:active { background: #eef0f0; }
     .wa-actions button.primary {
-      background: var(--primary); border-color: var(--primary); color: #fff;
+      background: #fff;
+      color: var(--wa-action);
+      font-weight: 700;
     }
-    .wa-actions button.primary:hover { filter: brightness(1.04); }
-    .wa-actions button:disabled { opacity: 0.55; cursor: wait; }
+    .wa-actions button:disabled { opacity: 0.5; cursor: wait; }
     .wa-compose {
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.45rem 0.2rem;
+      gap: 0.35rem;
+      padding: 0.3rem 0.4rem 0.15rem;
       background: #f0f2f5;
-      border-top: 1px solid rgba(0,0,0,0.06);
+      border-top: 1px solid rgba(0,0,0,0.05);
       flex-shrink: 0;
     }
     .wa-compose__icon {
-      width: 28px; height: 28px; border-radius: 50%;
+      width: 26px; height: 26px; border-radius: 50%;
       display: grid; place-items: center;
-      color: #54656f; font-size: 0.95rem; font-weight: 600;
+      color: #54656f; font-size: 0.9rem; font-weight: 600;
       user-select: none;
     }
     .wa-compose__field {
       background: #fff;
-      border-radius: 18px;
-      padding: 0.4rem 0.75rem;
-      font-size: 0.72rem;
+      border-radius: 20px;
+      padding: 0.38rem 0.7rem;
+      font-size: 0.7rem;
       color: #8696a0;
-      border: 1px solid rgba(0,0,0,0.05);
-      min-height: 1.7rem;
+      border: none;
+      min-height: 1.65rem;
+      line-height: 1.65rem;
     }
     .wa-compose__mic {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: #075e54; color: #fff;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--wa-teal); color: #fff;
       display: grid; place-items: center;
-      font-size: 0.75rem;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+      font-size: 0.7rem;
     }
     #floorBubble { cursor: pointer; }
     #floorBubble:focus-visible {
       outline: 2px solid var(--primary);
       outline-offset: 2px;
     }
-    .wa-bubble.is-dismiss-ack {
+    .wa-bubble.is-dismiss-ack,
+    .wa-msg.is-dismiss-ack {
       animation: floorAckOut 0.34s var(--ease) forwards;
     }
-    .wa-bubble.is-dismiss-snooze {
+    .wa-bubble.is-dismiss-snooze,
+    .wa-msg.is-dismiss-snooze {
       animation: floorSnoozeOut 0.34s var(--ease) forwards;
     }
-    .wa-bubble.is-enter {
+    .wa-bubble.is-enter,
+    .wa-msg.is-enter {
       animation: floorEnter 0.34s var(--ease) both;
     }
     .phone.is-pulse .phone__bezel {
@@ -1199,17 +1330,18 @@
     }
     .wa-end span { font-size: 0.78rem; color: #667781; }
     .phone-home {
-      height: 16px;
+      height: 18px;
       display: flex; align-items: center; justify-content: center;
       background: #f0f2f5;
       flex-shrink: 0;
+      padding-bottom: 2px;
     }
     .phone-home::after {
       content: "";
-      width: 112px; height: 4px; border-radius: 999px; background: #1c1c1e;
-      opacity: 0.88;
+      width: 108px; height: 4px; border-radius: 999px; background: #1c1c1e;
+      opacity: 0.9;
     }
-    .floor-rail-lede { margin-bottom: 0.45rem; font-size: 0.92rem; max-width: 26em; }
+    .floor-rail-lede { margin-bottom: 0.55rem; font-size: 0.92rem; max-width: 26em; line-height: 1.45; }
     .status-rail { display: grid; gap: 0.65rem; }
     .status-item {
       display: grid; grid-template-columns: 14px 1fr; gap: 0.75rem;
@@ -1516,7 +1648,9 @@
       #scene-what .do-step p { font-size: 0.84rem; }
       #scene-tech .tech-card p { font-size: 0.84rem; }
       #scene-tech .tech-card ul { font-size: 0.78rem; }
-      #scene-floor .floor-rail-lede { font-size: 0.88rem; }
+      #scene-floor h2 { margin-bottom: 0.3rem; }
+      #scene-floor .floor-copy .lede { margin-bottom: 0; max-width: none; font-size: 0.95rem; }
+      #scene-floor .floor-copy .status-rail { margin-top: 1.1rem; }
       #scene-floor .status-item p { font-size: 0.76rem; }
       #scene-verify .meta { font-size: 0.78rem; }
     }
@@ -1540,9 +1674,12 @@
       .rx-flip, .rx-flip__inner { min-height: 360px; }
       .tech-card, .waste-card, .do-step, .silo-card { min-height: 0; }
       .silo-board, .stat-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .phone { max-width: 300px; transform: none; }
+      .phone {
+        max-width: calc(var(--phone-screen-w) + var(--phone-frame-pad) * 2 + 2px);
+        transform: none;
+      }
       .phone:hover { transform: none; }
-      .phone__screen { min-height: 400px; }
+      .phone__screen { min-height: unset; }
       .dash-shell { height: clamp(380px, 66vh, 600px); }
       #scene-title .hero-shell { gap: var(--space-6); }
     }
@@ -1759,80 +1896,47 @@
         max-width: 14em;
       }
 
-      /* Floor: proper phone, no nested-phone clutter */
+      /* Floor: proper phone — real iPhone aspect ratio, no stretch */
       #scene-floor.slide {
         justify-content: flex-start;
         overflow: hidden;
         padding-top: calc(var(--chrome-h) + var(--progress-h) + var(--safe-t) + 0.55rem);
         padding-bottom: max(4.75rem, calc(var(--safe-b) + 4.25rem));
       }
-      #scene-floor .slide__inner {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
-      }
+      #scene-floor .slide__inner { transform: none; }
       #scene-floor .floor-layout {
-        margin-top: 0.45rem;
-        flex: 1;
-        min-height: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
       }
+      #scene-floor .phone-col { justify-content: center; }
       #scene-floor .phone {
-        order: -1;
-        width: min(100%, 340px);
-        max-width: 100%;
+        width: calc(var(--phone-screen-w) + var(--phone-frame-pad) * 2 + 2px);
+        max-width: min(100%, calc(var(--phone-screen-w) + var(--phone-frame-pad) * 2 + 2px));
         margin: 0 auto;
-        border-radius: 30px;
-        padding: 9px;
-        flex: 1 1 auto;
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
-        max-height: calc(100dvh - var(--chrome-h) - var(--progress-h) - var(--safe-t) - 7.5rem);
         transform: none;
       }
       #scene-floor .phone:hover { transform: none; }
-      #scene-floor .phone::before {
-        width: 72px;
-        height: 14px;
-        top: 12px;
-      }
       #scene-floor .phone__screen {
-        flex: 1;
-        min-height: 0;
-        border-radius: 22px;
-        display: flex;
-        flex-direction: column;
+        width: 100%;
+        height: auto;
+        aspect-ratio: var(--phone-ratio);
       }
       #scene-floor .wa-header {
-        padding: 1.35rem 0.9rem 0.75rem;
+        padding: 2.35rem 0.65rem 0.5rem;
         flex-shrink: 0;
       }
       #scene-floor .wa-body {
         flex: 1;
         min-height: 0;
         overflow: auto;
-        padding: 0.8rem;
+        padding: 0.5rem;
+        justify-content: flex-start;
       }
-      #scene-floor .wa-bubble {
-        font-size: 0.86rem;
-        line-height: 1.4;
-      }
-      #scene-floor .wa-bubble h4 {
-        font-size: 1rem;
-        line-height: 1.25;
-      }
-      #scene-floor .wa-actions {
-        flex-shrink: 0;
-        margin-top: 0.55rem;
-      }
+      #scene-floor .wa-msg { max-width: 94%; }
       #scene-floor .wa-actions button {
-        min-height: 44px;
-        font-size: 0.8rem;
+        min-height: 0;
+        padding: 0.55rem 0.65rem;
+        font-size: 0.78rem;
       }
 
       /* ponytail: desktop-only simulated workspace - unusable on phone */
@@ -1924,8 +2028,15 @@
       .waste-card, .tech-card, .silo-card, .audit-col { padding: 0.85rem; }
     }
 
+    @media (min-width: 721px) and (max-height: 860px) {
+      #scene-floor .phone { --phone-screen-w: 284px; }
+    }
+    @media (min-width: 721px) and (max-height: 760px) {
+      #scene-floor .phone { --phone-screen-w: 252px; }
+    }
+
     @media (max-height: 760px) and (min-width: 721px) {
-      .phone__screen { min-height: 360px; }
+      .phone__screen { min-height: unset; }
       .dash-shell { height: clamp(420px, 72vh, 640px); }
       .video-frame { max-height: min(50vh, 400px); }
       h1 { font-size: clamp(1.7rem, 3.8vw, 2.5rem); }
@@ -2356,88 +2467,99 @@
     <!-- 7 Floor -->
     <section class="slide slide--light" id="scene-floor" data-theme="light" aria-label="Floor delivery">
       <div class="slide__inner slide__inner--wide">
-        <p class="eyebrow reveal hide-mobile">Floor channel</p>
-        <p class="eyebrow reveal show-mobile">On the floor</p>
-        <h2 class="reveal">On the supervisor's phone.</h2>
         <div class="floor-layout">
-          <div class="status-rail reveal hide-mobile">
-            <p class="lede floor-rail-lede">The prescription lands as assigned work.</p>
-            <div class="status-item">
-              <span class="status-dot done"></span>
-              <div>
-                <strong>Open</strong>
-                <p>Owner, due time, and ₹ impact attached.</p>
+          <div class="floor-copy">
+            <p class="eyebrow reveal hide-mobile">Floor channel</p>
+            <p class="eyebrow reveal show-mobile">On the floor</p>
+            <h2 class="reveal">On the supervisor's phone.</h2>
+            <p class="lede reveal hide-mobile">The prescription lands as assigned work — owner, due time, and ₹ impact attached.</p>
+            <p class="lede reveal show-mobile">Tap Snooze or Acknowledge to walk through three prescriptions.</p>
+            <div class="status-rail hide-mobile">
+              <div class="status-item">
+                <span class="status-dot done"></span>
+                <div>
+                  <strong>Open</strong>
+                  <p>Owner, due time, and ₹ impact attached.</p>
+                </div>
               </div>
-            </div>
-            <div class="status-item">
-              <span class="status-dot active pulse-on-active"></span>
-              <div>
-                <strong>In progress</strong>
-                <p>Supervisor acknowledges and runs the stagger.</p>
+              <div class="status-item">
+                <span class="status-dot active pulse-on-active"></span>
+                <div>
+                  <strong>In progress</strong>
+                  <p>Supervisor acknowledges and runs the stagger.</p>
+                </div>
               </div>
-            </div>
-            <div class="status-item">
-              <span class="status-dot"></span>
-              <div>
-                <strong>Done, ready to verify</strong>
-                <p>Checked on the next MD / energy bill lines.</p>
+              <div class="status-item">
+                <span class="status-dot"></span>
+                <div>
+                  <strong>Done, ready to verify</strong>
+                  <p>Checked on the next MD / energy bill lines.</p>
+                </div>
               </div>
             </div>
           </div>
-          <div class="phone reveal" id="floorPhone" role="region" aria-label="Plant prescription phone">
+          <div class="phone-col">
+            <div class="phone reveal" id="floorPhone" role="region" aria-label="Plant prescription phone">
             <div class="phone-btn phone-btn--silent" aria-hidden="true"></div>
             <div class="phone-btn phone-btn--vol-up" aria-hidden="true"></div>
             <div class="phone-btn phone-btn--vol-down" aria-hidden="true"></div>
             <div class="phone-btn phone-btn--power" aria-hidden="true"></div>
             <div class="phone__bezel">
               <div class="phone__screen">
+                <div class="phone-island" aria-hidden="true"></div>
                 <div class="phone-statusbar" aria-hidden="true">
                   <span class="phone-time">07:18</span>
-                  <span class="phone-island"></span>
                   <span class="phone-status-right">
                     <svg class="phone-sig" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="2" width="3" height="10" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
                     <span>5G</span>
                     <svg class="phone-bat" viewBox="0 0 28 14" aria-hidden="true"><rect x="1" y="2" width="22" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="4" width="16" height="6" rx="1"/><rect x="24" y="5" width="2.5" height="4" rx="0.5"/></svg>
                   </span>
                 </div>
-                <div class="wa-header">
-                  <div class="wa-back" aria-hidden="true">‹</div>
-                  <div class="wa-avatar">SE</div>
-                  <div class="wa-head-text">
-                    <strong>Stamped Energy</strong>
-                    <span>online</span>
+                <div class="wa-app">
+                  <div class="wa-header">
+                    <div class="wa-back" aria-hidden="true">‹</div>
+                    <div class="wa-avatar">SE</div>
+                    <div class="wa-head-text">
+                      <strong>Stamped Energy</strong>
+                      <span>online</span>
+                    </div>
+                    <div class="wa-head-icons" aria-hidden="true"><span>⌕</span><span>⋮</span></div>
                   </div>
-                  <div class="wa-head-icons" aria-hidden="true"><span>⌕</span><span>⋮</span></div>
-                </div>
-                <div class="wa-body" id="floorWaBody">
-                  <p class="wa-meta" id="floorMeta">Today · Shift B · 07:18</p>
-                  <div class="wa-bubble" id="floorBubble" role="button" tabindex="0" aria-label="Acknowledge prescription">
-                    <span class="tag" id="floorTag">New prescription · High</span>
-                    <h4 id="floorTitle">Stagger mill start and kiln fans by 10 min</h4>
-                    <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak from Monday overlap</p>
-                    <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹3-5L/mo on MD line</p>
-                    <p class="wa-line" id="floorOwner"><b>Owner:</b> Grinding supervisor · B</p>
-                    <p class="wa-line" id="floorDue"><b>Due:</b> This week · before next peak</p>
-                    <div class="wa-cta">Tap to acknowledge →</div>
-                    <span class="wa-tick" aria-hidden="true">07:18</span>
+                  <div class="wa-body" id="floorWaBody">
+                    <p class="wa-meta" id="floorMeta">Today · Shift B · 07:18</p>
+                    <div class="wa-msg" id="floorMsg">
+                      <div class="wa-bubble" id="floorBubble" role="button" tabindex="0" aria-label="Acknowledge prescription">
+                        <span class="tag" id="floorTag">New prescription · High</span>
+                        <h4 id="floorTitle">Stagger mill start and kiln fans by 10 min</h4>
+                        <div class="wa-bubble__divider" aria-hidden="true"></div>
+                        <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak from Monday overlap</p>
+                        <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹3-5L/mo on MD line</p>
+                        <p class="wa-line" id="floorOwner"><b>Owner:</b> Grinding supervisor · B</p>
+                        <p class="wa-line" id="floorDue"><b>Due:</b> This week · before next peak</p>
+                        <div class="wa-bubble__foot">
+                          <span class="wa-tick" aria-hidden="true">07:18</span>
+                        </div>
+                      </div>
+                      <div class="wa-actions" id="floorActions">
+                        <button type="button" id="floorSnooze" aria-label="Snooze prescription">Snooze</button>
+                        <button type="button" class="primary" id="floorAck" aria-label="Acknowledge prescription">Acknowledge</button>
+                      </div>
+                    </div>
+                    <div class="wa-end" id="floorEnd" hidden>
+                      <strong>Stamped Energy</strong>
+                      <span>Inbox clear for this shift</span>
+                    </div>
                   </div>
-                  <div class="wa-actions" id="floorActions">
-                    <button type="button" id="floorSnooze" aria-label="Snooze prescription">Snooze</button>
-                    <button type="button" class="primary" id="floorAck" aria-label="Acknowledge prescription">Acknowledge</button>
+                  <div class="wa-compose" aria-hidden="true">
+                    <span class="wa-compose__icon">+</span>
+                    <div class="wa-compose__field">Message</div>
+                    <span class="wa-compose__mic">◉</span>
                   </div>
-                  <div class="wa-end" id="floorEnd" hidden>
-                    <strong>Stamped Energy</strong>
-                    <span>Inbox clear for this shift</span>
-                  </div>
-                </div>
-                <div class="wa-compose" aria-hidden="true">
-                  <span class="wa-compose__icon">+</span>
-                  <div class="wa-compose__field">Message</div>
-                  <span class="wa-compose__mic">◉</span>
                 </div>
                 <div class="phone-home" aria-hidden="true"></div>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -2817,6 +2939,7 @@
       var floorImpact = document.getElementById("floorImpact");
       var floorOwner = document.getElementById("floorOwner");
       var floorDue = document.getElementById("floorDue");
+      var floorMsg = document.getElementById("floorMsg");
       var floorSnooze = document.getElementById("floorSnooze");
       var floorAck = document.getElementById("floorAck");
 
@@ -2837,20 +2960,21 @@
         if (floorOwner) floorOwner.innerHTML = "<b>Owner:</b> " + (rx.owner || "");
         if (floorDue) floorDue.innerHTML = "<b>Due:</b> " + (rx.due || "This week · before next peak");
         if (floorMeta) floorMeta.textContent = "Today · Shift B · 07:18 · " + (i + 1) + "/" + floorRx.length;
+        if (floorMsg) floorMsg.hidden = false;
         floorBubble.hidden = false;
         if (floorActions) floorActions.hidden = false;
         if (floorEnd) floorEnd.hidden = true;
+        if (floorMsg) floorMsg.classList.remove("is-dismiss-ack", "is-dismiss-snooze", "is-enter");
         floorBubble.classList.remove("is-dismiss-ack", "is-dismiss-snooze", "is-enter");
         if (animateIn) {
-          void floorBubble.offsetWidth;
-          floorBubble.classList.add("is-enter");
+          void floorMsg.offsetWidth;
+          floorMsg.classList.add("is-enter");
         }
         setFloorControlsEnabled(true);
       }
 
       function showFloorEnd() {
-        if (floorBubble) floorBubble.hidden = true;
-        if (floorActions) floorActions.hidden = true;
+        if (floorMsg) floorMsg.hidden = true;
         if (floorMeta) floorMeta.hidden = true;
         if (floorEnd) floorEnd.hidden = false;
         floorBusy = false;
@@ -2865,7 +2989,7 @@
       }
 
       function dismissFloor(mode) {
-        if (floorBusy || !floorBubble || floorBubble.hidden || !floorRx.length) return;
+        if (floorBusy || !floorBubble || !floorMsg || floorMsg.hidden || !floorRx.length) return;
         floorBusy = true;
         setFloorControlsEnabled(false);
         var phoneEl = document.getElementById("floorPhone");
@@ -2874,9 +2998,9 @@
           void phoneEl.offsetWidth;
           phoneEl.classList.add("is-pulse");
         }
-        floorBubble.classList.remove("is-enter", "is-dismiss-ack", "is-dismiss-snooze");
-        void floorBubble.offsetWidth;
-        floorBubble.classList.add(mode === "snooze" ? "is-dismiss-snooze" : "is-dismiss-ack");
+        floorMsg.classList.remove("is-enter", "is-dismiss-ack", "is-dismiss-snooze");
+        void floorMsg.offsetWidth;
+        floorMsg.classList.add(mode === "snooze" ? "is-dismiss-snooze" : "is-dismiss-ack");
         window.setTimeout(function () {
           var next = floorIdx + 1;
           if (next >= floorRx.length) {
