@@ -876,23 +876,24 @@
 
     /* 7 Floor / phone — iPhone 15 proportions (393×852 pt) */
     #scene-floor .slide__inner--wide {
-      max-width: min(1120px, 100%);
-      padding-inline: clamp(1.75rem, 5.5vw, 3.75rem);
+      max-width: min(1180px, 100%);
+      padding-inline: clamp(2rem, 7vw, 5rem);
     }
     .floor-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(280px, 340px);
-      gap: clamp(1.75rem, 3.5vw, 3rem);
+      grid-template-columns: minmax(0, 28rem) auto;
+      gap: clamp(1.5rem, 2.8vw, 2.4rem);
       align-items: center;
       justify-content: center;
-      margin-top: 0.15rem;
+      margin: 0.15rem auto 0;
+      width: 100%;
+      max-width: 52rem;
     }
     .floor-copy {
       display: flex;
       flex-direction: column;
       align-items: stretch;
       min-width: 0;
-      max-width: 34rem;
     }
     .floor-copy .eyebrow { margin-bottom: 0.55rem; }
     .floor-copy h2 { margin-bottom: 0.35rem; }
