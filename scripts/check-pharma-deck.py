@@ -140,16 +140,21 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
       if (slideId === 'scene-floor') {
         const h2 = slide.querySelector('h2');
         const phone = document.getElementById('floorPhone');
+        const rail = slide.querySelector('.status-rail');
         const statusbar = slide.querySelector('.phone-statusbar');
         const rect = phone ? phone.getBoundingClientRect() : null;
+        const railRect = rail ? rail.getBoundingClientRect() : null;
+        const tag = slide.querySelector('#floorTag');
         return {
           problems,
           h2Visible: !!(h2 && getComputedStyle(h2).display !== 'none' && h2.getBoundingClientRect().height > 0),
           rxCount: Array.isArray(window.__FLOOR_RX__) ? window.__FLOOR_RX__.length : 0,
           hasStatusbar: !!statusbar,
-          phoneRight: rect ? rect.left > window.innerWidth * 0.42 : false,
+          phoneRightOfRail: !!(rect && railRect && rect.left >= railRect.right - 8),
           hasCompose: !!slide.querySelector('.wa-compose'),
           hasIsland: !!slide.querySelector('.phone-island'),
+          hasRouteCards: slide.querySelectorAll('.floor-route-card').length >= 3,
+          alarmTag: tag ? tag.textContent.trim() : '',
         };
       }
       return {problems};
@@ -179,14 +184,18 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
                 issues.append(f"{label}/scene-offer: missing Utso LinkedIn")
 
         if sid == "scene-floor":
-            if width > 720 and not report.get("phoneRight"):
-                issues.append(f"{label}/scene-floor: phone not on right")
+            if width > 720 and not report.get("phoneRightOfRail"):
+                issues.append(f"{label}/scene-floor: phone should sit right of status rail")
+            if width > 720 and not report.get("hasRouteCards"):
+                issues.append(f"{label}/scene-floor: missing alarm/prescription route cards")
             if not report.get("hasStatusbar"):
                 issues.append(f"{label}/scene-floor: missing realistic status bar")
             if not report.get("hasCompose"):
                 issues.append(f"{label}/scene-floor: missing compose bar")
             if not report.get("hasIsland"):
                 issues.append(f"{label}/scene-floor: missing dynamic island")
+            if not str(report.get("alarmTag") or "").startswith("Alarm"):
+                issues.append(f"{label}/scene-floor: expected Alarm tag, got {report.get('alarmTag')!r}")
             if width <= 720:
                 if not report.get("h2Visible"):
                     issues.append(f"{label}/scene-floor: h2 not visible")
