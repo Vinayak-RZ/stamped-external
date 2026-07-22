@@ -33,16 +33,16 @@ PACKS = {
         "title": {
             "eyebrowD": "Cement · kiln, mills, and WHR decisions verified on the bill",
             "eyebrowM": "Cement · bill-verified decisions",
-            "h1D": "From kiln and mill signals to owned actions on the invoice.",
+            "h1D": "Kiln and mill data, priced onto the bill.",
             "h1M": "Kiln & mill ₹ actions on the bill.",
-            "ledeD": "You already run kiln, mill, WHR, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.",
+            "ledeD": "You already run kiln, mill, WHR, and EMS data. Stamped ranks floor work in rupees, then checks it on the next DISCOM bill.",
             "ledeM": "Ranked kiln, mill, and WHR actions. Verified on the DISCOM bill.",
         },
         "hook": {
             "eyebrow": "Monday 06:40 · Kiln / mill handover",
-            "h2": "The systems are there. The handoff is not.",
-            "ledeD": "The incomer saw the MD spike when the cement mill and kiln auxiliaries overlapped. The EMS logged it. Nobody got a work order with a rupee figure.",
-            "ledeM": "Mill and kiln fans overlapped. EMS logged it. Nobody got a ₹ work order.",
+            "h2": "Your plant already logs this. Nobody owns the fix.",
+            "ledeD": "Mill and kiln fans overlapped. EMS logged it. No work order went out.",
+            "ledeM": "Mill and kiln fans overlapped. No work order went out.",
             "t1s": "Mill start and kiln fans overlap",
             "t1p": "Shift B brings mill and kiln auxiliaries online together.",
             "t2s": "MD spike hits the incomer",
@@ -50,8 +50,8 @@ PACKS = {
             "t3s": "Clinker and grinding continue as usual",
             "t3p": "The bill will price this later. The floor never saw the fix.",
             "meterNote": "The EMS recorded the spike, but nobody was assigned to change the next mill start sequence.",
-            "statImpact": "~₹55k",
-            "statImpactLabel": "Monthly demand impact <span class=\"tilde\">[~]</span>",
+            "statImpact": "₹55k",
+            "statImpactLabel": "Monthly demand impact",
         },
         "gapHas": {
             "scada": "Has: kiln, mill, WHR run states",
@@ -134,9 +134,9 @@ PACKS = {
         ],
         "math": {
             "eyebrow": "Where cement electricity cost usually hides",
-            "h2": "Five areas we check first in cement",
-            "ledeD": "First places we look when a cement plant already meters kiln, mills, and WHR, and still sees avoidable ₹ on the HT bill.",
-            "ledeM": "First places we look for avoidable ₹ on a cement HT bill.",
+            "h2": "Where we look first in cement",
+            "ledeD": "Avoidable ₹ on a cement HT bill, starting with kiln, mills, and WHR.",
+            "ledeM": "Avoidable ₹ on a cement HT bill.",
             "cards": [
                 (
                     "MD / demand",
@@ -181,16 +181,16 @@ PACKS = {
         "title": {
             "eyebrowD": "Steel · furnace and mill decisions verified on the bill",
             "eyebrowM": "Steel · bill-verified decisions",
-            "h1D": "From furnace and mill signals to owned actions on the invoice.",
+            "h1D": "Furnace and mill data, priced onto the bill.",
             "h1M": "Furnace & mill ₹ actions on the bill.",
-            "ledeD": "You already run furnace, rolling, and EMS data. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.",
+            "ledeD": "You already run furnace, rolling, and EMS data. Stamped ranks floor work in rupees, then checks it on the next DISCOM bill.",
             "ledeM": "Ranked furnace and mill actions. Verified on the DISCOM bill.",
         },
         "hook": {
             "eyebrow": "Monday 07:15 · Melt / roll handover",
-            "h2": "The systems are there. The handoff is not.",
-            "ledeD": "The incomer saw the MD spike when the furnace restart overlapped the rolling-mill bite. The EMS logged it. Nobody got a work order with a rupee figure.",
-            "ledeM": "Furnace and mill overlapped. EMS logged it. Nobody got a ₹ work order.",
+            "h2": "Your plant already logs this. Nobody owns the fix.",
+            "ledeD": "Furnace and mill overlapped. EMS logged it. No work order went out.",
+            "ledeM": "Furnace and mill overlapped. No work order went out.",
             "t1s": "Furnace restart and mill start overlap",
             "t1p": "Shift B brings melt and roll online together.",
             "t2s": "MD spike hits the incomer",
@@ -198,8 +198,8 @@ PACKS = {
             "t3s": "Rolling continues as usual",
             "t3p": "The bill will price this later. The floor never saw the fix.",
             "meterNote": "The EMS recorded the spike, but nobody was assigned to change the next furnace–mill sequence.",
-            "statImpact": "~₹48k",
-            "statImpactLabel": "Monthly demand impact <span class=\"tilde\">[~]</span>",
+            "statImpact": "₹48k",
+            "statImpactLabel": "Monthly demand impact",
         },
         "gapHas": {
             "scada": "Has: furnace, mill, utility run states",
@@ -244,7 +244,7 @@ PACKS = {
             "tags": [
                 ("FURNACE2.HOLD", "ON", "35 min avg"),
                 ("CAST.PROD", "0 heats", "same window"),
-                ("FURNACE2.kWh", "~180 kWh", "per event <span class=\"tilde\">[~]</span>"),
+                ("FURNACE2.kWh", "180 kWh", "per event"),
                 ("DELAY.FLAG", "TRUE", "planned"),
             ],
             "cite": "physics/idle_hold@v1.8 · model conf 0.87 · ToD energy line · baseline last 5 delays",
@@ -282,9 +282,9 @@ PACKS = {
         ],
         "math": {
             "eyebrow": "Where steel electricity cost usually hides",
-            "h2": "Five areas we check first in steel",
-            "ledeD": "First places we look when a steel plant already meters furnace and mill loads, and still sees avoidable ₹ on the HT bill.",
-            "ledeM": "First places we look for avoidable ₹ on a steel HT bill.",
+            "h2": "Where we look first in steel",
+            "ledeD": "Avoidable ₹ on a steel HT bill, starting with furnace and mill loads.",
+            "ledeM": "Avoidable ₹ on a steel HT bill.",
             "cards": [
                 (
                     "MD / demand",
@@ -329,16 +329,16 @@ PACKS = {
         "title": {
             "eyebrowD": "Pharma · load management and HVAC decisions verified on the bill",
             "eyebrowM": "Pharma · load management, verified",
-            "h1D": "From load spikes and HVAC waste to owned actions on the invoice.",
+            "h1D": "Chiller and HVAC load, priced onto the bill.",
             "h1M": "Load management ₹ actions on the bill.",
-            "ledeD": "Pharma sites run chillers, HVAC, and batch utilities around the clock. Stamped finds avoidable load coincidence and idle utility waste, ranks the fix in rupees, and verifies it on the next DISCOM bill.",
+            "ledeD": "Pharma sites run chillers, HVAC, and batch utilities around the clock. Stamped ranks the fix in rupees and checks it on the next DISCOM bill.",
             "ledeM": "Load management for chillers, HVAC, and batch utilities. Verified on the DISCOM bill.",
         },
         "hook": {
             "eyebrow": "Monday 07:05 · Utilities handover",
-            "h2": "The systems are there. The handoff is not.",
-            "ledeD": "The incomer saw the MD spike when chillers and autoclave heat-up overlapped: a classic load-management miss. The EMS logged it. Nobody got a work order with a rupee figure.",
-            "ledeM": "Chillers and autoclave overlapped. A load spike with no ₹ work order.",
+            "h2": "Your plant already logs this. Nobody owns the fix.",
+            "ledeD": "Chillers and autoclave overlapped. EMS logged it. No work order went out.",
+            "ledeM": "Chillers and autoclave overlapped. No work order went out.",
             "t1s": "Chillers and autoclave start together",
             "t1p": "Shift B brings heavy utilities online in the same window.",
             "t2s": "MD spike hits the incomer",
@@ -346,8 +346,8 @@ PACKS = {
             "t3s": "Batch schedule continues as usual",
             "t3p": "The bill will price this later. The floor never saw the fix.",
             "meterNote": "The EMS recorded the spike, but nobody was assigned to change the next utility sequence.",
-            "statImpact": "~₹36k",
-            "statImpactLabel": "Monthly demand impact <span class=\"tilde\">[~]</span>",
+            "statImpact": "₹36k",
+            "statImpactLabel": "Monthly demand impact",
         },
         "gapHas": {
             "scada": "Has: AHU, chiller, batch utility states",
@@ -392,7 +392,7 @@ PACKS = {
             "tags": [
                 ("AHU_S3.RUN", "Full duty", "40 min avg"),
                 ("BATCH.OCCUPANCY", "0", "same window"),
-                ("AHU_S3.kWh", "~95 kWh", "per event <span class=\"tilde\">[~]</span>"),
+                ("AHU_S3.kWh", "95 kWh", "per event"),
                 ("IDLE_WINDOW.FLAG", "TRUE", "validated"),
             ],
             "cite": "physics/hvac_idle@v1.5 · model conf 0.86 · ToD energy line · baseline last 6 idle windows",
@@ -430,8 +430,8 @@ PACKS = {
         ],
         "math": {
             "eyebrow": "Where pharma electricity cost usually hides",
-            "h2": "Five areas we check first in pharma",
-            "ledeD": "First places we look when a pharma plant already meters HVAC and utilities: load management, idle waste, tariff timing, and early signals before equipment fails.",
+            "h2": "Where we look first in pharma",
+            "ledeD": "Avoidable ₹ on a pharma HT bill: load, idle HVAC, tariff, early warnings.",
             "ledeM": "Load management, HVAC & chillers, idle utilities, tariff, and early warnings before breakdowns.",
             "cards": [
                 (
@@ -736,17 +736,17 @@ def inject_hero_photo(html: str, industry: str) -> str:
         '<p class="eyebrow reveal hide-mobile">Operational energy decisions, verified on the bill</p>\n'
         '            <p class="eyebrow reveal show-mobile">Bill-verified decisions</p>\n'
         '            <p class="brand-name reveal">Stamped Energy</p>\n'
-        '            <h1 class="reveal hide-mobile">From plant signals to owned actions on the invoice.</h1>\n'
+        '            <h1 class="reveal hide-mobile">From plant meters to bill-line actions.</h1>\n'
         '            <h1 class="reveal show-mobile">Owned ₹ actions on the bill.</h1>\n'
-        '            <p class="lede reveal hide-mobile">You already have meters, EMS, and often renewables. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.</p>\n'
+        '            <p class="lede reveal hide-mobile">You already have meters and EMS. Stamped ranks floor work in rupees, then checks the result on the next DISCOM bill.</p>\n'
         '            <p class="lede reveal show-mobile">Ranked floor actions from your meters and EMS. Verified on the DISCOM bill.</p>',
         '<p class="industry-chip reveal" id="industryChip">Industry</p>\n'
         '            <p class="eyebrow reveal hide-mobile" id="titleEyebrowD">Operational energy decisions, verified on the bill</p>\n'
         '            <p class="eyebrow reveal show-mobile" id="titleEyebrowM">Bill-verified decisions</p>\n'
         '            <p class="brand-name reveal">Stamped Energy</p>\n'
-        '            <h1 class="reveal hide-mobile" id="titleH1D">From plant signals to owned actions on the invoice.</h1>\n'
+        '            <h1 class="reveal hide-mobile" id="titleH1D">From plant meters to bill-line actions.</h1>\n'
         '            <h1 class="reveal show-mobile" id="titleH1M">Owned ₹ actions on the bill.</h1>\n'
-        '            <p class="lede reveal hide-mobile" id="titleLedeD">You already have meters, EMS, and often renewables. Stamped turns those signals into ranked floor actions with a rupee value, then checks the result on the next DISCOM bill.</p>\n'
+        '            <p class="lede reveal hide-mobile" id="titleLedeD">You already have meters and EMS. Stamped ranks floor work in rupees, then checks the result on the next DISCOM bill.</p>\n'
         '            <p class="lede reveal show-mobile" id="titleLedeM">Ranked floor actions from your meters and EMS. Verified on the DISCOM bill.</p>',
         1,
     )
@@ -789,41 +789,36 @@ def inject_ids_and_hooks(html: str) -> str:
     replacements = [
         (
             '<p class="eyebrow reveal">Monday 07:15 · Shift handover</p>\n'
-            '        <h2 class="reveal">The systems are there. The handoff is not.</h2>\n'
-            '        <p class="lede reveal hide-mobile">The incomer saw the MD spike. The EMS logged it. Nobody got a ₹ work order.</p>\n'
-            '        <p class="lede reveal show-mobile">MD spiked. EMS logged it. Nobody got a ₹ work order.</p>',
+            '        <h2 class="reveal">Your plant already logs this. Nobody owns the fix.</h2>\n'
+            '        <p class="lede reveal hide-mobile">MD spiked. EMS logged it. No work order went out.</p>\n'
+            '        <p class="lede reveal show-mobile">MD spiked. EMS logged it. No work order went out.</p>',
             '<p class="eyebrow reveal" id="hookEyebrow">Monday 07:15 · Shift handover</p>\n'
-            '        <h2 class="reveal" id="hookH2">The systems are there. The handoff is not.</h2>\n'
-            '        <p class="lede reveal hide-mobile" id="hookLedeD">The incomer saw the MD spike. The EMS logged it. Nobody got a ₹ work order.</p>\n'
-            '        <p class="lede reveal show-mobile" id="hookLedeM">MD spiked. EMS logged it. Nobody got a ₹ work order.</p>',
+            '        <h2 class="reveal" id="hookH2">Your plant already logs this. Nobody owns the fix.</h2>\n'
+            '        <p class="lede reveal hide-mobile" id="hookLedeD">MD spiked. EMS logged it. No work order went out.</p>\n'
+            '        <p class="lede reveal show-mobile" id="hookLedeM">MD spiked. EMS logged it. No work order went out.</p>',
         ),
         (
-            "<strong>Compressors + furnace bay start together</strong>\n"
-            "                <p>Shift B brings utilities online in a 4-minute overlap.</p>",
+            '<strong>Compressors + furnace bay start together</strong>\n'
+            '                <p class="hide-mobile">Shift B brings utilities online together.</p>',
             '<strong id="hookT1s">Compressors + furnace bay start together</strong>\n'
-            '                <p id="hookT1p">Shift B brings utilities online in a 4-minute overlap.</p>',
+            '                <p class="hide-mobile" id="hookT1p">Shift B brings utilities online together.</p>',
         ),
         (
-            "<strong>MD spike hits the incomer</strong>\n"
-            "                <p>EMS threshold crossed. Alert created. Still no assigned owner.</p>",
+            '<strong>MD spike hits the incomer</strong>\n'
+            '                <p class="hide-mobile">Alert created. Still no owner.</p>',
             '<strong id="hookT2s">MD spike hits the incomer</strong>\n'
-            '                <p id="hookT2p">EMS threshold crossed. Alert created. Still no assigned owner.</p>',
+            '                <p class="hide-mobile" id="hookT2p">Alert created. Still no owner.</p>',
         ),
         (
-            "<strong>Production continues as usual</strong>\n"
-            "                <p>The bill will price this later. The floor never saw the fix.</p>",
+            '<strong>Production continues as usual</strong>\n'
+            '                <p class="hide-mobile">The floor never saw the fix.</p>',
             '<strong id="hookT3s">Production continues as usual</strong>\n'
-            '                <p id="hookT3p">The bill will price this later. The floor never saw the fix.</p>',
-        ),
-        (
-            '<p class="meter-note hide-mobile">The EMS recorded the spike, but nobody was assigned to change the next shift start.</p>',
-            '<p class="meter-note hide-mobile" id="hookMeterNote">The EMS recorded the spike, but nobody was assigned to change the next shift start.</p>',
-        ),
-        (
-            "<strong>~₹42k</strong>\n"
-            '                <span>Monthly demand impact <span class="tilde">[~]</span></span>',
-            '<strong id="hookStatImpact">~₹42k</strong>\n'
-            '                <span id="hookStatImpactLabel">Monthly demand impact <span class="tilde">[~]</span></span>',
+            '                <p class="hide-mobile" id="hookT3p">The floor never saw the fix.</p>',
+        ),        (
+            "<strong>₹42k</strong>\n"
+            '                <span>Monthly demand impact</span>',
+            '<strong id="hookStatImpact">₹42k</strong>\n'
+            '                <span id="hookStatImpactLabel">Monthly demand impact</span>',
         ),
         (
             '<div class="has">Has: run states, starts, setpoints</div>',
@@ -900,8 +895,8 @@ def replace_rx_block(html: str, pack: dict) -> str:
     # math headers
     html = html.replace(
         '<p class="eyebrow reveal">Where electricity cost usually hides</p>\n'
-        '        <h2 class="reveal">Five areas we check first</h2>\n'
-        '        <p class="lede reveal">First places we look for avoidable ₹ on the HT bill.</p>',
+        '        <h2 class="reveal">Where we look first</h2>\n'
+        '        <p class="lede reveal">Avoidable ₹ on the HT bill, starting with these lines.</p>',
         f'<p class="eyebrow reveal" id="mathEyebrow">{pack["math"]["eyebrow"]}</p>\n'
         f'        <h2 class="reveal" id="mathH2">{pack["math"]["h2"]}</h2>\n'
         f'        <p class="lede reveal" id="mathLede">{pack["math"].get("ledeM") or pack["math"].get("ledeD")}</p>',
@@ -918,7 +913,7 @@ def replace_rx_block(html: str, pack: dict) -> str:
                     <div class="rx-row"><dt>Why</dt><dd id="rx1Why">{r1["why"]}</dd></div>
                     <div class="rx-row"><dt>Bill line</dt><dd id="rx1Bill">{r1["bill"]}</dd></div>
                     <div class="rx-row"><dt>Owner</dt><dd id="rx1Owner">{r1["owner"]}</dd></div>
-                    <div class="rx-row"><dt>Impact</dt><dd><strong id="rx1Impact">₹{r1["impact"].replace("₹", "") if r1["impact"].startswith("₹") else r1["impact"]}</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong id="rx1Impact">₹{r1["impact"].replace("₹", "") if r1["impact"].startswith("₹") else r1["impact"]}</strong></dd></div>
                     <div class="rx-row"><dt>Effort</dt><dd id="rx1Effort">{r1["effort"]}</dd></div>
                     <div class="rx-row"><dt>Rule</dt><dd id="rx1Rule">{r1["rule"]}</dd></div>
                     <div class="rx-row"><dt>Due</dt><dd id="rx1Due">{r1["due"]}</dd></div>
@@ -940,7 +935,7 @@ def replace_rx_block(html: str, pack: dict) -> str:
                     <div class="rx-row"><dt>Why</dt><dd>Mon 07:12-07:20 overlap drove the incomer MD window</dd></div>
                     <div class="rx-row"><dt>Bill line</dt><dd>MD (kVA) · billing demand</dd></div>
                     <div class="rx-row"><dt>Owner</dt><dd>Electrical shift supervisor · Shift B</dd></div>
-                    <div class="rx-row"><dt>Impact</dt><dd><strong>₹2.5-4L / month</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong>₹2.5-4L / month</strong></dd></div>
                     <div class="rx-row"><dt>Effort</dt><dd>Sequence only · no capex · no PLC write</dd></div>
                     <div class="rx-row"><dt>Rule</dt><dd>md_overlap@v2.4 · Confidence High</dd></div>
                     <div class="rx-row"><dt>Due</dt><dd>This week · verify on next MD line</dd></div>
@@ -991,7 +986,7 @@ def replace_rx_block(html: str, pack: dict) -> str:
                     <div class="rx-row"><dt>Why</dt><dd>Unload kWh with no production tag on 3 of last 5 changeovers</dd></div>
                     <div class="rx-row"><dt>Bill line</dt><dd>Energy (kWh) · ToD shoulder</dd></div>
                     <div class="rx-row"><dt>Owner</dt><dd>Utilities supervisor · Line 2</dd></div>
-                    <div class="rx-row"><dt>Impact</dt><dd><strong>₹80k-1.2L / month</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong>₹80k-1.2L / month</strong></dd></div>
                     <div class="rx-row"><dt>Effort</dt><dd>Staging SOP · no capex · no PLC write</dd></div>
                     <div class="rx-row"><dt>Rule</dt><dd>idle_hold@v1.8 · Confidence High</dd></div>
                     <div class="rx-row"><dt>Due</dt><dd>Next changeover · verify on energy line</dd></div>
@@ -1005,7 +1000,7 @@ def replace_rx_block(html: str, pack: dict) -> str:
                     <div class="rx-row"><dt>Why</dt><dd id="rx2Why">{r2["why"]}</dd></div>
                     <div class="rx-row"><dt>Bill line</dt><dd id="rx2Bill">{r2["bill"]}</dd></div>
                     <div class="rx-row"><dt>Owner</dt><dd id="rx2Owner">{r2["owner"]}</dd></div>
-                    <div class="rx-row"><dt>Impact</dt><dd><strong id="rx2Impact">{impact2}</strong> <span class="tilde">[~]</span></dd></div>
+                    <div class="rx-row"><dt>Impact</dt><dd><strong id="rx2Impact">{impact2}</strong></dd></div>
                     <div class="rx-row"><dt>Effort</dt><dd id="rx2Effort">{r2["effort"]}</dd></div>
                     <div class="rx-row"><dt>Rule</dt><dd id="rx2Rule">{r2["rule"]}</dd></div>
                     <div class="rx-row"><dt>Due</dt><dd id="rx2Due">{r2["due"]}</dd></div>
@@ -1021,7 +1016,7 @@ def replace_rx_block(html: str, pack: dict) -> str:
     old_rx2_table = '''                    <tbody>
                       <tr><td><code>BANK_B.RUN</code></td><td>ON · unload</td><td>45 min avg</td></tr>
                       <tr><td><code>LINE2.PROD</code></td><td>0 units</td><td>same window</td></tr>
-                      <tr><td><code>BANK_B.kWh</code></td><td>~210 kWh</td><td>per event <span class="tilde">[~]</span></td></tr>
+                      <tr><td><code>BANK_B.kWh</code></td><td>210 kWh</td><td>per event</td></tr>
                       <tr><td><code>CHANGEOVER.FLAG</code></td><td>TRUE</td><td>planned</td></tr>
                     </tbody>'''
     new_rx2_table = (
@@ -1046,18 +1041,18 @@ def replace_rx_block(html: str, pack: dict) -> str:
     if not isinstance(floors, list) or len(floors) != 3:
         raise SystemExit("pack['floor'] must be a list of 3 prescriptions")
     f = floors[0]
-    old_floor = '''                  <span class="tag" id="floorTag">New prescription · High</span>
-                  <h4 id="floorTitle">Stagger Comp 1 &amp; 3 vs furnace bay ≥8 min</h4>
-                  <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak Mon 07:12-07:20 overlap</p>
-                  <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹2.5-4L/mo on MD line <span class="tilde">[~]</span></p>
-                  <p class="wa-line" id="floorOwner"><b>Owner:</b> Electrical shift supervisor · B</p>
-                  <p class="wa-line" id="floorDue"><b>Due:</b> This week · before next peak</p>'''
-    new_floor = f'''                  <span class="tag" id="floorTag">New prescription · {f.get("priority", "High")}</span>
-                  <h4 id="floorTitle">{f["title"]}</h4>
-                  <p class="wa-line" id="floorWhy"><b>Why:</b> {f["why"]}</p>
-                  <p class="wa-line" id="floorImpact"><b>Impact:</b> {f["impact"]} <span class="tilde">[~]</span></p>
-                  <p class="wa-line" id="floorOwner"><b>Owner:</b> {f["owner"]}</p>
-                  <p class="wa-line" id="floorDue"><b>Due:</b> {f.get("due", "This week · before next peak")}</p>'''
+    old_floor = '''                    <span class="tag" id="floorTag">New prescription · High</span>
+                    <h4 id="floorTitle">Stagger Comp 1 &amp; 3 vs furnace bay ≥8 min</h4>
+                    <p class="wa-line" id="floorWhy"><b>Why:</b> MD peak Mon 07:12-07:20 overlap</p>
+                    <p class="wa-line" id="floorImpact"><b>Impact:</b> ₹2.5-4L/mo on MD line</p>
+                    <p class="wa-line" id="floorOwner"><b>Owner:</b> Electrical shift supervisor · B</p>
+                    <p class="wa-line" id="floorDue"><b>Due:</b> This week · before next peak</p>'''
+    new_floor = f'''                    <span class="tag" id="floorTag">New prescription · {f.get("priority", "High")}</span>
+                    <h4 id="floorTitle">{f["title"]}</h4>
+                    <p class="wa-line" id="floorWhy"><b>Why:</b> {f["why"]}</p>
+                    <p class="wa-line" id="floorImpact"><b>Impact:</b> {f["impact"]}</p>
+                    <p class="wa-line" id="floorOwner"><b>Owner:</b> {f["owner"]}</p>
+                    <p class="wa-line" id="floorDue"><b>Due:</b> {f.get("due", "This week · before next peak")}</p>'''
     if old_floor not in html:
         raise SystemExit("floor bubble not found")
     html = html.replace(old_floor, new_floor, 1)
@@ -1090,7 +1085,6 @@ def apply_static_pack_fields(html: str, pack: dict) -> str:
         "hookT2p": h["t2p"],
         "hookT3s": h["t3s"],
         "hookT3p": h["t3p"],
-        "hookMeterNote": h["meterNote"],
         "hookStatImpact": h["statImpact"],
         "gapScadaHas": pack["gapHas"]["scada"],
         "gapEmsHas": pack["gapHas"]["ems"],
