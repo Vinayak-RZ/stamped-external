@@ -820,24 +820,24 @@
 
     /* 7 Floor / phone — iPhone 15 proportions (393×852 pt) */
     #scene-floor .slide__inner--wide {
-      max-width: min(1180px, 100%);
-      padding-inline: clamp(2rem, 7vw, 5rem);
+      max-width: min(1400px, 100%);
+      padding-inline: clamp(1.5rem, 3.5vw, 2.5rem);
     }
     .floor-layout {
       display: grid;
-      grid-template-columns: minmax(0, 28rem) auto;
-      gap: clamp(1.5rem, 2.8vw, 2.4rem);
-      align-items: center;
-      justify-content: center;
-      margin: 0.15rem auto 0;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr) auto;
+      gap: clamp(1.35rem, 2.4vw, 2.1rem);
+      align-items: start;
+      justify-content: stretch;
+      margin-top: 0.15rem;
       width: 100%;
-      max-width: 52rem;
     }
     .floor-copy {
       display: flex;
       flex-direction: column;
       align-items: stretch;
       min-width: 0;
+      max-width: 26rem;
     }
     .floor-copy .eyebrow { margin-bottom: 0.55rem; }
     .floor-copy h2 { margin-bottom: 0.35rem; }
@@ -847,11 +847,17 @@
       font-size: clamp(0.92rem, 1.35vw, 1.02rem);
       line-height: 1.45;
     }
-    .floor-copy .status-rail { margin-top: 1.25rem; }
+    .floor-copy .status-rail {
+      margin-top: 1.25rem;
+      gap: 1.15rem;
+    }
     .floor-route {
-      margin-top: 1.35rem;
       display: grid;
-      gap: 0.85rem;
+      gap: 0.9rem;
+      align-content: start;
+      min-width: 0;
+      max-width: 24rem;
+      margin-top: 2.65rem;
     }
     .floor-route__title {
       font-family: var(--font-display);
@@ -864,7 +870,7 @@
     }
     .floor-route-grid {
       display: grid;
-      gap: 0.85rem;
+      gap: 0.9rem;
     }
     .floor-route-card {
       border: 1px solid var(--outline-variant);
@@ -886,9 +892,10 @@
     }
     #scene-floor .phone-col {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: flex-end;
+      align-items: flex-start;
       min-width: 0;
+      padding-top: 0.15rem;
     }
     .phone {
       width: calc(var(--phone-screen-w) + var(--phone-frame-pad) * 2 + 2px);
@@ -1332,7 +1339,7 @@
       opacity: 0.9;
     }
     .floor-rail-lede { margin-bottom: 0.55rem; font-size: 0.92rem; max-width: 26em; line-height: 1.45; }
-    .status-rail { display: grid; gap: 1rem; }
+    .status-rail { display: grid; gap: 1.15rem; }
     .status-item {
       display: grid; grid-template-columns: 14px 1fr; gap: 0.75rem;
       align-items: start; border: 1px solid var(--outline-variant);
@@ -1640,19 +1647,40 @@
       #scene-tech .tech-card ul { font-size: 0.78rem; }
       #scene-floor h2 { margin-bottom: 0.35rem; }
       #scene-floor .floor-copy .lede { margin-bottom: 0; max-width: 34em; font-size: 0.95rem; }
-      #scene-floor .floor-copy .status-rail { margin-top: 1.25rem; gap: 1rem; }
+      #scene-floor .floor-copy .status-rail { margin-top: 1.25rem; gap: 1.15rem; }
       #scene-floor .status-item p { font-size: 0.78rem; }
+      #scene-floor .floor-route { margin-top: 2.65rem; }
       #scene-floor .floor-route-card p { font-size: 0.78rem; }
-      #scene-floor .phone-col { justify-content: center; }
+      #scene-floor .phone-col { justify-content: flex-end; }
       #scene-verify .meta { font-size: 0.78rem; }
     }
 
 
     .show-mobile { display: none !important; }
     .hide-mobile { display: revert; }
+    /* ponytail: revert would kill grid/flex on shared hide-mobile nodes */
+    .status-rail.hide-mobile { display: grid; }
+    .floor-route.hide-mobile { display: grid; }
+    .floor-route-grid { display: grid; }
 
     .bill-table-wrap, .ledger-wrap, .phase-table { max-width: 100%; }
     .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    @media (max-width: 1100px) and (min-width: 721px) {
+      #scene-floor .floor-layout {
+        grid-template-columns: minmax(0, 1.1fr) auto;
+        gap: 1.5rem;
+      }
+      #scene-floor .floor-route {
+        grid-column: 1 / -1;
+        max-width: none;
+        margin-top: 0.35rem;
+      }
+      #scene-floor .floor-route-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+      }
+    }
 
     @media (max-width: 1100px) {
       .waste-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1824,7 +1852,7 @@
       #scene-hook .gap-break { margin-top: 0.85rem; padding: 0.75rem 0.9rem; font-size: 0.84rem; }
       #scene-hook .tl-item { grid-template-columns: 48px 1fr; gap: 0.5rem; }
 
-      /* Floor: proper phone — real iPhone aspect ratio, no stretch */
+      /* Floor: proper phone — real iPhone aspect ratio, uniform scale only */
       #scene-floor.slide {
         justify-content: flex-start;
         overflow: hidden;
@@ -1835,19 +1863,29 @@
       #scene-floor .floor-layout {
         grid-template-columns: 1fr;
         gap: 0.85rem;
+        justify-items: center;
       }
-      #scene-floor .phone-col { justify-content: center; }
+      #scene-floor .floor-copy {
+        max-width: 100%;
+        width: 100%;
+      }
+      #scene-floor .phone-col {
+        justify-content: center;
+        width: 100%;
+      }
       #scene-floor .phone {
+        --phone-screen-w: 292px;
         width: calc(var(--phone-screen-w) + var(--phone-frame-pad) * 2 + 2px);
-        max-width: min(100%, calc(var(--phone-screen-w) + var(--phone-frame-pad) * 2 + 2px));
+        max-width: calc(var(--phone-screen-w) + var(--phone-frame-pad) * 2 + 2px);
         margin: 0 auto;
         transform: none;
       }
       #scene-floor .phone:hover { transform: none; }
       #scene-floor .phone__screen {
-        width: 100%;
+        width: var(--phone-screen-w);
         height: auto;
         aspect-ratio: var(--phone-ratio);
+        flex: none;
       }
       #scene-floor .wa-header {
         padding: 2.35rem 0.65rem 0.5rem;
@@ -2411,22 +2449,22 @@
                 </div>
               </div>
             </div>
-            <div class="floor-route hide-mobile reveal">
-              <p class="floor-route__title">Before it hits the phone</p>
-              <div class="floor-route-grid">
-                <article class="floor-route-card">
-                  <strong>Alarm routes</strong>
-                  <p>Pick which role gets which alarm. Re-map recipients when the org chart moves, without rewriting the floor SOP.</p>
-                </article>
-                <article class="floor-route-card">
-                  <strong>Urgent prescriptions</strong>
-                  <p>Admin confirms first, then the recommended fix goes out as an authenticated handoff to the assigned phone.</p>
-                </article>
-                <article class="floor-route-card">
-                  <strong>Larger prescriptions</strong>
-                  <p>Stay in the admin dashboard until someone assigns an owner. Only then does that person get the notification.</p>
-                </article>
-              </div>
+          </div>
+          <div class="floor-route hide-mobile reveal">
+            <p class="floor-route__title">Before it hits the phone</p>
+            <div class="floor-route-grid">
+              <article class="floor-route-card">
+                <strong>Alarm routes</strong>
+                <p>Pick which role gets which alarm. Re-map recipients when the org chart moves, without rewriting the floor SOP.</p>
+              </article>
+              <article class="floor-route-card">
+                <strong>Urgent prescriptions</strong>
+                <p>Admin confirms first, then the recommended fix goes out as an authenticated handoff to the assigned phone.</p>
+              </article>
+              <article class="floor-route-card">
+                <strong>Larger prescriptions</strong>
+                <p>Stay in the admin dashboard until someone assigns an owner. Only then does that person get the notification.</p>
+              </article>
             </div>
           </div>
           <div class="phone-col">

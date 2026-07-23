@@ -82,28 +82,61 @@ def check_deck(page, base: str, path: str) -> None:
         """() => {
       const phone = document.getElementById('floorPhone');
       const rail = document.querySelector('#scene-floor .status-rail');
+      const route = document.querySelector('#scene-floor .floor-route');
       const tag = document.getElementById('floorTag');
       const why = document.getElementById('floorWhy');
-      if (!phone || !rail) return null;
+      if (!phone || !rail || !route) return null;
       const pr = phone.getBoundingClientRect();
       const rr = rail.getBoundingClientRect();
+      const or_ = route.getBoundingClientRect();
+      const items = Array.from(rail.querySelectorAll('.status-item'));
+      const gaps = items.slice(0, -1).map((el, i) => items[i + 1].getBoundingClientRect().top - el.getBoundingClientRect().bottom);
       return {
         phoneLeft: pr.left,
         railRight: rr.right,
+        routeLeft: or_.left,
+        routeRight: or_.right,
         mid: window.innerWidth / 2,
         routes: document.querySelectorAll('#scene-floor .floor-route-card').length,
         tag: tag ? tag.textContent.trim() : '',
         why: why ? why.textContent.trim() : '',
+        gaps,
+        phoneRatio: pr.height ? pr.width / pr.height : 0,
       };
     }"""
     )
     assert layout and layout["railRight"] <= layout["phoneLeft"] + 8, f"{path}: status should be left of phone {layout}"
-    assert layout["phoneLeft"] > layout["mid"] * 0.72, f"{path}: phone should sit toward center-right {layout}"
+    assert layout["routeLeft"] < layout["phoneLeft"], f"{path}: route should be left of phone {layout}"
+    assert layout["phoneLeft"] > layout["mid"] * 0.78, f"{path}: phone should sit on the right {layout}"
+    assert all(g >= 12 for g in layout["gaps"]), f"{path}: status gaps too small {layout['gaps']}"
     assert layout["routes"] >= 3, f"{path}: expected route cards, got {layout['routes']}"
     assert layout["tag"].startswith("Alarm"), f"{path}: bad tag {layout['tag']!r}"
     assert layout["why"].startswith("Alarm:"), f"{path}: bad alarm line {layout['why']!r}"
     assert page.locator(".wa-compose").count() == 1, f"{path}: missing compose bar"
     assert page.locator(".phone-island").count() == 1, f"{path}: missing dynamic island"
+
+    # Mobile phone: slight uniform scale, not vertically compressed
+    page.set_viewport_size({"width": 390, "height": 844})
+    page.reload(wait_until="networkidle")
+    go_to_slide(page, "scene-floor")
+    mobile_phone = page.evaluate(
+        """() => {
+      const phone = document.getElementById('floorPhone');
+      const screen = phone && phone.querySelector('.phone__screen');
+      if (!phone || !screen) return null;
+      const pr = phone.getBoundingClientRect();
+      const sr = screen.getBoundingClientRect();
+      const cs = getComputedStyle(screen);
+      return {
+        phoneRatio: pr.height ? pr.width / pr.height : 0,
+        screenRatio: sr.height ? sr.width / sr.height : 0,
+        aspect: cs.aspectRatio,
+        screenW: sr.width,
+      };
+    }"""
+    )
+    assert mobile_phone and 0.40 <= mobile_phone["phoneRatio"] <= 0.55, f"{path}: mobile phone squashed {mobile_phone}"
+    assert mobile_phone["screenW"] >= 250, f"{path}: mobile phone scaled down too far {mobile_phone}"
 
     go_to_slide(page, "scene-verify")
     cells = page.evaluate(
