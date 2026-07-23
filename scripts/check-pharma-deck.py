@@ -141,20 +141,31 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
         const h2 = slide.querySelector('h2');
         const phone = document.getElementById('floorPhone');
         const rail = slide.querySelector('.status-rail');
+        const route = slide.querySelector('.floor-route');
         const statusbar = slide.querySelector('.phone-statusbar');
         const rect = phone ? phone.getBoundingClientRect() : null;
         const railRect = rail ? rail.getBoundingClientRect() : null;
+        const routeRect = route ? route.getBoundingClientRect() : null;
         const tag = slide.querySelector('#floorTag');
+        const gaps = rail
+          ? Array.from(rail.querySelectorAll('.status-item')).slice(0, -1).map((el, i) => {
+              const next = rail.querySelectorAll('.status-item')[i + 1];
+              return next.getBoundingClientRect().top - el.getBoundingClientRect().bottom;
+            })
+          : [];
         return {
           problems,
           h2Visible: !!(h2 && getComputedStyle(h2).display !== 'none' && h2.getBoundingClientRect().height > 0),
           rxCount: Array.isArray(window.__FLOOR_RX__) ? window.__FLOOR_RX__.length : 0,
           hasStatusbar: !!statusbar,
           phoneRightOfRail: !!(rect && railRect && rect.left >= railRect.right - 8),
+          routeBetween: !!(rect && railRect && routeRect && routeRect.left >= railRect.left - 40 && routeRect.right <= rect.left + 40),
+          statusGapsOk: gaps.length ? gaps.every((g) => g >= 12) : true,
           hasCompose: !!slide.querySelector('.wa-compose'),
           hasIsland: !!slide.querySelector('.phone-island'),
           hasRouteCards: slide.querySelectorAll('.floor-route-card').length >= 3,
           alarmTag: tag ? tag.textContent.trim() : '',
+          phoneRatio: rect && rect.height > 0 ? rect.width / rect.height : 0,
         };
       }
       return {problems};
@@ -186,6 +197,10 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
         if sid == "scene-floor":
             if width > 720 and not report.get("phoneRightOfRail"):
                 issues.append(f"{label}/scene-floor: phone should sit right of status rail")
+            if width > 1100 and not report.get("routeBetween"):
+                issues.append(f"{label}/scene-floor: route column should sit between copy and phone")
+            if width > 720 and not report.get("statusGapsOk"):
+                issues.append(f"{label}/scene-floor: status cards should have visible gaps")
             if width > 720 and not report.get("hasRouteCards"):
                 issues.append(f"{label}/scene-floor: missing alarm/prescription route cards")
             if not report.get("hasStatusbar"):
@@ -201,6 +216,10 @@ def audit_viewport(page, base: str, label: str, width: int, height: int) -> list
                     issues.append(f"{label}/scene-floor: h2 not visible")
                 if report.get("rxCount") != 3:
                     issues.append(f"{label}/scene-floor: rxCount={report.get('rxCount')}")
+                ratio = report.get("phoneRatio") or 0
+                # iPhone ~393/852 ≈ 0.46; allow modest scale, forbid squat compression
+                if ratio < 0.40 or ratio > 0.55:
+                    issues.append(f"{label}/scene-floor: phone aspect squashed ratio={ratio:.3f}")
 
     if width <= 720:
         go_to(page, "scene-floor")
