@@ -145,6 +145,8 @@ Authority ADRs: [ADR-012](../decisions/ADR-012-l3-artifact-repo-topology.md) · 
 | 8 | [l6-counterfactual-display-stub.md](./l6-counterfactual-display-stub.md) | Modeled delay-cost display |
 | 9 | [../consumers/stamped-l6/README.md](../consumers/stamped-l6/README.md) | Typed UI seed + [TRANSFER.md](../consumers/stamped-l6/TRANSFER.md) |
 | 10 | [../design/forge-industrial-design-system.md](../design/forge-industrial-design-system.md) | Forge Industrial v2.0 |
+| 11 | [l6-alarms-prescriptions-evidence-ia.md](./l6-alarms-prescriptions-evidence-ia.md) | **Proposed** — separate Alarm / Rx / Evidence jobs (live UI audit) |
+| 12 | [audits/2026-07-24-trying-stamped-work.md](./audits/2026-07-24-trying-stamped-work.md) | Playwright audit notes for trying.stamped.work |
 
 ### stamped-l6 one-line mission
 
@@ -204,3 +206,4 @@ L5 consumer README snapshot: [../consumers/readmes/closure-verification.md](../c
 | 2026-07-21 | Ops-first L5 + Finding 1.1.0 `ops_clearance`; contracts 0.8.0; L3 ops-clearance consumer prompt |
 | 2026-07-21 | Mirrored completed L5 README → `consumers/readmes/closure-verification.md` |
 | 2026-07-21 | L6 architecture + UI handoff (ADR-022/023); ops-first SSOT; `consumers/stamped-l6` reference seed |
+2026-07-24 | Proposed L6 IA: Alarms vs Prescriptions vs Evidence + Playwright audit of trying.stamped.work

@@ -32,6 +32,6 @@ Compliance register: [../compliance/india-compliance-register.md](../compliance/
 
 **L5 handoff:** [../handoff/stamped-l5-architecture-handoff.md](../handoff/stamped-l5-architecture-handoff.md) · [../handoff/stamped-l5-build-plan.md](../handoff/stamped-l5-build-plan.md)
 
-**L6 handoff:** [../handoff/stamped-l6-architecture-handoff.md](../handoff/stamped-l6-architecture-handoff.md) · [../handoff/stamped-l6-ui-ux-charter.md](../handoff/stamped-l6-ui-ux-charter.md) · [../handoff/stamped-l6-build-plan.md](../handoff/stamped-l6-build-plan.md)
+**L6 handoff:** [../handoff/stamped-l6-architecture-handoff.md](../handoff/stamped-l6-architecture-handoff.md) · [../handoff/stamped-l6-ui-ux-charter.md](../handoff/stamped-l6-ui-ux-charter.md) · [../handoff/stamped-l6-build-plan.md](../handoff/stamped-l6-build-plan.md) · **Proposed IA:** [../handoff/l6-alarms-prescriptions-evidence-ia.md](../handoff/l6-alarms-prescriptions-evidence-ia.md) (Alarms vs Rx vs Evidence — 2026-07-24 audit)
 
 When a downstream repo (L2, L3, …) needs L1 context, start with [../technical/README.md](../technical/README.md) then read ADRs here.
