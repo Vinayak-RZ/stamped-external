@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Verified with evidence · Stamped Energy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="deep-dive.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="topbar__brand" href="../index.html">
+      <img src="https://stamped.work/logo.png" alt="" width="24" height="24" onerror="this.style.display='none'" />
+      Stamped Energy
+    </a>
+    <a class="topbar__back" id="backToDeck" href="../index.html">← Back to decks</a>
+  </header>
+
+  <main class="page">
+    <p class="eyebrow reveal">04 · Evidence</p>
+    <h1 class="reveal">Verified with evidence — not vibes.</h1>
+    <p class="lede reveal">
+      Our in-house calculation engine recomputes ₹ impact from telemetry deltas and tariff line items,
+      tracks potential vs realised, and shows how much more you can still save. Savings count when the evidence — and the bill path — move.
+    </p>
+
+    <section class="panel reveal">
+      <h2 class="section-title">Calculation engine · interactive ledger</h2>
+      <p class="muted" style="margin-bottom:0.85rem;">Pick a sample action. Watch baseline lock → delta → engine ₹ → realised vs remaining.</p>
+      <div class="calc-layout">
+        <div class="action-pick" id="actionPick">
+          <button type="button" class="action-btn is-active" data-action="md">
+            <strong>Stagger mill start vs kiln peak</strong>
+            <span>MD coincidence · load management</span>
+          </button>
+          <button type="button" class="action-btn" data-action="idle">
+            <strong>Idle compressor on changeover</strong>
+            <span>ToD energy · idle hold pack</span>
+          </button>
+          <button type="button" class="action-btn" data-action="pf">
+            <strong>Correct PF before slab step</strong>
+            <span>PF penalty arithmetic</span>
+          </button>
+        </div>
+        <div id="calcOut" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <div class="grid-2" style="margin-top:1rem;">
+      <section class="reveal">
+        <button type="button" class="flip" data-flip aria-pressed="false" aria-label="Flip between claim and evidence pack">
+          <div class="flip__inner">
+            <div class="flip__face flip__face--front">
+              <span class="badge badge--core">Claim</span>
+              <h2 class="section-title" style="margin-top:0.65rem;">What the floor hears</h2>
+              <p class="muted" style="margin:0.5rem 0 0.85rem;">
+                “Stagger the 11:40 mill start — MD overlap risk ₹1.8L / month if today’s coincidence holds.”
+              </p>
+              <ul class="method-list">
+                <li>
+                  <strong>Potential locked at issue</strong>
+                  <span>Engine quote pinned with baseline version and tariff table hash.</span>
+                </li>
+                <li>
+                  <strong>Owner + due</strong>
+                  <span>Electrical / utilities · before next predicted peak window.</span>
+                </li>
+              </ul>
+              <p class="flip-cue">Flip for evidence pack →</p>
+            </div>
+            <div class="flip__face flip__face--back">
+              <span class="badge badge--frontier">Evidence pack</span>
+              <h2 class="section-title" style="margin-top:0.65rem;color:#fff;">What finance &amp; assurance get</h2>
+              <ul class="method-list" style="margin-top:0.75rem;">
+                <li style="background:rgba(255,255,255,0.06);">
+                  <strong style="color:#fff;">Baseline + window</strong>
+                  <span class="muted">TOW-P v2026.04 · peak week · production covariate locked</span>
+                </li>
+                <li style="background:rgba(255,255,255,0.06);">
+                  <strong style="color:#fff;">Bill-line decomposition</strong>
+                  <span class="muted">MD slab · energy ToD · PF — priced the way DISCOM charges</span>
+                </li>
+                <li style="background:rgba(255,255,255,0.06);">
+                  <strong style="color:#fff;">Trail</strong>
+                  <span class="muted">issued → viewed → acted → verified · exportable workpaper</span>
+                </li>
+              </ul>
+              <p class="flip-cue">← Back to claim</p>
+            </div>
+          </div>
+        </button>
+      </section>
+
+      <section class="panel reveal">
+        <h2 class="section-title">M&amp;V language that survives auditors</h2>
+        <ul class="method-list">
+          <li>
+            <strong>IPMVP-style options + ASHRAE G14</strong>
+            <span>Acceptance via NMBE / CV(RMSE) language — regression you can print, not a model smile.</span>
+          </li>
+          <li>
+            <strong>Potential vs realised ledger</strong>
+            <span>Per-action tracking of what was possible, what cleared on telemetry, and remaining opportunity.</span>
+          </li>
+          <li>
+            <strong>Same ledger → intensity &amp; tCO₂e</strong>
+            <span>Sustainability workpapers reuse the ops trail. We do not file ESG returns for you.</span>
+          </li>
+        </ul>
+        <p class="cite">IPMVP · ASHRAE Guideline 14 · bill-line decomposition · sample walkthrough labelled</p>
+      </section>
+    </div>
+
+    <p class="footnote reveal">
+      Sample figures on this page are labelled walkthrough numbers — not a customer guarantee.
+      “Verified with evidence” means the calculation engine + locked M&amp;V plan + exportable trail;
+      bill-line confirmation is the Proof Run closure path, not a claim that every badge is already DISCOM-reconciled on day one.
+    </p>
+
+    <nav class="nav-pills" aria-label="Tech deep dives">
+      <a href="physics.html" data-pill-from>Physics</a>
+      <a href="models.html" data-pill-from>Models</a>
+      <a href="agents.html" data-pill-from>Agents</a>
+      <a class="is-current" href="evidence.html" data-pill-from>Evidence</a>
+    </nav>
+  </main>
+
+  <script src="deep-dive.js"></script>
+  <script>
+    StampedDeepDive.bindCalculator("#actionPick", "#calcOut", {
+      md: {
+        baseline: "TOW-P · Apr peak week · locked",
+        delta: "−180 kVA coincidence (post-stagger)",
+        tariff: "DISCOM MD slab · CMD margin",
+        potential: "₹1.8L / mo",
+        realised: "₹1.5L",
+        remaining: "₹0.3L",
+        status: "VERIFIED",
+        engine: "v0.9.4"
+      },
+      idle: {
+        baseline: "idle_hold@v1.8 · last 5 changeovers",
+        delta: "−42 kWh / event × 18 events",
+        tariff: "ToD energy · shoulder",
+        potential: "₹0.9L / mo",
+        realised: "₹0.6L",
+        remaining: "₹0.3L",
+        status: "IN REVIEW",
+        engine: "v0.9.4"
+      },
+      pf: {
+        baseline: "pf_slab@v3.0 · trailing 30d",
+        delta: "PF 0.91 → 0.96",
+        tariff: "PF penalty / incentive slab",
+        potential: "₹0.55L / mo",
+        realised: "—",
+        remaining: "₹0.55L",
+        status: "PENDING",
+        engine: "v0.9.4"
+      }
+    });
+  </script>
+</body>
+</html>

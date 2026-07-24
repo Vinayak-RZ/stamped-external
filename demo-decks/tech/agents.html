@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Prescription agents · Stamped Energy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="deep-dive.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="topbar__brand" href="../index.html">
+      <img src="https://stamped.work/logo.png" alt="" width="24" height="24" onerror="this.style.display='none'" />
+      Stamped Energy
+    </a>
+    <a class="topbar__back" id="backToDeck" href="../index.html">← Back to decks</a>
+  </header>
+
+  <main class="page">
+    <p class="eyebrow reveal">03 · Agents</p>
+    <h1 class="reveal">Agentic where variability exists. Deterministic where trust demands it.</h1>
+    <p class="lede reveal">
+      Bounded agents draft floor-ready prescriptions — what changes, why it matters, who owns it, effort, ₹ impact, and due time —
+      while physics, tariff, and the calculation engine retain non-overridable vetoes on the money path.
+    </p>
+
+    <section class="panel reveal">
+      <h2 class="section-title">Interactive agent pipeline</h2>
+      <p class="muted" style="margin-bottom:0.85rem;">Click a stage to expand tools, contracts, and guardrails.</p>
+      <div class="pipeline" id="agentPipe">
+        <button type="button" class="pipe-node is-active" data-node="finding">
+          <div class="pipe-node__step">01</div>
+          <strong>Finding</strong>
+          <p>Rule or model cite + residual evidence</p>
+        </button>
+        <button type="button" class="pipe-node" data-node="tools">
+          <div class="pipe-node__step">02</div>
+          <strong>Tool use</strong>
+          <p>Bounded reads — no PLC writes</p>
+        </button>
+        <button type="button" class="pipe-node" data-node="veto">
+          <div class="pipe-node__step">03</div>
+          <strong>Veto loop</strong>
+          <p>Physics &amp; tariff non-overridable</p>
+        </button>
+        <button type="button" class="pipe-node" data-node="rank">
+          <div class="pipe-node__step">04</div>
+          <strong>Rank</strong>
+          <p>₹ × confidence / effort</p>
+        </button>
+        <button type="button" class="pipe-node" data-node="rx">
+          <div class="pipe-node__step">05</div>
+          <strong>Prescription</strong>
+          <p>WhatsApp-ready floor action</p>
+        </button>
+      </div>
+      <div class="pipe-detail" id="pipeDetail" aria-live="polite"></div>
+    </section>
+
+    <div class="grid-2" style="margin-top:1rem;">
+      <section class="panel reveal">
+        <h2 class="section-title">Architecture that impresses EEs</h2>
+        <ul class="method-list">
+          <li>
+            <strong>Structured finding contract</strong>
+            <span>Every agent output must reattach to <code>rule_or_model_ref</code>, baseline lock, and pinned impact — or the Rx is blocked.</span>
+          </li>
+          <li>
+            <strong>LLM for prose only</strong>
+            <span>Natural language for supervisors. Numbers come from <code>calculate_impact</code> — never invented in the completion.</span>
+          </li>
+          <li>
+            <strong>Read-only OT posture</strong>
+            <span>Tools query timeseries and rules. No PLC writes. Multi-plant ready without a new dashboard habit.</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="panel reveal">
+        <h2 class="section-title">Live flow sketch</h2>
+        <svg class="svg-stage" viewBox="0 0 480 200" role="img" aria-label="Agent tool loop">
+          <circle cx="70" cy="100" r="36" fill="#fff" stroke="#e3beb8" stroke-width="2"/>
+          <text x="70" y="96" text-anchor="middle" font-size="11" font-family="Inter" font-weight="700" fill="#051F13">Agent</text>
+          <text x="70" y="112" text-anchor="middle" font-size="9" font-family="Inter" fill="#8f706b">draft Rx</text>
+          <path class="draw-line" d="M106 100 H170" stroke="#00666b" stroke-width="2"/>
+          <rect x="170" y="40" width="120" height="120" rx="12" fill="#051F13"/>
+          <text x="230" y="78" text-anchor="middle" font-size="11" fill="#e8f2ec" font-family="Inter" font-weight="700">Tool sandbox</text>
+          <text x="230" y="98" text-anchor="middle" font-size="9" fill="#9ec9bc" font-family="Inter">query_timeseries</text>
+          <text x="230" y="114" text-anchor="middle" font-size="9" fill="#9ec9bc" font-family="Inter">get_baseline</text>
+          <text x="230" y="130" text-anchor="middle" font-size="9" fill="#ffb4a8" font-family="Inter">calculate_impact</text>
+          <path class="draw-line" d="M290 100 H350" stroke="#F75440" stroke-width="2" style="animation-delay:0.3s"/>
+          <rect x="350" y="64" width="100" height="72" rx="12" fill="rgba(247,84,64,0.1)" stroke="#F75440"/>
+          <text x="400" y="96" text-anchor="middle" font-size="11" font-family="Inter" font-weight="700" fill="#051F13">Veto</text>
+          <text x="400" y="114" text-anchor="middle" font-size="9" font-family="Inter" fill="#8f706b">physics · tariff</text>
+        </svg>
+        <p class="cite" style="margin-top:0.65rem;">L4 knowledge &amp; reasoning · verifier loop · ADR honesty on agent scope</p>
+      </section>
+    </div>
+
+    <p class="footnote reveal">
+      We do not ship free-form multi-agent crews as the default. Agentic drafting sits on top of deterministic ranking and calculators —
+      so the floor gets clear language without gambling the ₹ path on a completion.
+    </p>
+
+    <nav class="nav-pills" aria-label="Tech deep dives">
+      <a href="physics.html" data-pill-from>Physics</a>
+      <a href="models.html" data-pill-from>Models</a>
+      <a class="is-current" href="agents.html" data-pill-from>Agents</a>
+      <a href="evidence.html" data-pill-from>Evidence</a>
+    </nav>
+  </main>
+
+  <script src="deep-dive.js"></script>
+  <script>
+    StampedDeepDive.bindPipeline("#agentPipe", "#pipeDetail", {
+      finding: {
+        title: "Finding intake",
+        body: "A physics rule or CORE model emits a structured finding: residual evidence, confidence, equipment scope, and a cite the EE can open.",
+        code: "finding.rule_or_model_ref · baseline_id · window"
+      },
+      tools: {
+        title: "Bounded tool use",
+        body: "The agent may call read-only tools to assemble context. No OT writes. Impact must be recomputed — prose cannot invent rupees.",
+        code: "query_timeseries · get_baseline · calculate_impact · check_rule_violation"
+      },
+      veto: {
+        title: "Physics & tariff veto",
+        body: "If the drafted action violates a rulepack clause or tariff arithmetic, the verifier blocks issue. Vetoes are non-overridable by the LLM.",
+        code: "verifier.reject(reason=physics|tariff|impact_mismatch)"
+      },
+      rank: {
+        title: "Deterministic ranking",
+        body: "Queue order is ₹ × confidence / effort — so high-value, low-effort floor work surfaces first without a popularity contest.",
+        code: "score = rupees * confidence / effort"
+      },
+      rx: {
+        title: "Floor prescription",
+        body: "WhatsApp-ready action: what / why / who / effort / ₹ / due — with M&amp;V plan locked at issue for later verification.",
+        code: "Rx{action, owner, impact_inr, due, mv_plan_id}"
+      }
+    });
+  </script>
+</body>
+</html>

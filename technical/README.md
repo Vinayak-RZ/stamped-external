@@ -25,6 +25,7 @@ It deliberately contains **no market, ICP, or GTM research** beyond what the mas
 | 1 | [00-stamped-master-document.md](00-stamped-master-document.md) | What Stamped is: positioning, product vision, capabilities, outcomes, ICP summary, revenue model |
 | 2 | [01-product-architecture.md](01-product-architecture.md) | Product definition: 10 capability modules, UX surfaces, integration paths, competitor learnings, module→layer map |
 | 3 | [02-technical-architecture.md](02-technical-architecture.md) | The engineering spec: L0–L6 stack, savings math for 15–20%, layer contracts, resolved decisions, build phases |
+| 3b | [stamped-research-and-ml-citations.md](stamped-research-and-ml-citations.md) | Client-facing CORE vs FRONTIER bibliography (SPC, TOW-P, LightGBM, TimesFM…) for tech deep-dives and discovery |
 | 4 | [cross-cutting/03-production-engineering.md](cross-cutting/03-production-engineering.md) | Streaming backbone, reliability patterns, edge, tenancy, observability, deployment |
 | 5 | [cross-cutting/04-evaluation-and-quality.md](cross-cutting/04-evaluation-and-quality.md) | The quality spine: testing pyramid, data-quality gates, ML/LLM evals, CI gates, shadow mode |
 | 6+ | `layers/` (below) | Per-layer deep dives, in build order |
