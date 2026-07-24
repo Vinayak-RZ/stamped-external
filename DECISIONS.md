@@ -57,6 +57,17 @@
 | Platform seed | `consumers/stamped-l6/` non-canonical typed reference UI |
 | Handoff | [handoff/stamped-l6-architecture-handoff.md](handoff/stamped-l6-architecture-handoff.md) · [UI charter](handoff/stamped-l6-ui-ux-charter.md) · [build plan](handoff/stamped-l6-build-plan.md) |
 
+## L6 IA proposal — Alarms / Prescriptions / Evidence (2026-07-24)
+
+| Topic | Proposal (awaiting approval) |
+|-------|------------------------------|
+| Live audit | Playwright crawl of `trying.stamped.work` — [handoff/audits/2026-07-24-trying-stamped-work.md](handoff/audits/2026-07-24-trying-stamped-work.md) |
+| Alarm | Attention / EMS lifecycle — not the ₹ queue |
+| Prescription | Recommended action + closure / ₹ |
+| Evidence | Pre-scoped proof pack (child of alarm and/or Rx), not a third triage |
+| Nav default | Keep Evidence deep-link + Reports shelf; add Show proof on every Rx |
+| Full write-up | [handoff/l6-alarms-prescriptions-evidence-ia.md](handoff/l6-alarms-prescriptions-evidence-ia.md) |
+
 ## L4 architecture (2026-07-17)
 
 | Topic | Choice |
