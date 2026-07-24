@@ -805,13 +805,25 @@
       display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.75rem; margin-top: 1.15rem;
     }
-    .tech-card {
+    a.tech-card {
       background: var(--white);
       border: 1px solid var(--outline-variant);
       border-radius: var(--radius-card);
       padding: 1.1rem 1rem; min-height: 250px;
       box-shadow: 0 12px 30px -24px rgba(5,31,19,0.22);
       display: flex; flex-direction: column;
+      text-decoration: none; color: inherit;
+      transition: transform 0.28s var(--ease), box-shadow 0.28s var(--ease), border-color 0.28s var(--ease);
+      cursor: pointer;
+    }
+    a.tech-card:hover {
+      transform: translateY(-3px);
+      border-color: color-mix(in srgb, var(--primary) 45%, var(--outline-variant));
+      box-shadow: 0 18px 36px -22px rgba(5,31,19,0.32);
+    }
+    a.tech-card:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 3px;
     }
     .tech-card__num {
       font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
@@ -835,6 +847,16 @@
     .tech-card li::before {
       content: ""; position: absolute; left: 0; top: 0.45em;
       width: 5px; height: 5px; border-radius: 1px; background: var(--tertiary);
+    }
+    .tech-card__cta {
+      margin-top: 0.75rem;
+      font-size: 0.72rem; font-weight: 650; letter-spacing: 0.04em;
+      color: var(--tertiary);
+    }
+    a.tech-card:hover .tech-card__cta { color: var(--primary); }
+    @media (prefers-reduced-motion: reduce) {
+      a.tech-card { transition: none; }
+      a.tech-card:hover { transform: none; }
     }
 
     /* Audit + sustainability */
@@ -2175,7 +2197,7 @@
               <span class="chip">Physics &amp; rules</span>
               <span class="chip">Foundation models</span>
               <span class="chip">Agentic prescriptions</span>
-              <span class="chip">Bill verification</span>
+              <span class="chip">Verified with evidence</span>
             </div>
             <div class="btn-row reveal">
               <button type="button" class="btn btn--primary" id="btnBegin">Begin</button>
@@ -2726,46 +2748,50 @@
         <p class="eyebrow reveal">Technology</p>
         <h2 class="reveal">The stack behind each prescription</h2>
         <div class="tech-grid reveal">
-          <article class="tech-card">
+          <a class="tech-card" href="tech/physics.html?from=pharma" aria-label="Physics and rules engines. Open deep dive.">
             <div class="tech-card__num">01 · Physics</div>
-            <h3>Industrial physics and rules engines</h3>
-            <p>Versioned rule packs for plant energy behaviour, built from published research in energy management, power systems, and equipment efficiency.</p>
+            <h3>Versioned industrial physics &amp; rulepacks</h3>
+            <p>Semver rule packs that encode affinity laws, holding floors, and tariff arithmetic — every finding cites a pack a plant EE can open.</p>
             <ul>
               <li id="techPhysicsBullet">Load management, HVAC & chillers, idle utilities, tariff intensity, early fault warnings</li>
               <li>PF and tariff arithmetic tied to utility line items</li>
-              <li>Every finding cites a rule version a plant EE can review</li>
+              <li>Physics-informed hybrids; PINN research lineage, not black-box PDEs</li>
             </ul>
-          </article>
-          <article class="tech-card">
+            <span class="tech-card__cta">Open deep dive →</span>
+          </a>
+          <a class="tech-card" href="tech/models.html?from=pharma" aria-label="Industrial energy models. Open deep dive.">
             <div class="tech-card__num">02 · Models</div>
-            <h3>Industrial energy models</h3>
-            <p>Models trained on industrial load behaviour, not a general chatbot sitting on meter dumps.</p>
+            <h3>Plant-calibrated industrial ML</h3>
+            <p>Baselines and ranking models fitted on your plant’s telemetry — production-normalised residuals, not a chatbot on meter dumps.</p>
             <ul>
-              <li>Load and demand forecasting models</li>
-              <li>Pattern and anomaly models for waste detection</li>
-              <li>Equipment efficiency and tariff-aware dispatch models</li>
+              <li>TOW-P baselines · EWMA / CUSUM residual SPC</li>
+              <li>LightGBM quantile MD exceedance ranking</li>
+              <li>TimesFM-class foundation models in shadow only</li>
             </ul>
-          </article>
-          <article class="tech-card">
+            <span class="tech-card__cta">Open deep dive →</span>
+          </a>
+          <a class="tech-card" href="tech/agents.html?from=pharma" aria-label="Prescription agents. Open deep dive.">
             <div class="tech-card__num">03 · Agents</div>
-            <h3>Prescription agents</h3>
-            <p>Agents draft the floor action: what changes, why it matters, who owns it, effort, ₹ impact, and due time.</p>
+            <h3>Bounded prescription agents</h3>
+            <p>Agents draft floor actions with tools and vetoes — what, why, who, effort, ₹, due — while the calculation engine owns the money path.</p>
             <ul>
-              <li>Ranks the queue so high-₹, low-effort work surfaces first</li>
-              <li>Keeps numbers tied to the finding and tariff line</li>
-              <li>Produces text supervisors can act on without a new dashboard habit</li>
+              <li>Ranks by ₹ × confidence / effort</li>
+              <li>Physics and tariff vetoes are non-overridable</li>
+              <li>LLM for prose only — never invents ₹</li>
             </ul>
-          </article>
-          <article class="tech-card">
-            <div class="tech-card__num">04 · Closure</div>
-            <h3>Bill-linked verification</h3>
-            <p>Prescriptions are priced onto DISCOM line items and closed with an M&amp;V plan locked at issue time.</p>
+            <span class="tech-card__cta">Open deep dive →</span>
+          </a>
+          <a class="tech-card" href="tech/evidence.html?from=pharma" aria-label="Verified with evidence. Open deep dive.">
+            <div class="tech-card__num">04 · Evidence</div>
+            <h3>Verified with evidence</h3>
+            <p>In-house calculation engine recomputes ₹ from telemetry deltas and tariff lines, then checks whether the action actually moved the needle.</p>
             <ul>
-              <li>Potential vs realised tracked per action</li>
-              <li>Evidence exportable for plant, finance, and assurance</li>
-              <li>Same ledger feeds intensity and sustainability workpapers</li>
+              <li>Potential vs realised vs remaining opportunity</li>
+              <li>M&amp;V plan and baseline locked at issue time</li>
+              <li>Evidence trail for plant, finance, and assurance</li>
             </ul>
-          </article>
+            <span class="tech-card__cta">Open deep dive →</span>
+          </a>
         </div>
         <div class="flow-tags reveal hide-mobile" style="margin-top:1rem;">
           <span class="chip">Read-only OT</span>

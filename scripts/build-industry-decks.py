@@ -844,15 +844,13 @@ def inject_ids_and_hooks(html: str) -> str:
             '<p class="lede reveal show-mobile">Audit → floor execution → go / no-go at Day 60.</p>',
             '<p class="lede reveal show-mobile" id="offerLedeM">Audit → floor execution → go / no-go at Day 60.</p>',
         ),
-        (
-            "<li>MD coincidence, idle and holding loads, compressed air, thermal</li>",
-            '<li id="techPhysicsBullet">MD coincidence, idle and holding loads, compressed air, thermal</li>',
-        ),
     ]
     for old, new in replacements:
         if old not in html:
             raise SystemExit(f"missing fragment for ID injection:\n{old[:120]}...")
         html = html.replace(old, new, 1)
+    if 'id="techPhysicsBullet"' not in html:
+        raise SystemExit("techPhysicsBullet id missing from base tech card")
     return html
 
 
@@ -1156,6 +1154,7 @@ def inject_boot_script(html: str, industry: str) -> str:
 def build_one(base_html: str, industry: str) -> str:
     pack = PACKS[industry]
     html = base_html
+    html = html.replace("__INDUSTRY__", industry)
     html = inject_css(html)
     html = inject_chrome_industry(html)
     html = inject_hero_photo(html, industry)
@@ -1309,8 +1308,10 @@ def main() -> None:
             deploy_dir = DECKS_DIR / "pharma"
             deploy_dir.mkdir(parents=True, exist_ok=True)
             deploy_index = deploy_dir / "index.html"
-            deploy_index.write_text(out, encoding="utf-8")
-            print(f"wrote {deploy_index} ({len(out)} bytes)")
+            # Tech deep-dives live in demo-decks/tech/; rewrite relative links from pharma/
+            deploy_html = out.replace('href="tech/', 'href="../tech/')
+            deploy_index.write_text(deploy_html, encoding="utf-8")
+            print(f"wrote {deploy_index} ({len(deploy_html)} bytes)")
 
     hub = HUB
     (DECKS_DIR / "index.html").write_text(hub, encoding="utf-8")

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Physics &amp; rulepacks · Stamped Energy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="deep-dive.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="topbar__brand" href="../index.html">
+      <img src="https://stamped.work/logo.png" alt="" width="24" height="24" onerror="this.style.display='none'" />
+      Stamped Energy
+    </a>
+    <a class="topbar__back" id="backToDeck" href="../index.html">← Back to decks</a>
+  </header>
+
+  <main class="page">
+    <p class="eyebrow reveal">01 · Physics</p>
+    <h1 class="reveal">Versioned industrial physics the plant EE can open.</h1>
+    <p class="lede reveal">
+      Every finding cites a semver rulepack — affinity laws, holding floors, MD coincidence, PF and tariff arithmetic —
+      not a mysterious “AI score.” Intelligence lives in known-physics deviations from a good baseline.
+    </p>
+
+    <div class="grid-2">
+      <section class="panel reveal">
+        <h2 class="section-title">Rulepack explorer</h2>
+        <p class="muted">Click a pack. See the physics and the citation string that ships with the finding.</p>
+        <div class="chip-row" id="packChips" role="tablist" aria-label="Rule packs">
+          <button type="button" class="chip is-active" data-chip="compressor" role="tab">Compressor</button>
+          <button type="button" class="chip" data-chip="furnace" role="tab">Furnace / holding</button>
+          <button type="button" class="chip" data-chip="idle" role="tab">Idle utilities</button>
+          <button type="button" class="chip" data-chip="hvac" role="tab">HVAC / chillers</button>
+          <button type="button" class="chip" data-chip="tariff" role="tab">Tariff / PF</button>
+          <button type="button" class="chip" data-chip="md" role="tab">MD coincidence</button>
+        </div>
+        <div class="detail-box" id="packDetail" aria-live="polite"></div>
+      </section>
+
+      <section class="panel reveal">
+        <h2 class="section-title">What makes buyers lean in</h2>
+        <ul class="method-list">
+          <li>
+            <strong>Deterministic commercial math first</strong>
+            <span>MD histogram vs CMD, PF slabs, TOD windows, billing-demand floors — the same arithmetic the DISCOM invoice uses.</span>
+          </li>
+          <li>
+            <strong>Physics-informed hybrids</strong>
+            <span>Production artefacts are versioned rules + calibrated residuals. Aligned with PINN research (Raissi et al., 2019) without pretending we solve plant PDEs in production.</span>
+          </li>
+          <li>
+            <strong>Audit-ready cites</strong>
+            <span>Every finding carries <code>rulepack://…@semver#clause</code> so an EE can challenge the rule, not argue with a black box.</span>
+          </li>
+        </ul>
+        <p class="cite">CORE · product of record · see technical/stamped-research-and-ml-citations.md §0–§1</p>
+      </section>
+    </div>
+
+    <section class="panel reveal" style="margin-top:1rem;">
+      <h2 class="section-title">Animated stack</h2>
+      <svg class="svg-stage" viewBox="0 0 720 220" role="img" aria-label="Physics to finding pipeline">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#00666b"/>
+            <stop offset="100%" stop-color="#F75440"/>
+          </linearGradient>
+        </defs>
+        <rect x="24" y="70" width="130" height="56" rx="10" fill="#fff" stroke="#e3beb8"/>
+        <text x="89" y="95" text-anchor="middle" font-size="12" font-family="Inter" fill="#051F13" font-weight="700">Telemetry</text>
+        <text x="89" y="112" text-anchor="middle" font-size="10" font-family="Inter" fill="#8f706b">kW · PF · prod</text>
+        <path class="draw-line" d="M154 98 H210" stroke="url(#g1)" stroke-width="2.5" fill="none"/>
+        <rect x="210" y="56" width="150" height="84" rx="10" fill="#051F13"/>
+        <text x="285" y="88" text-anchor="middle" font-size="12" font-family="Inter" fill="#e8f2ec" font-weight="700">Rulepack engine</text>
+        <text x="285" y="108" text-anchor="middle" font-size="10" font-family="Inter" fill="#9ec9bc">affinity · floors · tariff</text>
+        <text x="285" y="124" text-anchor="middle" font-size="10" font-family="Inter" fill="#ffb4a8">semver + params hash</text>
+        <path class="draw-line" d="M360 98 H416" stroke="url(#g1)" stroke-width="2.5" fill="none" style="animation-delay:0.25s"/>
+        <rect x="416" y="70" width="130" height="56" rx="10" fill="#fff" stroke="#e3beb8"/>
+        <text x="481" y="95" text-anchor="middle" font-size="12" font-family="Inter" fill="#051F13" font-weight="700">Finding</text>
+        <text x="481" y="112" text-anchor="middle" font-size="10" font-family="Inter" fill="#8f706b">cite + ₹ path</text>
+        <path class="draw-line" d="M546 98 H602" stroke="url(#g1)" stroke-width="2.5" fill="none" style="animation-delay:0.5s"/>
+        <rect x="602" y="70" width="94" height="56" rx="10" fill="rgba(0,102,107,0.12)" stroke="#00666b"/>
+        <text x="649" y="103" text-anchor="middle" font-size="12" font-family="Inter" fill="#00666b" font-weight="700">EE review</text>
+      </svg>
+    </section>
+
+    <p class="footnote reveal">
+      Honesty bar: we name published physics and M&amp;V arithmetic as the system of record.
+      Frontier PINN architectures are research pedigree for “hard constraints in the loss” — not a claim that a full PDE network writes your bill number.
+    </p>
+
+    <nav class="nav-pills" aria-label="Tech deep dives">
+      <a class="is-current" href="physics.html" data-pill-from>Physics</a>
+      <a href="models.html" data-pill-from>Models</a>
+      <a href="agents.html" data-pill-from>Agents</a>
+      <a href="evidence.html" data-pill-from>Evidence</a>
+    </nav>
+  </main>
+
+  <script src="deep-dive.js"></script>
+  <script>
+    StampedDeepDive.bindChips("#packChips", "#packDetail", {
+      compressor: {
+        title: "Compressed air — affinity & specific power",
+        body: "Fan/compressor affinity relationships and specific-power floors catch leak signatures and wrong staging before they become a quiet baseload tax.",
+        cite: "rulepack://compressor/1.4.2#specific_power"
+      },
+      furnace: {
+        title: "Furnace / holding — thermal floors",
+        body: "Holding and heat-loss floors (Stefan–Boltzmann-style terms where relevant) flag overnight soak and empty-chamber draw that SCADA treats as ‘normal’.",
+        cite: "rulepack://furnace/2.1.0#holding_floor"
+      },
+      idle: {
+        title: "Idle utilities — changeover windows",
+        body: "Idle/hold detectors on changeover windows suppress false alarms during known downtime, then escalate when idle energy persists without production.",
+        cite: "rulepack://idle/1.8.0#changeover_hold"
+      },
+      hvac: {
+        title: "HVAC & chillers — COP proxies",
+        body: "Chiller and AHU packs watch COP proxies, staging, and simultaneous heat/cool — high-signal in pharma utilities islands.",
+        cite: "rulepack://hvac/1.2.3#cop_proxy"
+      },
+      tariff: {
+        title: "Tariff & power factor — calculators, not ML",
+        body: "PF slab math, TOD windows, and billing-demand floors are deterministic commercial calculators. Competitors bury this under ‘AI’; we put it first.",
+        cite: "rulepack://tariffs/3.0.1#pf_slab"
+      },
+      md: {
+        title: "Maximum demand — coincidence & stagger",
+        body: "MD coincidence detectors and stagger what-ifs recompute whether a startup overlap is about to set a new billing demand — priced onto the DISCOM MD line.",
+        cite: "rulepack://load_management/2.4.0#md_overlap"
+      }
+    });
+  </script>
+</body>
+</html>

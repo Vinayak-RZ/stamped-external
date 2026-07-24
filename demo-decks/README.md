@@ -9,8 +9,20 @@ Client-facing HTML presentation decks for Stamped Energy: one walkthrough per in
 | [steel.html](./steel.html) | Steel: furnace, rolling mill |
 | [pharma.html](./pharma.html) | Pharma: load management, HVAC, chillers |
 | [pharma/](./pharma/) | Pharma Vercel deploy root (`index.html`; `vercel --prod`) |
+| [tech/](./tech/) | Tech deep-dives linked from the Technology slide |
 | [assets/](./assets/) | Industry hero photos |
 | [/index.html](../index.html) | Same hub at repo root for GitHub Pages |
+
+**Tech deep-dives** (shared across industries; open from `#scene-tech` cards):
+
+| Page | Pillar |
+|------|--------|
+| [tech/physics.html](./tech/physics.html) | Versioned industrial physics & rulepacks |
+| [tech/models.html](./tech/models.html) | Plant-calibrated industrial ML |
+| [tech/agents.html](./tech/agents.html) | Bounded prescription agents |
+| [tech/evidence.html](./tech/evidence.html) | Verified with evidence (calculation engine) |
+
+Back-links use `?from={cement|steel|pharma}` → `{industry}.html#scene-tech`. Citation SSOT: [`../technical/stamped-research-and-ml-citations.md`](../technical/stamped-research-and-ml-citations.md).
 
 Each industry deck keeps the same Proof Run structure. What changes:
 

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Industrial ML models · Stamped Energy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="deep-dive.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="topbar__brand" href="../index.html">
+      <img src="https://stamped.work/logo.png" alt="" width="24" height="24" onerror="this.style.display='none'" />
+      Stamped Energy
+    </a>
+    <a class="topbar__back" id="backToDeck" href="../index.html">← Back to decks</a>
+  </header>
+
+  <main class="page">
+    <p class="eyebrow reveal">02 · Models</p>
+    <h1 class="reveal">Plant-calibrated models — not a generic industry average.</h1>
+    <p class="lede reveal">
+      We fit baselines and ranking models on <em>your</em> plant’s telemetry, production rate, and tariff regime —
+      fleet-shared architecture with per-plant calibration — so predictions sit on the actual load shape, not a chatbot on meter dumps.
+    </p>
+
+    <div class="grid-2">
+      <section class="reveal">
+        <button type="button" class="flip" data-flip aria-pressed="false" aria-label="Flip between CORE and FRONTIER model lanes">
+          <div class="flip__inner">
+            <div class="flip__face flip__face--front">
+              <span class="badge badge--core">CORE · product of record</span>
+              <h2 class="section-title" style="margin-top:0.65rem;">What actually drives findings</h2>
+              <ul class="method-list" style="margin-top:0.75rem;">
+                <li>
+                  <strong>TOW-P baselines</strong>
+                  <span>Time-of-week + production covariates (TOWT / CalTRACK lineage). Printable coefficients for M&amp;V.</span>
+                </li>
+                <li>
+                  <strong>EWMA + CUSUM on residuals</strong>
+                  <span>Roberts 1959 · Page 1954 — the same SPC family plant QA already trusts for process control.</span>
+                </li>
+                <li>
+                  <strong>LightGBM quantile</strong>
+                  <span>Short-horizon “will today set a new MD?” ranking. Challenger for baselines — never invents the invoice ₹.</span>
+                </li>
+              </ul>
+              <p class="flip-cue">Flip for frontier pedigree →</p>
+            </div>
+            <div class="flip__face flip__face--back">
+              <span class="badge badge--frontier">FRONTIER · shadow / watchlist</span>
+              <h2 class="section-title" style="margin-top:0.65rem;color:#fff;">Research we name without lying</h2>
+              <ul class="method-list" style="margin-top:0.75rem;">
+                <li style="background:rgba(255,255,255,0.06);">
+                  <strong style="color:#fff;">TimesFM (Google, ICML 2024)</strong>
+                  <span class="muted">Shadow challenger for cold-start bands. Promotion needs pinball gates vs LightGBM across plants.</span>
+                </li>
+                <li style="background:rgba(255,255,255,0.06);">
+                  <strong style="color:#fff;">Chronos · Moirai · MOMENT</strong>
+                  <span class="muted">Amazon / Salesforce / CMU-lineage foundation models — watchlist, same honesty rules.</span>
+                </li>
+                <li style="background:rgba(255,255,255,0.06);">
+                  <strong style="color:#fff;">PatchTST · N-HiTS · TFT</strong>
+                  <span class="muted">Deep forecasting research wave for challenger forecasts — not the M&amp;V baseline of record.</span>
+                </li>
+              </ul>
+              <p class="flip-cue">← Back to CORE</p>
+            </div>
+          </div>
+        </button>
+      </section>
+
+      <section class="panel reveal">
+        <h2 class="section-title">Custom models on your data</h2>
+        <p class="muted" style="margin-bottom:0.85rem;">
+          For each customer we train and calibrate models on that plant’s history so baselines reflect <em>their</em> shifts, mix, and weather — not a generic sector curve.
+        </p>
+        <ul class="method-list">
+          <li>
+            <strong>Per-plant baselines</strong>
+            <span>TOW-P regressions per incomer / feeder, registry-governed refits as production mix drifts.</span>
+          </li>
+          <li>
+            <strong>Plant-class ranking models</strong>
+            <span>LightGBM quantile for MD exceedance tuned on local peaks and tariff windows.</span>
+          </li>
+          <li>
+            <strong>Shape intelligence</strong>
+            <span>Isolation Forest + Matrix Profile (STUMPY) for discords and recurring plant signatures — training-light, explainable.</span>
+          </li>
+        </ul>
+        <p class="cite">Ke et al. 2017 · Yeh et al. 2016 · Das et al. 2024 (TimesFM, shadow)</p>
+      </section>
+    </div>
+
+    <section class="panel reveal" style="margin-top:1rem;">
+      <h2 class="section-title">When each model family fires</h2>
+      <div class="chip-row" id="whenChips">
+        <button type="button" class="chip is-active" data-chip="baseline">Baseline drift</button>
+        <button type="button" class="chip" data-chip="md">MD risk</button>
+        <button type="button" class="chip" data-chip="shape">Shape discord</button>
+        <button type="button" class="chip" data-chip="shadow">Shadow FM</button>
+      </div>
+      <div class="detail-box" id="whenDetail"></div>
+    </section>
+
+    <p class="footnote reveal">
+      Credibility line we say out loud: peer-reviewed SPC and M&amp;V-grade regression as the system of record;
+      LightGBM where probabilistic ranking wins; TimesFM-class models in shadow — without letting a black box write the number on your bill.
+    </p>
+
+    <nav class="nav-pills" aria-label="Tech deep dives">
+      <a href="physics.html" data-pill-from>Physics</a>
+      <a class="is-current" href="models.html" data-pill-from>Models</a>
+      <a href="agents.html" data-pill-from>Agents</a>
+      <a href="evidence.html" data-pill-from>Evidence</a>
+    </nav>
+  </main>
+
+  <script src="deep-dive.js"></script>
+  <script>
+    StampedDeepDive.bindChips("#whenChips", "#whenDetail", {
+      baseline: {
+        title: "Baseline drift → EWMA / CUSUM",
+        body: "After TOW-P residualises production and time-of-week, EWMA catches small sustained creep; CUSUM decides ‘new worse regime’ vs one hot day.",
+        cite: "model://spc/ewma_cusum@core"
+      },
+      md: {
+        title: "MD risk → LightGBM quantile",
+        body: "Tabular industrial features (load factor, coincidence, TOD) rank ‘will today set a new MD?’ — so the floor gets a stagger prescription before the peak locks.",
+        cite: "model://lgbm/md_quantile@core"
+      },
+      shape: {
+        title: "Never-seen startup → Matrix Profile",
+        body: "Nearest-neighbour distance over windows surfaces discords (odd startups) and motifs (recurring plant signatures) without a deep AD black box.",
+        cite: "model://matrix_profile/stumpy@core"
+      },
+      shadow: {
+        title: "Cold-start bands → TimesFM shadow",
+        body: "Foundation-model challengers may propose transfer hypotheses. They do not write M&amp;V citations or ₹ until promotion gates and a new ADR say so.",
+        cite: "model://timesfm/shadow@frontier"
+      }
+    });
+  </script>
+</body>
+</html>
